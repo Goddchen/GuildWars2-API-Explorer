@@ -9,7 +9,7 @@ buildscript {
 apply plugin: 'android'
 
 dependencies {
-    compile fileTree(dir:'libs', include:'*.jar', exclude:'android-support-v4.jar')
+    compile fileTree(dir: 'libs', include: '*.jar', exclude: 'android-support-v4.jar')
     compile project(':submodules:ActionBarSherlock:actionbarsherlock')
 }
 
@@ -20,5 +20,23 @@ android {
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 17
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("Z:\\Dropbox\\Android\\paradise.android.keystore")
+            storePassword System.getenv("ANDROID_STORE_PASS")
+            keyAlias "android release key"
+            keyPassword System.getenv("ANDROID_KEY_PASS")
+        }
+    }
+
+    buildTypes {
+        debug {
+            packageNameSuffix ".debug"
+        }
+        release {
+            signingConfig signingConfigs.release
+        }
     }
 }
