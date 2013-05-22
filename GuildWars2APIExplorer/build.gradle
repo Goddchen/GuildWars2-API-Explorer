@@ -11,6 +11,7 @@ apply plugin: 'android'
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar', exclude: 'android-support-v4.jar')
     compile project(':submodules:ActionBarSherlock:actionbarsherlock')
+    compile project(':submodules:ViewPagerIndicator:library')
 }
 
 android {

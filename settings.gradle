@@ -1,2 +1,3 @@
 include ':GuildWars2APIExplorer'
 include ':submodules:ActionBarSherlock:actionbarsherlock'
+include ':submodules:ViewPagerIndicator:library'

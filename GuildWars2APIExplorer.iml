@@ -76,6 +76,7 @@
     <orderEntry type="library" name="actionbarsherlock.aar" level="project" />
     <orderEntry type="library" name="crittercism_v3_0_8_sdkonly" level="project" />
     <orderEntry type="library" name="GoogleAdMobAdsSdk-6.4.1" level="project" />
+    <orderEntry type="module" module-name="ViewPagerIndicator" />
   </component>
 </module>
 

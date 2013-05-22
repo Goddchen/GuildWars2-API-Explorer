@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.viewpagerindicator.PageIndicator;
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.adapter.MatchMapPagerAdapter;
@@ -71,6 +72,8 @@ public class MatchDetailsFragment extends SherlockFragment {
                         ViewPager viewPager = (ViewPager) getView().findViewById(R.id.maps);
                         viewPager.setOffscreenPageLimit(10);
                         viewPager.setAdapter(new MatchMapPagerAdapter(getFragmentManager(), matchDetails));
+                        PageIndicator pageIndicator = (PageIndicator) getView().findViewById(R.id.page_indicators);
+                        pageIndicator.setViewPager(viewPager);
                     } else {
                         mHandler.post(new Runnable() {
                             @Override
