@@ -90,29 +90,37 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return eventNameDao;
     }
 
-    public static void loadMapNames() throws Exception {
-        HttpsURLConnection connection =
-                (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/map_names.json").openConnection();
-        List<MapName> mapNames =
-                new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
-                        new TypeToken<List<MapName>>() {
-                        }.getType());
-        for (MapName mapName : mapNames) {
-            Application.getDatabaseHelper().getMapNameDao().delete(mapName);
-            Application.getDatabaseHelper().getMapNameDao().create(mapName);
+    public static void loadMapNames(List<Event> events) throws Exception {
+        if (Application.getDatabaseHelper().getMapNameDao().queryForAll().size() == 0) {
+            HttpsURLConnection connection =
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/map_names.json").openConnection();
+            List<MapName> mapNames =
+                    new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
+                            new TypeToken<List<MapName>>() {
+                            }.getType());
+            for (MapName mapName : mapNames) {
+                Application.getDatabaseHelper().getMapNameDao().create(mapName);
+            }
+        }
+        for (Event event : events) {
+            event.mapName = Application.getDatabaseHelper().getMapNameDao().queryForId(event.map_id);
         }
     }
 
-    public static void loadEventNames() throws Exception {
-        HttpsURLConnection connection =
-                (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/event_names.json").openConnection();
-        List<EventName> eventNames =
-                new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
-                        new TypeToken<List<EventName>>() {
-                        }.getType());
-        for (EventName eventName : eventNames) {
-            Application.getDatabaseHelper().getEventNameDao().delete(eventName);
-            Application.getDatabaseHelper().getEventNameDao().create(eventName);
+    public static void loadEventNames(List<Event> events) throws Exception {
+        if (Application.getDatabaseHelper().getEventNameDao().queryForAll().size() == 0) {
+            HttpsURLConnection connection =
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/event_names.json").openConnection();
+            List<EventName> eventNames =
+                    new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
+                            new TypeToken<List<EventName>>() {
+                            }.getType());
+            for (EventName eventName : eventNames) {
+                Application.getDatabaseHelper().getEventNameDao().create(eventName);
+            }
+        }
+        for (Event event : events) {
+            event.eventName = Application.getDatabaseHelper().getEventNameDao().queryForId(event.event_id);
         }
     }
 }

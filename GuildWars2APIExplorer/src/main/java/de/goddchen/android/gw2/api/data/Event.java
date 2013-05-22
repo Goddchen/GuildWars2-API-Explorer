@@ -22,4 +22,8 @@ public class Event implements Serializable {
     @DatabaseField
     public String state;
 
+    public EventName eventName;
+
+    public MapName mapName;
+
 }

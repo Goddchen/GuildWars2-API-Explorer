@@ -27,13 +27,13 @@ public class EventsLoader extends FixedAsyncTaskLoader<List<Event>> {
     @Override
     public List<Event> loadInBackground() {
         try {
-            DatabaseHelper.loadEventNames();
-            DatabaseHelper.loadMapNames();
             HttpsURLConnection connection =
                     (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/events.json?world_id=" + mWorld.id)
                             .openConnection();
             List<Event> events = new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                     Response.class).events;
+            DatabaseHelper.loadEventNames(events);
+            DatabaseHelper.loadMapNames(events);
             return events;
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error loading events", e);
