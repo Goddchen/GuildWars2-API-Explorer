@@ -1,6 +1,7 @@
 package de.goddchen.android.gw2.api;
 
 import android.content.Context;
+import com.crittercism.app.Crittercism;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import de.goddchen.android.gw2.api.db.DatabaseHelper;
@@ -16,10 +17,14 @@ public class Application extends android.app.Application {
 
     public static final class Loaders {
         public static final int ITEM_IDS = 0;
-        public static final int ITEM_DETAILS = 1;
-        public static final int WORLDS_DB = 2;
-        public static final int WORLDS_ONLINE = 3;
+        public static final int WORLDS = 3;
         public static final int EVENTS = 4;
+        public static final int MAP_NAMES = 5;
+    }
+
+    public static final class Extras {
+        public static final String WORLD = "world";
+        public static final String MAP = "map";
     }
 
     private static DatabaseHelper databaseHelper;
@@ -28,6 +33,7 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
         setupORMLite();
+        Crittercism.init(getApplicationContext(), "519cb89c558d6a448b000007");
     }
 
     private void setupORMLite() {

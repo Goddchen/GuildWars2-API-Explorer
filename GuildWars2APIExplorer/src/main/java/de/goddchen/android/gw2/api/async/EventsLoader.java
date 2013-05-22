@@ -11,6 +11,8 @@ import de.goddchen.android.gw2.api.db.DatabaseHelper;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -34,6 +36,20 @@ public class EventsLoader extends FixedAsyncTaskLoader<List<Event>> {
                     Response.class).events;
             DatabaseHelper.loadEventNames(events);
             DatabaseHelper.loadMapNames(events);
+            Collections.sort(events, new Comparator<Event>() {
+                @Override
+                public int compare(Event event, Event event2) {
+                    if (event.state.equals(event2.state)) {
+                        if (event.eventName == null) {
+                            return -1;
+                        } else {
+                            return event.eventName.name.compareTo(event2.eventName.name);
+                        }
+                    } else {
+                        return -(Integer.valueOf(event.getStatePriority()).compareTo(event2.getStatePriority()));
+                    }
+                }
+            });
             return events;
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error loading events", e);

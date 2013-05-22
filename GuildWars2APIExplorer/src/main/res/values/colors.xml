@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="event_active">#fff</color>
+    <color name="event_warmup">#ff6</color>
+    <color name="event_fail">#f66</color>
+    <color name="event_success">#6f6</color>
+</resources>

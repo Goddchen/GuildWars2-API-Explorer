@@ -26,4 +26,18 @@ public class Event implements Serializable {
 
     public MapName mapName;
 
+    public int getStatePriority() {
+        if ("active".equalsIgnoreCase(state)) {
+            return 4;
+        } else if ("warmup".equalsIgnoreCase(state)) {
+            return 3;
+        } else if ("success".equalsIgnoreCase(state)) {
+            return 2;
+        } else if ("fail".equalsIgnoreCase(state)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
 }

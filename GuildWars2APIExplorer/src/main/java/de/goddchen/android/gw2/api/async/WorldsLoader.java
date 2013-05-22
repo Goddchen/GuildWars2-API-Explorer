@@ -10,6 +10,8 @@ import de.goddchen.android.gw2.api.data.World;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -23,15 +25,23 @@ public class WorldsLoader extends FixedAsyncTaskLoader<List<World>> {
     @Override
     public List<World> loadInBackground() {
         try {
-            HttpsURLConnection connection =
-                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/world_names.json").openConnection();
-            List<World> worlds = new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
-                    new TypeToken<List<World>>() {
-                    }.getType());
-            for (World world : worlds) {
-                Application.getDatabaseHelper().getWorldDao().delete(world);
-                Application.getDatabaseHelper().getWorldDao().create(world);
+            List<World> worlds = Application.getDatabaseHelper().getWorldDao().queryForAll();
+            if (worlds == null || worlds.isEmpty()) {
+                HttpsURLConnection connection =
+                        (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/world_names.json").openConnection();
+                worlds = new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
+                        new TypeToken<List<World>>() {
+                        }.getType());
+                for (World world : worlds) {
+                    Application.getDatabaseHelper().getWorldDao().create(world);
+                }
             }
+            Collections.sort(worlds, new Comparator<World>() {
+                @Override
+                public int compare(World world, World world2) {
+                    return world.name.compareTo(world2.name);
+                }
+            });
             return worlds;
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error loading worlds", e);
