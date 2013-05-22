@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.PageIndicator;
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
@@ -37,6 +40,7 @@ public class MatchDetailsFragment extends SherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mHandler = new Handler();
     }
 
@@ -51,6 +55,23 @@ public class MatchDetailsFragment extends SherlockFragment {
         view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         view.findViewById(R.id.content).setVisibility(View.GONE);
         getLoaderManager().restartLoader(Application.Loaders.MATCH_DETAILS, null, mMatcheDetailsLoaderCallbacks);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_match_details, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.refresh) {
+            getView().findViewById(R.id.loading).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.content).setVisibility(View.GONE);
+            getLoaderManager().restartLoader(Application.Loaders.MATCH_DETAILS, null, mMatcheDetailsLoaderCallbacks);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private LoaderManager.LoaderCallbacks<MatchDetails> mMatcheDetailsLoaderCallbacks =
@@ -69,6 +90,12 @@ public class MatchDetailsFragment extends SherlockFragment {
                         ((TextView) getView().findViewById(R.id.score_1)).setText("" + matchDetails.scores[0]);
                         ((TextView) getView().findViewById(R.id.score_2)).setText("" + matchDetails.scores[1]);
                         ((TextView) getView().findViewById(R.id.score_3)).setText("" + matchDetails.scores[2]);
+                        getView().findViewById(R.id.score_1)
+                                .setBackgroundColor(getResources().getColor(R.color.score_red));
+                        getView().findViewById(R.id.score_2)
+                                .setBackgroundColor(getResources().getColor(R.color.score_blue));
+                        getView().findViewById(R.id.score_3)
+                                .setBackgroundColor(getResources().getColor(R.color.score_green));
                         ViewPager viewPager = (ViewPager) getView().findViewById(R.id.maps);
                         viewPager.setOffscreenPageLimit(10);
                         viewPager.setAdapter(new MatchMapPagerAdapter(getFragmentManager(), matchDetails));

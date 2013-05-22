@@ -45,6 +45,12 @@ public class MatchMapFragment extends SherlockFragment {
         ((TextView) view.findViewById(R.id.score_1)).setText("" + mMap.scores[0]);
         ((TextView) view.findViewById(R.id.score_2)).setText("" + mMap.scores[1]);
         ((TextView) view.findViewById(R.id.score_3)).setText("" + mMap.scores[2]);
+        getView().findViewById(R.id.score_1)
+                .setBackgroundColor(getResources().getColor(R.color.score_red));
+        getView().findViewById(R.id.score_2)
+                .setBackgroundColor(getResources().getColor(R.color.score_blue));
+        getView().findViewById(R.id.score_3)
+                .setBackgroundColor(getResources().getColor(R.color.score_green));
         ListView objectives = (ListView) view.findViewById(R.id.objectives);
         objectives.setAdapter(new ObjectiveAdapter(getActivity(), mMap.objectives));
     }
