@@ -12,7 +12,6 @@ import de.goddchen.android.gw2.api.adapter.WorldAdapter;
 import de.goddchen.android.gw2.api.async.WorldsLoader;
 import de.goddchen.android.gw2.api.data.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,28 +19,15 @@ import java.util.List;
  */
 public class WorldsFragment extends SherlockListFragment {
 
-    private ArrayList<World> mWorlds = new ArrayList<World>();
-
     public static WorldsFragment newInstance() {
         WorldsFragment fragment = new WorldsFragment();
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().restartLoader(Application.Loaders.WORLDS, null, mWorldLoaderCallbacks);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setListAdapter(new WorldAdapter(getActivity(), mWorlds));
     }
 
     @Override
@@ -64,9 +50,7 @@ public class WorldsFragment extends SherlockListFragment {
                 @Override
                 public void onLoadFinished(Loader<List<World>> listLoader, List<World> worlds) {
                     if (worlds != null) {
-                        mWorlds.clear();
-                        mWorlds.addAll(worlds);
-                        ((WorldAdapter) getListAdapter()).notifyDataSetChanged();
+                        setListAdapter(new WorldAdapter(getActivity(), worlds));
                     }
                 }
 

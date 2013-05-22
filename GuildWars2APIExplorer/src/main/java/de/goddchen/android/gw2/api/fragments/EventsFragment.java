@@ -3,7 +3,6 @@ package de.goddchen.android.gw2.api.fragments;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.view.View;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -23,8 +22,6 @@ import java.util.List;
  * Created by Goddchen on 22.05.13.
  */
 public class EventsFragment extends SherlockListFragment {
-
-    private ArrayList<Event> mEvents = new ArrayList<Event>();
 
     public static EventsFragment newInstance(World world, MapName mapName) {
         EventsFragment fragment = new EventsFragment();
@@ -48,12 +45,6 @@ public class EventsFragment extends SherlockListFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setListAdapter(new EventAdapter(getActivity(), mEvents));
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_events, menu);
@@ -62,7 +53,11 @@ public class EventsFragment extends SherlockListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.refresh) {
-            getLoaderManager().restartLoader(Application.Loaders.EVENTS, null, mEventsLoaderCallbacks);
+            if (!getLoaderManager().hasRunningLoaders()) {
+                setListAdapter(null);
+                setListShown(false);
+                getLoaderManager().restartLoader(Application.Loaders.EVENTS, null, mEventsLoaderCallbacks);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -78,14 +73,14 @@ public class EventsFragment extends SherlockListFragment {
                 @Override
                 public void onLoadFinished(Loader<List<Event>> listLoader, List<Event> events) {
                     if (events != null) {
+                        List<Event> mapEvents = new ArrayList<Event>();
                         MapName mapName = (MapName) getArguments().getSerializable(Application.Extras.MAP);
-                        mEvents.clear();
                         for (Event event : events) {
                             if (event.map_id == mapName.id) {
-                                mEvents.add(event);
+                                mapEvents.add(event);
                             }
                         }
-                        ((EventAdapter) getListAdapter()).notifyDataSetChanged();
+                        setListAdapter(new EventAdapter(getActivity(), mapEvents));
                     }
                 }
 

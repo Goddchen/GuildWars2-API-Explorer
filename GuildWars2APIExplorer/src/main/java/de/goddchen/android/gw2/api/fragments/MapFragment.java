@@ -13,15 +13,12 @@ import de.goddchen.android.gw2.api.async.MapNamesLoader;
 import de.goddchen.android.gw2.api.data.MapName;
 import de.goddchen.android.gw2.api.data.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Goddchen on 22.05.13.
  */
 public class MapFragment extends SherlockListFragment {
-
-    private ArrayList<MapName> mMapNames = new ArrayList<MapName>();
 
     public static MapFragment newInstance(World world) {
         MapFragment fragment = new MapFragment();
@@ -35,12 +32,6 @@ public class MapFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().restartLoader(Application.Loaders.MAP_NAMES, null, mMapNamesLoaderCallbacks);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setListAdapter(new MapAdapter(getActivity(), mMapNames));
     }
 
     @Override
@@ -64,9 +55,7 @@ public class MapFragment extends SherlockListFragment {
                 @Override
                 public void onLoadFinished(Loader<List<MapName>> listLoader, List<MapName> mapNames) {
                     if (mapNames != null) {
-                        mMapNames.clear();
-                        mMapNames.addAll(mapNames);
-                        ((MapAdapter) getListAdapter()).notifyDataSetChanged();
+                        setListAdapter(new MapAdapter(getActivity(), mapNames));
                     }
                 }
 
