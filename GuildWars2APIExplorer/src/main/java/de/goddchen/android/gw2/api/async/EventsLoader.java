@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -30,7 +31,8 @@ public class EventsLoader extends FixedAsyncTaskLoader<List<Event>> {
     public List<Event> loadInBackground() {
         try {
             HttpsURLConnection connection =
-                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/events.json?world_id=" + mWorld.id)
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/events.json?world_id=" + mWorld.id
+                            + "&lang=" + Locale.getDefault().getLanguage())
                             .openConnection();
             List<Event> events = new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                     Response.class).events;

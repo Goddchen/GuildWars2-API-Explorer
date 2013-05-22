@@ -16,23 +16,24 @@
         ads:loadAdOnCreate="true"/>
 
     <Button
-        android:id="@+id/items"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/items"
-        android:enabled="false"/>
-
-    <Button
         android:id="@+id/events"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dynamic_events"/>
+
 
     <Button
         android:id="@+id/wvwvw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/wvwvw"
+        android:enabled="false"/>
+
+    <Button
+        android:id="@+id/items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/items"
         android:enabled="false"/>
 
     <Button

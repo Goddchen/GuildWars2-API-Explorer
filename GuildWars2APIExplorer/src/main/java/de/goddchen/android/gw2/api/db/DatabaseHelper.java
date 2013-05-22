@@ -17,6 +17,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -93,7 +94,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static void loadMapNames(List<Event> events) throws Exception {
         if (Application.getDatabaseHelper().getMapNameDao().queryForAll().size() == 0) {
             HttpsURLConnection connection =
-                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/map_names.json").openConnection();
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/map_names.json?lang="
+                            + Locale.getDefault().getLanguage())
+                            .openConnection();
             List<MapName> mapNames =
                     new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                             new TypeToken<List<MapName>>() {
@@ -110,7 +113,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static void loadEventNames(List<Event> events) throws Exception {
         if (Application.getDatabaseHelper().getEventNameDao().queryForAll().size() == 0) {
             HttpsURLConnection connection =
-                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/event_names.json").openConnection();
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/event_names.json?lang="
+                            + Locale.getDefault().getLanguage())
+                            .openConnection();
             List<EventName> eventNames =
                     new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                             new TypeToken<List<EventName>>() {

@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -28,7 +29,9 @@ public class WorldsLoader extends FixedAsyncTaskLoader<List<World>> {
             List<World> worlds = Application.getDatabaseHelper().getWorldDao().queryForAll();
             if (worlds == null || worlds.isEmpty()) {
                 HttpsURLConnection connection =
-                        (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/world_names.json").openConnection();
+                        (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/world_names.json?lang="
+                                + Locale.getDefault().getLanguage())
+                                .openConnection();
                 worlds = new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                         new TypeToken<List<World>>() {
                         }.getType());

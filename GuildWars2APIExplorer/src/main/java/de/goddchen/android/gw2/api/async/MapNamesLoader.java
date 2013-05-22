@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -28,7 +29,9 @@ public class MapNamesLoader extends FixedAsyncTaskLoader<List<MapName>> {
             List<MapName> mapNames = Application.getDatabaseHelper().getMapNameDao().queryForAll();
             if (mapNames == null || mapNames.isEmpty()) {
                 HttpsURLConnection connection =
-                        (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/map_names.json").openConnection();
+                        (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/map_names.json?lang="
+                                + Locale.getDefault().getLanguage())
+                                .openConnection();
                 mapNames = new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                         new TypeToken<List<MapName>>() {
                         }.getType());
