@@ -16,5 +16,6 @@
         a ticket to our issue tracker?
     </string>
     <string name="refresh">Refresh</string>
+    <string name="toast_error_getting_match_details">Error getting match details!</string>
 
 </resources>

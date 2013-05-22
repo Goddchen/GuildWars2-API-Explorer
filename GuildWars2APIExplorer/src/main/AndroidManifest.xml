@@ -35,12 +35,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.ItemsActivity"/>
-        <activity android:name=".activities.WorldsActivity"/>
+        <activity android:name=".activities.EventsActivity"/>
 
         <!-- AdMob -->
         <activity
             android:name="com.google.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+        <activity android:name=".activities.WvWActivity"/>
     </application>
 
 </manifest>

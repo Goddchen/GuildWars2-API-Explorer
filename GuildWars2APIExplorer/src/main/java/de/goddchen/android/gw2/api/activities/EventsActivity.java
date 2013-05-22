@@ -9,7 +9,7 @@ import de.goddchen.android.gw2.api.fragments.WorldsFragment;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class WorldsActivity extends SherlockFragmentActivity {
+public class EventsActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

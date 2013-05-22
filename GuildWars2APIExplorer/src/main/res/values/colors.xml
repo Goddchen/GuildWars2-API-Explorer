@@ -5,4 +5,7 @@
     <color name="event_warmup">#ff6</color>
     <color name="event_fail">#f66</color>
     <color name="event_success">#6f6</color>
+    <color name="objective_owner_green">#6f6</color>
+    <color name="objective_owner_red">#f66</color>
+    <color name="objective_owner_blue">#66f</color>
 </resources>

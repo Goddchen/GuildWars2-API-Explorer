@@ -20,11 +20,15 @@ public class Application extends android.app.Application {
         public static final int WORLDS = 3;
         public static final int EVENTS = 4;
         public static final int MAP_NAMES = 5;
+        public static final int MATCHES = 6;
+        public static final int MATCH_DETAILS = 7;
     }
 
     public static final class Extras {
         public static final String WORLD = "world";
         public static final String MAP = "map";
+        public static final String MATCH = "match";
+        public static final String MATCH_MAP = "match_map";
     }
 
     private static DatabaseHelper databaseHelper;

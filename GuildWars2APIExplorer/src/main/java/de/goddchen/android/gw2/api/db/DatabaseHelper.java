@@ -33,8 +33,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static Dao<EventName, String> eventNameDao;
 
+    private static Dao<ObjectiveName, Integer> objectiveNameDao;
+
     public DatabaseHelper(Context context) {
-        super(context, "gw2.db", null, 4);
+        super(context, "gw2.db", null, 5);
     }
 
     @Override
@@ -45,6 +47,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, EventName.class);
             TableUtils.createTable(connectionSource, MapName.class);
             TableUtils.createTable(connectionSource, Event.class);
+            TableUtils.createTable(connectionSource, ObjectiveName.class);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error creating database", e);
         }
@@ -58,6 +61,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, EventName.class, true);
             TableUtils.dropTable(connectionSource, MapName.class, true);
             TableUtils.dropTable(connectionSource, Event.class, true);
+            TableUtils.dropTable(connectionSource, ObjectiveName.class, true);
             onCreate(sqLiteDatabase, connectionSource);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error upgrading database", e);
@@ -90,6 +94,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             eventNameDao = BaseDaoImpl.createDao(getConnectionSource(), EventName.class);
         }
         return eventNameDao;
+    }
+
+    public Dao<ObjectiveName, Integer> getObjectiveNameDao() throws Exception {
+        if (objectiveNameDao == null) {
+            objectiveNameDao = BaseDaoImpl.createDao(getConnectionSource(), ObjectiveName.class);
+        }
+        return objectiveNameDao;
     }
 
     public static void loadMapNames(List<Event> events) throws Exception {
@@ -139,6 +150,33 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         for (Event event : events) {
             event.eventName = Application.getDatabaseHelper().getEventNameDao().queryForId(event.event_id);
+        }
+    }
+
+    public static void loadObjectiveNames(MatchDetails matchDetails) throws Exception {
+        if (Application.getDatabaseHelper().getObjectiveNameDao().queryForAll().size() == 0) {
+            HttpsURLConnection connection =
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/wvw/objective_names.json?lang="
+                            + Locale.getDefault().getLanguage())
+                            .openConnection();
+            final List<ObjectiveName> objectiveNames =
+                    new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
+                            new TypeToken<List<ObjectiveName>>() {
+                            }.getType());
+            Application.getDatabaseHelper().getEventNameDao().callBatchTasks(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    for (ObjectiveName objectiveName : objectiveNames) {
+                        Application.getDatabaseHelper().getObjectiveNameDao().create(objectiveName);
+                    }
+                    return null;
+                }
+            });
+        }
+        for (MatchDetails.Map map : matchDetails.maps) {
+            for (MatchDetails.Objective objective : map.objectives) {
+                objective.name = Application.getDatabaseHelper().getObjectiveNameDao().queryForId(objective.id);
+            }
         }
     }
 }
