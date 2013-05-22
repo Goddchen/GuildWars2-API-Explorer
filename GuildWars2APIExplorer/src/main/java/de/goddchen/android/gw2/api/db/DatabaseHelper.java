@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -97,13 +98,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/map_names.json?lang="
                             + Locale.getDefault().getLanguage())
                             .openConnection();
-            List<MapName> mapNames =
+            final List<MapName> mapNames =
                     new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                             new TypeToken<List<MapName>>() {
                             }.getType());
-            for (MapName mapName : mapNames) {
-                Application.getDatabaseHelper().getMapNameDao().create(mapName);
-            }
+            Application.getDatabaseHelper().getMapNameDao().callBatchTasks(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    for (MapName mapName : mapNames) {
+                        Application.getDatabaseHelper().getMapNameDao().create(mapName);
+                    }
+                    return null;
+                }
+            });
         }
         for (Event event : events) {
             event.mapName = Application.getDatabaseHelper().getMapNameDao().queryForId(event.map_id);
@@ -116,13 +123,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/event_names.json?lang="
                             + Locale.getDefault().getLanguage())
                             .openConnection();
-            List<EventName> eventNames =
+            final List<EventName> eventNames =
                     new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                             new TypeToken<List<EventName>>() {
                             }.getType());
-            for (EventName eventName : eventNames) {
-                Application.getDatabaseHelper().getEventNameDao().create(eventName);
-            }
+            Application.getDatabaseHelper().getEventNameDao().callBatchTasks(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    for (EventName eventName : eventNames) {
+                        Application.getDatabaseHelper().getEventNameDao().create(eventName);
+                    }
+                    return null;
+                }
+            });
         }
         for (Event event : events) {
             event.eventName = Application.getDatabaseHelper().getEventNameDao().queryForId(event.event_id);
