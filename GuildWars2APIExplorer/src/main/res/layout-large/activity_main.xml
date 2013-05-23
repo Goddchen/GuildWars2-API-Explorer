@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <com.google.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        ads:adUnitId="a1519cbaa10f9ae"
+        ads:adSize="BANNER"
+        ads:loadAdOnCreate="true"
+        android:layout_gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="30"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dynamic_events"/>
+
+            <Button
+                android:id="@+id/wvwvw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/wvwvw"/>
+
+            <Button
+                android:id="@+id/items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/items"/>
+
+            <Button
+                android:id="@+id/recipes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recipes"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment"
+            android:layout_width="0dp"
+            android:layout_weight="70"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+</LinearLayout>
