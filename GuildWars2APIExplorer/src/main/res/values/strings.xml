@@ -17,5 +17,10 @@
     </string>
     <string name="refresh">Refresh</string>
     <string name="toast_error_getting_match_details">Error getting match details!</string>
+    <string name="search_by_id_hint">I know it sucks, but this is the only API that is offered right now... :( Search by
+        ID... Who did come up with this? :( Pretty unusable like that...
+    </string>
+    <string name="search">Search</string>
+    <string name="toast_error_getting_item_details">Error getting item detail!</string>
 
 </resources>

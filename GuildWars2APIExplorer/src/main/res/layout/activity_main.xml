@@ -31,14 +31,12 @@
         android:id="@+id/items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/items"
-        android:enabled="false"/>
+        android:text="@string/items"/>
 
     <Button
         android:id="@+id/recipes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/recipes"
-        android:enabled="false"/>
+        android:text="@string/recipes"/>
 
 </LinearLayout>

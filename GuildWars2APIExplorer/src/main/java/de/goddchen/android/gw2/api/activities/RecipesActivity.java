@@ -4,19 +4,19 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import de.goddchen.android.gw2.api.R;
-import de.goddchen.android.gw2.api.fragments.ItemSearchFragment;
+import de.goddchen.android.gw2.api.fragments.RecipeSearchFragment;
 
 /**
- * Created by Goddchen on 22.05.13.
+ * Created by Goddchen on 23.05.13.
  */
-public class ItemsActivity extends SherlockFragmentActivity {
+public class RecipesActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_fragment_container);
         if (getSupportFragmentManager().findFragmentById(R.id.fragment) == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment, ItemSearchFragment.newInstance())
+                    .add(R.id.fragment, RecipeSearchFragment.newInstance())
                     .commit();
         }
     }

@@ -24,7 +24,7 @@ public class Item {
     public int level;
 
     @DatabaseField
-    public String ratity;
+    public String rarity;
 
     @DatabaseField
     public int vendor_value;
@@ -39,5 +39,5 @@ public class Item {
     public String[] restrictions;
 
     @DatabaseField
-    public String carfting_material;
+    public String crafting_material;
 }

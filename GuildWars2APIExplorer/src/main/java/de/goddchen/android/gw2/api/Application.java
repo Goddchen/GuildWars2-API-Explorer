@@ -16,12 +16,13 @@ public class Application extends android.app.Application {
     }
 
     public static final class Loaders {
-        public static final int ITEM_IDS = 0;
         public static final int WORLDS = 3;
         public static final int EVENTS = 4;
         public static final int MAP_NAMES = 5;
         public static final int MATCHES = 6;
         public static final int MATCH_DETAILS = 7;
+        public static final int ITEM_DETAILS = 8;
+        public static final int RECIPE_DETAILS = 9;
     }
 
     public static final class Extras {
@@ -29,6 +30,8 @@ public class Application extends android.app.Application {
         public static final String MAP = "map";
         public static final String MATCH = "match";
         public static final String MATCH_MAP = "match_map";
+        public static final String ITEM_ID = "item.id";
+        public static final String RECIPE_ID = "recipe.id";
     }
 
     private static DatabaseHelper databaseHelper;

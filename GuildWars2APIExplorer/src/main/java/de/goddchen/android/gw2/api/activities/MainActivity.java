@@ -17,6 +17,7 @@ public class MainActivity extends SherlockFragmentActivity implements View.OnCli
         findViewById(R.id.items).setOnClickListener(this);
         findViewById(R.id.events).setOnClickListener(this);
         findViewById(R.id.wvwvw).setOnClickListener(this);
+        findViewById(R.id.recipes).setOnClickListener(this);
         if (Crittercism.didCrashOnLastAppLoad()) {
             CrashDialogFragment.newInstance().show(getSupportFragmentManager(), "crash");
         }
@@ -30,6 +31,8 @@ public class MainActivity extends SherlockFragmentActivity implements View.OnCli
             startActivity(new Intent(getApplicationContext(), EventsActivity.class));
         } else if (view.getId() == R.id.wvwvw) {
             startActivity(new Intent(getApplicationContext(), WvWActivity.class));
+        } else if (view.getId() == R.id.recipes) {
+            startActivity(new Intent(getApplicationContext(), RecipesActivity.class));
         }
     }
 }

@@ -207,4 +207,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             match.blueWorld = Application.getDatabaseHelper().getWorldDao().queryForId(match.blue_world_id);
         }
     }
+
+    public static Item getItem(int id) throws Exception {
+        HttpsURLConnection connection =
+                (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/item_details.json?item_id=" + id
+                        + "&lang=" + Locale.getDefault().getLanguage()).openConnection();
+        Item item = new Gson().fromJson(new InputStreamReader(connection.getInputStream()), Item.class);
+        return item;
+    }
 }
