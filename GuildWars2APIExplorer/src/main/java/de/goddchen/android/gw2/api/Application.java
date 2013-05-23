@@ -40,7 +40,9 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
         setupORMLite();
-        Crittercism.init(getApplicationContext(), "519cb89c558d6a448b000007");
+        if (!getString(R.string.app_name).contains("DEBUG")) {
+            Crittercism.init(getApplicationContext(), "519cb89c558d6a448b000007");
+        }
     }
 
     private void setupORMLite() {
