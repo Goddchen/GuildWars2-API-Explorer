@@ -13,4 +13,10 @@ public class Match implements Serializable {
     public int blue_world_id;
 
     public int green_world_id;
+
+    public World redWorld;
+
+    public World blueWorld;
+
+    public World greenWorld;
 }

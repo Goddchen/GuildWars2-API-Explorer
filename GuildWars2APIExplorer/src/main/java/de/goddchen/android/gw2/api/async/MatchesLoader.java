@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.data.Match;
+import de.goddchen.android.gw2.api.db.DatabaseHelper;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.InputStreamReader;
@@ -32,6 +33,7 @@ public class MatchesLoader extends FixedAsyncTaskLoader<List<Match>> {
                             .openConnection();
             List<Match> matches = new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                     Response.class).wvw_matches;
+            DatabaseHelper.loadWorldNames(matches);
             Collections.sort(matches, new Comparator<Match>() {
                 @Override
                 public int compare(Match match, Match match2) {

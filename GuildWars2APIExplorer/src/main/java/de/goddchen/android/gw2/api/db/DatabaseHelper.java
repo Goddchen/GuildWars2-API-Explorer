@@ -179,4 +179,32 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
         }
     }
+
+
+    public static void loadWorldNames(List<Match> matches) throws Exception {
+        if (Application.getDatabaseHelper().getWorldDao().queryForAll().size() == 0) {
+            HttpsURLConnection connection =
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/world_names.json?lang="
+                            + Locale.getDefault().getLanguage())
+                            .openConnection();
+            final List<World> worlds =
+                    new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
+                            new TypeToken<List<World>>() {
+                            }.getType());
+            Application.getDatabaseHelper().getEventNameDao().callBatchTasks(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    for (World world : worlds) {
+                        Application.getDatabaseHelper().getWorldDao().create(world);
+                    }
+                    return null;
+                }
+            });
+        }
+        for (Match match : matches) {
+            match.redWorld = Application.getDatabaseHelper().getWorldDao().queryForId(match.red_world_id);
+            match.greenWorld = Application.getDatabaseHelper().getWorldDao().queryForId(match.green_world_id);
+            match.blueWorld = Application.getDatabaseHelper().getWorldDao().queryForId(match.blue_world_id);
+        }
+    }
 }
