@@ -10,6 +10,7 @@
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/submodules/ViewPagerIndicator/library/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/submodules/ViewPagerIndicator/library/res" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/submodules/ViewPagerIndicator/library/assets" />
+        <option name="UPDATE_PROPERTY_FILES" value="true" />
       </configuration>
     </facet>
   </component>
