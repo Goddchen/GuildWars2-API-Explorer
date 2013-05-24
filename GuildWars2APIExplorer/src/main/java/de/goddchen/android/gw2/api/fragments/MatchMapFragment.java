@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -45,6 +46,16 @@ public class MatchMapFragment extends SherlockFragment {
         ((TextView) view.findViewById(R.id.score_1)).setText("" + mMap.scores[0]);
         ((TextView) view.findViewById(R.id.score_2)).setText("" + mMap.scores[1]);
         ((TextView) view.findViewById(R.id.score_3)).setText("" + mMap.scores[2]);
+        float scoreSum = mMap.scores[0] + mMap.scores[1] + mMap.scores[2];
+        Float score1Percent = mMap.scores[0] / scoreSum * 100;
+        Float score2Percent = mMap.scores[1] / scoreSum * 100;
+        Float score3Percent = mMap.scores[2] / scoreSum * 100;
+        ((LinearLayout.LayoutParams) getView().findViewById(R.id.score_1).getLayoutParams())
+                .weight = score1Percent;
+        ((LinearLayout.LayoutParams) getView().findViewById(R.id.score_2).getLayoutParams())
+                .weight = score2Percent;
+        ((LinearLayout.LayoutParams) getView().findViewById(R.id.score_3).getLayoutParams())
+                .weight = score3Percent;
         getView().findViewById(R.id.score_1)
                 .setBackgroundColor(getResources().getColor(R.color.score_red));
         getView().findViewById(R.id.score_2)
