@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="wvwvw.auto.refresh"
+        android:title="@string/pref_wvwvw_refresh_title"
+        android:entries="@array/pref_wvwvw_refresh_entries"
+        android:entryValues="@array/pref_wvwvw_refresh_keys"
+        android:defaultValue="-1" />
+
+</PreferenceScreen>

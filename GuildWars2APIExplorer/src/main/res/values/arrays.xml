@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_wvwvw_refresh_entries">
+        <item>@string/pref_wvwvw_refresh_disabled</item>
+        <item>@string/pref_wvwvw_refresh_30</item>
+        <item>@string/pref_wvwvw_refresh_60</item>
+        <item>@string/pref_wvwvw_refresh_120</item>
+        <item>@string/pref_wvwvw_refresh_180</item>
+        <item>@string/pref_wvwvw_refresh_300</item>
+    </string-array>
+
+    <string-array name="pref_wvwvw_refresh_keys">
+        <item>-1</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>120000</item>
+        <item>180000</item>
+        <item>300000</item>
+    </string-array>
+
+</resources>

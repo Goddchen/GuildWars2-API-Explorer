@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.crittercism.app.Crittercism;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.fragments.ItemSearchFragment;
@@ -58,5 +60,20 @@ public class MainActivity extends SherlockFragmentActivity implements View.OnCli
                         .commit();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.settings) {
+            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

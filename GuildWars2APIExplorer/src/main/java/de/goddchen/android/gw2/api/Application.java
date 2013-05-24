@@ -34,6 +34,10 @@ public class Application extends android.app.Application {
         public static final String RECIPE_ID = "recipe.id";
     }
 
+    public static final class Preferences {
+        public static final String WVWVW_REFRESH = "wvwvw.auto.refresh";
+    }
+
     private static DatabaseHelper databaseHelper;
 
     @Override

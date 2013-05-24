@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.system.id="GRADLE" type="JAVA_MODULE" version="4">
+<module external.linked.project.path="D:\dev\git\gw2-api-explorer\build.gradle" external.system.id="GRADLE" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="android" name="Android">
       <configuration>
@@ -15,7 +15,7 @@
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
         <option name="GRADLE_PROJECT_PATH" value=":GuildWars2APIExplorer" />
-        <option name="PROJECT_ABSOLUTE_PATH" value="X:\git\gw2-api-explorer" />
+        <option name="PROJECT_ABSOLUTE_PATH" value="D:\dev\git\gw2-api-explorer" />
         <option name="GRADLE_HOME_DIR_PATH" />
       </configuration>
     </facet>
@@ -68,16 +68,15 @@
     </content>
     <orderEntry type="jdk" jdkName="Android 4.2.2" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="android-support-v4" level="project" />
-    <orderEntry type="library" name="com.j256.ormlite:ormlite-android:4.5" level="project" />
-    <orderEntry type="library" name="gson-2.2.4" level="project" />
-    <orderEntry type="module" module-name="actionbarsherlock" />
-    <orderEntry type="library" name="ormlite-android-4.5" level="project" />
-    <orderEntry type="library" name="actionbarsherlock.aar" level="project" />
     <orderEntry type="library" name="crittercism_v3_0_8_sdkonly" level="project" />
     <orderEntry type="library" name="GoogleAdMobAdsSdk-6.4.1" level="project" />
-    <orderEntry type="module" module-name="ViewPagerIndicator" />
+    <orderEntry type="library" name="gson-2.2.4" level="project" />
+    <orderEntry type="library" name="ormlite-android-4.5" level="project" />
+    <orderEntry type="library" name="actionbarsherlock.aar" level="project" />
     <orderEntry type="library" name="library.aar" level="project" />
+    <orderEntry type="module" module-name="actionbarsherlock" />
+    <orderEntry type="module" module-name="library" />
+    <orderEntry type="library" name="android-support-v4" level="project" />
   </component>
 </module>
 

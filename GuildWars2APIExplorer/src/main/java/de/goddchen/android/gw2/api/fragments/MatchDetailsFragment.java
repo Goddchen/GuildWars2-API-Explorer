@@ -2,6 +2,7 @@ package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
@@ -29,6 +30,23 @@ public class MatchDetailsFragment extends SherlockFragment {
 
     private Handler mHandler;
 
+    private int mAutoRefresh;
+
+    private Runnable mAuthRefreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            View view = getView();
+            if (view != null) {
+                view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.content).setVisibility(View.GONE);
+            }
+            getLoaderManager().restartLoader(Application.Loaders.MATCH_DETAILS, null, mMatcheDetailsLoaderCallbacks);
+            if (mAutoRefresh > 0) {
+                mHandler.postDelayed(this, mAutoRefresh);
+            }
+        }
+    };
+
     public static MatchDetailsFragment newInstance(Match match) {
         MatchDetailsFragment fragment = new MatchDetailsFragment();
         Bundle args = new Bundle();
@@ -42,6 +60,17 @@ public class MatchDetailsFragment extends SherlockFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mHandler = new Handler();
+        mAutoRefresh = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getString(Application.Preferences.WVWVW_REFRESH, "-1"));
+        if (mAutoRefresh > 0) {
+            mHandler.postDelayed(mAuthRefreshRunnable, mAutoRefresh);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacks(mAuthRefreshRunnable);
     }
 
     @Override
@@ -54,7 +83,7 @@ public class MatchDetailsFragment extends SherlockFragment {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         view.findViewById(R.id.content).setVisibility(View.GONE);
-        getLoaderManager().restartLoader(Application.Loaders.MATCH_DETAILS, null, mMatcheDetailsLoaderCallbacks);
+        mHandler.post(mAuthRefreshRunnable);
     }
 
     @Override
@@ -66,9 +95,8 @@ public class MatchDetailsFragment extends SherlockFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.refresh) {
-            getView().findViewById(R.id.loading).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.content).setVisibility(View.GONE);
-            getLoaderManager().restartLoader(Application.Loaders.MATCH_DETAILS, null, mMatcheDetailsLoaderCallbacks);
+            mHandler.removeCallbacks(mAuthRefreshRunnable);
+            mHandler.post(mAuthRefreshRunnable);
             return true;
         }
         return super.onOptionsItemSelected(item);

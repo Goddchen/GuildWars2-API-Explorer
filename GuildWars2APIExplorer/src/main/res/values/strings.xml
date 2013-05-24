@@ -18,5 +18,12 @@
     <string name="search">Search</string>
     <string name="toast_error_getting_item_details">Error getting item detail!</string>
     <string name="toast_error_getting_recipe_details">Error getting recipe detail!</string>
+    <string name="pref_wvwvw_refresh_disabled">Disabled</string>
+    <string name="pref_wvwvw_refresh_30">30 Seconds</string>
+    <string name="pref_wvwvw_refresh_60">1 Minute</string>
+    <string name="pref_wvwvw_refresh_120">2 Minutes</string>
+    <string name="pref_wvwvw_refresh_180">3 Minutes</string>
+    <string name="pref_wvwvw_refresh_300">5 Minutes</string>
+    <string name="pref_wvwvw_refresh_title">WvWvW Auto Refresh Interval</string>
 
 </resources>
