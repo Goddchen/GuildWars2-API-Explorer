@@ -67,7 +67,7 @@ public class RecipeFragment extends SherlockFragment {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getActivity(), R.string.toast_error_getting_item_details,
+                                Toast.makeText(getActivity(), R.string.toast_error_getting_recipe_details,
                                         Toast.LENGTH_SHORT).show();
                                 getActivity().finish();
                             }

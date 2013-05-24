@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">GuildWars 2 API Explorer
-    </string>
-    <string name="action_settings">Settings
-    </string>
-    <string name="hello_world">Hello world!
-    </string>
+    <string name="app_name">GuildWars 2 API Explorer</string>
     <string name="items">Items</string>
     <string name="dynamic_events">Dynamic Events</string>
     <string name="recipes">Recipes</string>
@@ -22,5 +17,6 @@
     </string>
     <string name="search">Search</string>
     <string name="toast_error_getting_item_details">Error getting item detail!</string>
+    <string name="toast_error_getting_recipe_details">Error getting recipe detail!</string>
 
 </resources>
