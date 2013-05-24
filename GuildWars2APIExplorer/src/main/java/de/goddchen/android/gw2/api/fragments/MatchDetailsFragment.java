@@ -33,6 +33,8 @@ public class MatchDetailsFragment extends SherlockFragment {
 
     private int mAutoRefresh;
 
+    private int mLastShownMap = 0;
+
     private Runnable mAuthRefreshRunnable = new Runnable() {
         @Override
         public void run() {
@@ -40,6 +42,8 @@ public class MatchDetailsFragment extends SherlockFragment {
             if (view != null) {
                 view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.content).setVisibility(View.GONE);
+                ViewPager viewPager = (ViewPager) view.findViewById(R.id.maps);
+                mLastShownMap = viewPager.getCurrentItem();
             }
             getLoaderManager().restartLoader(Application.Loaders.MATCH_DETAILS, null, mMatcheDetailsLoaderCallbacks);
             if (mAutoRefresh > 0) {
@@ -57,6 +61,12 @@ public class MatchDetailsFragment extends SherlockFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("last.map", mLastShownMap);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -65,6 +75,9 @@ public class MatchDetailsFragment extends SherlockFragment {
                 .getString(Application.Preferences.WVWVW_REFRESH, "-1"));
         if (mAutoRefresh > 0) {
             mHandler.postDelayed(mAuthRefreshRunnable, mAutoRefresh);
+        }
+        if (savedInstanceState != null && savedInstanceState.containsKey("last.map")) {
+            mLastShownMap = savedInstanceState.getInt("last.map");
         }
     }
 
@@ -80,11 +93,16 @@ public class MatchDetailsFragment extends SherlockFragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(Application.Loaders.MATCH_DETAILS, null, mMatcheDetailsLoaderCallbacks);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         view.findViewById(R.id.content).setVisibility(View.GONE);
-        mHandler.post(mAuthRefreshRunnable);
     }
 
     @Override
@@ -140,6 +158,7 @@ public class MatchDetailsFragment extends SherlockFragment {
                         viewPager.setAdapter(new MatchMapPagerAdapter(getFragmentManager(), matchDetails));
                         PageIndicator pageIndicator = (PageIndicator) getView().findViewById(R.id.page_indicators);
                         pageIndicator.setViewPager(viewPager);
+                        pageIndicator.setCurrentItem(mLastShownMap);
                     } else {
                         mHandler.post(new Runnable() {
                             @Override

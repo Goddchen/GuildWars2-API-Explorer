@@ -48,7 +48,7 @@ public class ItemFragment extends SherlockFragment {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         view.findViewById(R.id.content).setVisibility(View.GONE);
-        getLoaderManager().restartLoader(Application.Loaders.ITEM_DETAILS, null, mItemLoaderCallbacks);
+        getLoaderManager().initLoader(Application.Loaders.ITEM_DETAILS, null, mItemLoaderCallbacks);
     }
 
     private LoaderManager.LoaderCallbacks<Item> mItemLoaderCallbacks =

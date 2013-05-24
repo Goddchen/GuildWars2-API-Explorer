@@ -41,7 +41,7 @@ public class EventsFragment extends SherlockListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().restartLoader(Application.Loaders.EVENTS, null, mEventsLoaderCallbacks);
+        getLoaderManager().initLoader(Application.Loaders.EVENTS, null, mEventsLoaderCallbacks);
     }
 
     @Override

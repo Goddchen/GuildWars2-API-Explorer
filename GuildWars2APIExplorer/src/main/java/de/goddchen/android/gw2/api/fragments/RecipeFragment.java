@@ -49,7 +49,7 @@ public class RecipeFragment extends SherlockFragment {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         view.findViewById(R.id.content).setVisibility(View.GONE);
-        getLoaderManager().restartLoader(Application.Loaders.RECIPE_DETAILS, null, mRecipeLoaderCallbacks);
+        getLoaderManager().initLoader(Application.Loaders.RECIPE_DETAILS, null, mRecipeLoaderCallbacks);
     }
 
     private LoaderManager.LoaderCallbacks<Recipe> mRecipeLoaderCallbacks =

@@ -27,7 +27,7 @@ public class MatchesFragment extends SherlockListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().restartLoader(Application.Loaders.MATCHES, null, mMatchesLoaderCallbacks);
+        getLoaderManager().initLoader(Application.Loaders.MATCHES, null, mMatchesLoaderCallbacks);
     }
 
     @Override

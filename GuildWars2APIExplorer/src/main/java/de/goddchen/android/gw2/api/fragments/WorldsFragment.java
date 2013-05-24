@@ -27,7 +27,7 @@ public class WorldsFragment extends SherlockListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().restartLoader(Application.Loaders.WORLDS, null, mWorldLoaderCallbacks);
+        getLoaderManager().initLoader(Application.Loaders.WORLDS, null, mWorldLoaderCallbacks);
     }
 
     @Override

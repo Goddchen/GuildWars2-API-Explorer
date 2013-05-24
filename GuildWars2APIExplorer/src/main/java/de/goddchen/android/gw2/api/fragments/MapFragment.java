@@ -31,7 +31,7 @@ public class MapFragment extends SherlockListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().restartLoader(Application.Loaders.MAP_NAMES, null, mMapNamesLoaderCallbacks);
+        getLoaderManager().initLoader(Application.Loaders.MAP_NAMES, null, mMapNamesLoaderCallbacks);
     }
 
     @Override
