@@ -32,6 +32,7 @@ public class ObjectiveAdapter extends ArrayAdapter<MatchDetails.Objective> {
             ((TextView) convertView.findViewById(R.id.name)).setText(getItem(position).name.name);
         }
         ((TextView) convertView.findViewById(R.id.owner)).setText(objective.owner);
+        convertView.findViewById(R.id.owner).setVisibility(View.GONE);
         if ("red".equalsIgnoreCase(objective.owner)) {
             convertView.setBackgroundColor(getContext().getResources().getColor(R.color.objective_owner_red));
         } else if ("green".equalsIgnoreCase(objective.owner)) {
@@ -40,6 +41,7 @@ public class ObjectiveAdapter extends ArrayAdapter<MatchDetails.Objective> {
             convertView.setBackgroundColor(getContext().getResources().getColor(R.color.objective_owner_blue));
         } else {
             convertView.setBackgroundColor(getContext().getResources().getColor(android.R.color.transparent));
+            convertView.findViewById(R.id.owner).setVisibility(View.VISIBLE);
         }
         return convertView;
     }
