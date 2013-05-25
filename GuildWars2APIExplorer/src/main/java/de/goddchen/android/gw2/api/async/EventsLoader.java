@@ -41,7 +41,7 @@ public class EventsLoader extends FixedAsyncTaskLoader<List<Event>> {
                 @Override
                 public int compare(Event event, Event event2) {
                     if (event.state.equals(event2.state)) {
-                        if (event.eventName == null) {
+                        if (event.eventName == null || event2.eventName == null) {
                             return -1;
                         } else {
                             return event.eventName.name.compareTo(event2.eventName.name);
