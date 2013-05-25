@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/change_home_world"
+        android:title="@string/change_home_world"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_change_home_world"/>
+
+</menu>

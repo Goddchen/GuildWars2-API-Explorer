@@ -11,7 +11,6 @@ import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.adapter.MapAdapter;
 import de.goddchen.android.gw2.api.async.MapNamesLoader;
 import de.goddchen.android.gw2.api.data.MapName;
-import de.goddchen.android.gw2.api.data.World;
 
 import java.util.List;
 
@@ -20,10 +19,10 @@ import java.util.List;
  */
 public class MapFragment extends SherlockListFragment {
 
-    public static MapFragment newInstance(World world) {
+    public static MapFragment newInstance(Integer worldId) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
-        args.putSerializable(Application.Extras.WORLD, world);
+        args.putInt(Application.Extras.WORLD, worldId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,9 +37,9 @@ public class MapFragment extends SherlockListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         MapName mapName = (MapName) getListAdapter().getItem(position);
-        World world = (World) getArguments().getSerializable(Application.Extras.WORLD);
+        int worldId = getArguments().getInt(Application.Extras.WORLD);
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment, EventsFragment.newInstance(world, mapName))
+                .replace(R.id.fragment, EventsFragment.newInstance(worldId, mapName))
                 .addToBackStack("event")
                 .commit();
     }

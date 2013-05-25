@@ -5,7 +5,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.data.Event;
-import de.goddchen.android.gw2.api.data.World;
 import de.goddchen.android.gw2.api.db.DatabaseHelper;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -20,18 +19,18 @@ import java.util.Locale;
  * Created by Goddchen on 22.05.13.
  */
 public class EventsLoader extends FixedAsyncTaskLoader<List<Event>> {
-    private World mWorld;
+    private int mWorldId;
 
-    public EventsLoader(Context context, World world) {
+    public EventsLoader(Context context, int worldId) {
         super(context);
-        mWorld = world;
+        mWorldId = worldId;
     }
 
     @Override
     public List<Event> loadInBackground() {
         try {
             HttpsURLConnection connection =
-                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/events.json?world_id=" + mWorld.id
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/events.json?world_id=" + mWorldId
                             + "&lang=" + Locale.getDefault().getLanguage())
                             .openConnection();
             List<Event> events = new Gson().fromJson(new InputStreamReader(connection.getInputStream()),

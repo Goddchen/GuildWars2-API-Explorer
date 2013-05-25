@@ -1,6 +1,7 @@
 package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
@@ -27,15 +28,27 @@ public class WorldsFragment extends SherlockListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(Application.Loaders.WORLDS, null, mWorldLoaderCallbacks);
+        int homeWorld = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getInt(Application.Preferences.HOME_WORLD, -1);
+        if (homeWorld == -1) {
+            getLoaderManager().initLoader(Application.Loaders.WORLDS, null, mWorldLoaderCallbacks);
+        } else {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.fragment, MapFragment.newInstance(homeWorld))
+                    .commit();
+        }
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         World world = (World) getListAdapter().getItem(position);
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .edit()
+                .putInt(Application.Preferences.HOME_WORLD, world.id)
+                .commit();
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment, MapFragment.newInstance(world))
+                .replace(R.id.fragment, MapFragment.newInstance(world.id))
                 .addToBackStack("maps")
                 .commit();
     }

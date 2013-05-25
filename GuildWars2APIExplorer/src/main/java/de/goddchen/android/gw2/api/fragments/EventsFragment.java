@@ -13,7 +13,6 @@ import de.goddchen.android.gw2.api.adapter.EventAdapter;
 import de.goddchen.android.gw2.api.async.EventsLoader;
 import de.goddchen.android.gw2.api.data.Event;
 import de.goddchen.android.gw2.api.data.MapName;
-import de.goddchen.android.gw2.api.data.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +22,10 @@ import java.util.List;
  */
 public class EventsFragment extends SherlockListFragment {
 
-    public static EventsFragment newInstance(World world, MapName mapName) {
+    public static EventsFragment newInstance(Integer worldId, MapName mapName) {
         EventsFragment fragment = new EventsFragment();
         Bundle args = new Bundle();
-        args.putSerializable(Application.Extras.WORLD, world);
+        args.putInt(Application.Extras.WORLD, worldId);
         args.putSerializable(Application.Extras.MAP, mapName);
         fragment.setArguments(args);
         return fragment;
@@ -67,7 +66,7 @@ public class EventsFragment extends SherlockListFragment {
             new LoaderManager.LoaderCallbacks<List<Event>>() {
                 @Override
                 public Loader<List<Event>> onCreateLoader(int i, Bundle bundle) {
-                    return new EventsLoader(getActivity(), (World) getArguments().getSerializable(Application.Extras.WORLD));
+                    return new EventsLoader(getActivity(), getArguments().getInt(Application.Extras.WORLD));
                 }
 
                 @Override
