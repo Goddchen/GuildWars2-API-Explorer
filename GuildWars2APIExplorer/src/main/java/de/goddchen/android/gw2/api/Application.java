@@ -39,6 +39,7 @@ public class Application extends android.app.Application {
     public static final class Preferences {
         public static final String WVWVW_REFRESH = "wvwvw.auto.refresh";
         public static final String HOME_WORLD = "home.world";
+        public static final String EVENTS_REFRESH = "events.auto.refresh";
     }
 
     private static DatabaseHelper databaseHelper;

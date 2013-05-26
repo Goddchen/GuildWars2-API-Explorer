@@ -30,5 +30,6 @@
     <string name="loading">Loading...</string>
     <string name="no_items">No Items</string>
     <string name="no_recipes">No Recipes</string>
+    <string name="pref_events_refresh_title">Events Auto Refresh Interval</string>
 
 </resources>

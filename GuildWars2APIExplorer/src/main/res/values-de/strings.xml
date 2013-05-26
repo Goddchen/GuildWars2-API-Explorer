@@ -30,5 +30,6 @@
     <string name="loading">Lade...</string>
     <string name="no_items">Keine Items</string>
     <string name="no_recipes">Keine Rezepte</string>
+    <string name="pref_events_refresh_title">Events Auto Refresh Abstand</string>
 
 </resources>

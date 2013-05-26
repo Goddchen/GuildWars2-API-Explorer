@@ -1,8 +1,12 @@
 package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.view.View;
+import android.widget.AbsListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -21,6 +25,25 @@ import java.util.List;
  * Created by Goddchen on 22.05.13.
  */
 public class EventsFragment extends SherlockListFragment {
+    private Handler mHandler;
+
+    private int mAutoRefresh;
+
+    private int mListPosition;
+
+    private Runnable mAuthRefreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            View view = getView();
+            if (view != null) {
+                setListShown(false);
+            }
+            getLoaderManager().restartLoader(Application.Loaders.EVENTS, null, mEventsLoaderCallbacks);
+            if (mAutoRefresh > 0) {
+                mHandler.postDelayed(this, mAutoRefresh);
+            }
+        }
+    };
 
     public static EventsFragment newInstance(Integer worldId, MapName mapName) {
         EventsFragment fragment = new EventsFragment();
@@ -35,12 +58,50 @@ public class EventsFragment extends SherlockListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mHandler = new Handler();
+        if (savedInstanceState != null) {
+            mListPosition = savedInstanceState.getInt("list-y", 0);
+        }
+        mAutoRefresh = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getString(Application.Preferences.EVENTS_REFRESH, "-1"));
+        if (mAutoRefresh > 0) {
+            mHandler.postDelayed(mAuthRefreshRunnable, mAutoRefresh);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("list-y", mListPosition);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacks(mAuthRefreshRunnable);
+        mHandler = null;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(Application.Loaders.EVENTS, null, mEventsLoaderCallbacks);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+                mListPosition = absListView.getFirstVisiblePosition();
+            }
+        });
     }
 
     @Override
@@ -71,6 +132,7 @@ public class EventsFragment extends SherlockListFragment {
 
                 @Override
                 public void onLoadFinished(Loader<List<Event>> listLoader, List<Event> events) {
+                    setListShown(true);
                     if (events != null) {
                         List<Event> mapEvents = new ArrayList<Event>();
                         MapName mapName = (MapName) getArguments().getSerializable(Application.Extras.MAP);
@@ -80,6 +142,9 @@ public class EventsFragment extends SherlockListFragment {
                             }
                         }
                         setListAdapter(new EventAdapter(getActivity(), mapEvents));
+                        if (mListPosition > 0) {
+                            getListView().setSelection(mListPosition);
+                        }
                     }
                 }
 

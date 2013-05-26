@@ -85,6 +85,7 @@ public class MatchDetailsFragment extends SherlockFragment {
     public void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacks(mAuthRefreshRunnable);
+        mHandler = null;
     }
 
     @Override
