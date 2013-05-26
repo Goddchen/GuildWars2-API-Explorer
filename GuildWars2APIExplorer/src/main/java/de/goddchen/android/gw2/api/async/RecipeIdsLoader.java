@@ -15,8 +15,8 @@ import java.util.List;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class ItemIdsLoader extends FixedAsyncTaskLoader<List<Integer>> {
-    public ItemIdsLoader(Context context) {
+public class RecipeIdsLoader extends FixedAsyncTaskLoader<List<Integer>> {
+    public RecipeIdsLoader(Context context) {
         super(context);
     }
 
@@ -24,9 +24,9 @@ public class ItemIdsLoader extends FixedAsyncTaskLoader<List<Integer>> {
     public List<Integer> loadInBackground() {
         try {
             HttpsURLConnection connection =
-                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/items.json").openConnection();
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/recipes.json").openConnection();
             List<Integer> ids =
-                    new Gson().fromJson(new InputStreamReader(connection.getInputStream()), Response.class).items;
+                    new Gson().fromJson(new InputStreamReader(connection.getInputStream()), Response.class).recipes;
             Collections.sort(ids, new Comparator<Integer>() {
                 @Override
                 public int compare(Integer integer, Integer integer2) {
@@ -35,12 +35,12 @@ public class ItemIdsLoader extends FixedAsyncTaskLoader<List<Integer>> {
             });
             return ids;
         } catch (Exception e) {
-            Log.e(Application.Constants.LOG_TAG, "Error loading item ids", e);
+            Log.e(Application.Constants.LOG_TAG, "Error loading recipe ids", e);
             return null;
         }
     }
 
     private class Response {
-        List<Integer> items;
+        List<Integer> recipes;
     }
 }

@@ -23,6 +23,8 @@ public class Application extends android.app.Application {
         public static final int MATCH_DETAILS = 7;
         public static final int ITEM_DETAILS = 8;
         public static final int RECIPE_DETAILS = 9;
+        public static final int ITEM_IDS = 10;
+        public static final int RECIPE_IDS = 11;
     }
 
     public static final class Extras {

@@ -64,7 +64,7 @@
       <excludeFolder url="file://$MODULE_DIR$/submodules/ViewPagerIndicator/library/build/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/submodules/ViewPagerIndicator/library/build/tmp" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Android 1.6 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="actionbarsherlock.aar" level="project" />
     <orderEntry type="library" name="android-support-v4" level="project" />
