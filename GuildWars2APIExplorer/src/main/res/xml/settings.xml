@@ -16,4 +16,23 @@
         android:entryValues="@array/pref_events_refresh_keys"
         android:defaultValue="-1"/>
 
+    <PreferenceCategory
+        android:title="@string/pref_general">
+        <Preference
+            android:key="version"
+            android:title="@string/pref_version"/>
+        <Preference
+            android:key="feedback.contact"
+            android:title="@string/pref_contact"
+            android:summary="@string/pref_contact_summary"/>
+        <Preference
+            android:key="feedback.rate"
+            android:title="@string/pref_rate_title"
+            android:summary="@string/pref_rate_summary"/>
+        <Preference
+            android:key="feedback.issue"
+            android:title="@string/pref_issue_title"
+            android:summary="@string/pref_issue_summary"/>
+    </PreferenceCategory>
+
 </PreferenceScreen>

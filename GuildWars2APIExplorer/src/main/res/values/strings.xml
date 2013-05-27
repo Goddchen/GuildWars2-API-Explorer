@@ -31,5 +31,14 @@
     <string name="no_items">No Items</string>
     <string name="no_recipes">No Recipes</string>
     <string name="pref_events_refresh_title">Events Auto Refresh Interval</string>
+    <string name="url_issue_tracker">https://github.com/Goddchen/GuildWars2-API-Explorer/issues</string>
+    <string name="pref_general">General</string>
+    <string name="pref_version">Version</string>
+    <string name="pref_contact">Contact developer</string>
+    <string name="pref_contact_summary">Send an email to me :)</string>
+    <string name="pref_rate_title">Rate</string>
+    <string name="pref_rate_summary">Rate this app in the Play Store</string>
+    <string name="pref_issue_title">Issue tracker</string>
+    <string name="pref_issue_summary">Show the issue tracker</string>
 
 </resources>

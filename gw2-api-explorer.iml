@@ -4,7 +4,7 @@
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
         <option name="GRADLE_PROJECT_PATH" value=":" />
-        <option name="PROJECT_ABSOLUTE_PATH" value="D:\dev\git\gw2-api-explorer" />
+        <option name="PROJECT_ABSOLUTE_PATH" value="X:\git\gw2-api-explorer" />
         <option name="GRADLE_HOME_DIR_PATH" />
       </configuration>
     </facet>

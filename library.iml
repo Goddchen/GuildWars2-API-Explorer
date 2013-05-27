@@ -16,7 +16,7 @@
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
         <option name="GRADLE_PROJECT_PATH" value=":submodules:ViewPagerIndicator:library" />
-        <option name="PROJECT_ABSOLUTE_PATH" value="D:\dev\git\gw2-api-explorer" />
+        <option name="PROJECT_ABSOLUTE_PATH" value="X:\git\gw2-api-explorer" />
         <option name="GRADLE_HOME_DIR_PATH" />
       </configuration>
     </facet>
@@ -64,7 +64,7 @@
       <excludeFolder url="file://$MODULE_DIR$/submodules/ViewPagerIndicator/library/build/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/submodules/ViewPagerIndicator/library/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android 1.6 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android 4.2.2" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="actionbarsherlock.aar" level="project" />
     <orderEntry type="library" name="android-support-v4" level="project" />

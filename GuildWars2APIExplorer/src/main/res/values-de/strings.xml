@@ -31,5 +31,13 @@
     <string name="no_items">Keine Items</string>
     <string name="no_recipes">Keine Rezepte</string>
     <string name="pref_events_refresh_title">Events Auto Refresh Abstand</string>
+    <string name="pref_general">Allgemein</string>
+    <string name="pref_version">Version</string>
+    <string name="pref_contact">Kontakt zum Entwickler</string>
+    <string name="pref_contact_summary">Schicke mir eine Mail :)</string>
+    <string name="pref_rate_title">Bewerten</string>
+    <string name="pref_rate_summary">Bewerte diese App im Play Store</string>
+    <string name="pref_issue_title">Issue Tracker</string>
+    <string name="pref_issue_summary">Öffne den Issue Tracker</string>
 
 </resources>

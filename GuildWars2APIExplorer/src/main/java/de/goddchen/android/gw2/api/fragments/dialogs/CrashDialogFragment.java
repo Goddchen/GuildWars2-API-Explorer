@@ -28,7 +28,8 @@ public class CrashDialogFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         startActivity(Intent.createChooser(
-                                new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Goddchen/GuildWars2-API-Explorer/issues")),
+                                new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(getString(de.goddchen.android.gw2.api.R.string.url_issue_tracker))),
                                 ""
                         ));
                     }

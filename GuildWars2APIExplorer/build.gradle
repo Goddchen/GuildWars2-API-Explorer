@@ -25,7 +25,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("D:\\Dropbox\\Android\\paradise.android.keystore")
+            storeFile file("Z:\\Dropbox\\Android\\paradise.android.keystore")
             storePassword System.getenv("ANDROID_STORE_PASS")
             keyAlias "android release key"
             keyPassword System.getenv("ANDROID_KEY_PASS")
