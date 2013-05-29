@@ -18,7 +18,8 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/submodules/ViewPagerIndicator/library/build/classes/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/submodules/ViewPagerIndicator/library">
       <sourceFolder url="file://$MODULE_DIR$/submodules/ViewPagerIndicator/library/build/source/r/debug" isTestSource="false" />

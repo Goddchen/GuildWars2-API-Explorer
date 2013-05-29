@@ -79,6 +79,7 @@
     <orderEntry type="module" module-name="library" />
     <orderEntry type="library" name="android-support-v4" level="project" />
     <orderEntry type="library" name="Google Analytics" level="project" />
+    <orderEntry type="library" name="libGoogleAnalyticsV2" level="project" />
   </component>
 </module>
 
