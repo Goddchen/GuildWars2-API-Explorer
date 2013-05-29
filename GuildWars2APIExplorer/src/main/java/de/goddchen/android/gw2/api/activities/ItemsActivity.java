@@ -1,7 +1,6 @@
 package de.goddchen.android.gw2.api.activities;
 
 import android.os.Bundle;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.fragments.ItemSearchFragment;
@@ -9,7 +8,7 @@ import de.goddchen.android.gw2.api.fragments.ItemSearchFragment;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class ItemsActivity extends SherlockFragmentActivity {
+public class ItemsActivity extends AnalyticsSherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

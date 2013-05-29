@@ -2,7 +2,6 @@ package de.goddchen.android.gw2.api.activities;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import de.goddchen.android.gw2.api.Application;
@@ -12,7 +11,7 @@ import de.goddchen.android.gw2.api.fragments.WorldsFragment;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class EventsActivity extends SherlockFragmentActivity {
+public class EventsActivity extends AnalyticsSherlockFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

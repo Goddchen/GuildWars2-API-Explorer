@@ -3,7 +3,6 @@ package de.goddchen.android.gw2.api.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.crittercism.app.Crittercism;
@@ -14,7 +13,7 @@ import de.goddchen.android.gw2.api.fragments.RecipeSearchFragment;
 import de.goddchen.android.gw2.api.fragments.WorldsFragment;
 import de.goddchen.android.gw2.api.fragments.dialogs.CrashDialogFragment;
 
-public class MainActivity extends SherlockFragmentActivity implements View.OnClickListener {
+public class MainActivity extends AnalyticsSherlockFragmentActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
