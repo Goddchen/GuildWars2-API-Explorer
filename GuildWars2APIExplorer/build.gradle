@@ -3,13 +3,14 @@ buildscript {
         maven { url 'http://repo1.maven.org/maven2' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.4.1'
+        classpath 'com.android.tools.build:gradle:0.4.2'
     }
 }
 apply plugin: 'android'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar', exclude: 'android-support-v4.jar')
+    compile "com.android.support:support-v4:13.0.0"
+    compile fileTree(dir: 'libs', include: '*.jar',)
     compile project(':submodules:ActionBarSherlock:actionbarsherlock')
     compile project(':submodules:ViewPagerIndicator:library')
 }
