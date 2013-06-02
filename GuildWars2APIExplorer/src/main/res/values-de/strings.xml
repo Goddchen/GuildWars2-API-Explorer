@@ -45,8 +45,7 @@
     <string name="pref_rate_summary">Bewerte diese App im Play Store</string>
     <string name="pref_issue_title">Issue Tracker</string>
     <string name="pref_issue_summary">Öffne den Issue Tracker</string>
-    <string name="guilds">Guilds</string>
-    <string name="colors">Colors</string>
+    <string name="colors">Farben</string>
     <string name="build">Build</string>
 
 </resources>

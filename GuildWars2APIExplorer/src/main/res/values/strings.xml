@@ -44,8 +44,7 @@
     <string name="pref_rate_summary">Rate this app in the Play Store</string>
     <string name="pref_issue_title">Issue tracker</string>
     <string name="pref_issue_summary">Show the issue tracker</string>
-    <string name="guilds">Guilds</string>
-    <string name="colors">Colors</string>
+    <string name="colors">Colors (Dyes)</string>
     <string name="build">Build</string>
 
 </resources>
