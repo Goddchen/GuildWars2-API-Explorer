@@ -20,7 +20,8 @@ public class MatchDetails implements Serializable {
     public class Objective implements Serializable {
         public int id;
         public String owner;
-        public String owner_build;
+        public String owner_guild;
+        public GuildDetails ownerGuildDetails;
         public ObjectiveName name;
 
         public int getOwnerPriority() {

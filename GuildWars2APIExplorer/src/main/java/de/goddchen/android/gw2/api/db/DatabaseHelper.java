@@ -2,6 +2,7 @@ package de.goddchen.android.gw2.api.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -23,6 +24,7 @@ import javax.net.ssl.HttpsURLConnection;
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.data.Event;
 import de.goddchen.android.gw2.api.data.EventName;
+import de.goddchen.android.gw2.api.data.GuildDetails;
 import de.goddchen.android.gw2.api.data.Item;
 import de.goddchen.android.gw2.api.data.MapName;
 import de.goddchen.android.gw2.api.data.Match;
@@ -46,7 +48,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Dao<ObjectiveName, Integer> objectiveNameDao;
 
     public DatabaseHelper(Context context) {
-        super(context, "gw2.db", null, 5);
+        super(context, "gw2.db", null, 6);
     }
 
     @Override
@@ -58,8 +60,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, MapName.class);
             TableUtils.createTable(connectionSource, Event.class);
             TableUtils.createTable(connectionSource, ObjectiveName.class);
+            TableUtils.createTable(connectionSource, GuildDetails.class);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error creating database", e);
+
         }
     }
 
@@ -72,6 +76,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, MapName.class, true);
             TableUtils.dropTable(connectionSource, Event.class, true);
             TableUtils.dropTable(connectionSource, ObjectiveName.class, true);
+            TableUtils.dropTable(connectionSource, GuildDetails.class, true);
             onCreate(sqLiteDatabase, connectionSource);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error upgrading database", e);
@@ -190,6 +195,40 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public static void loadGuildNames(MatchDetails matchDetails) throws Exception {
+        if (Application.getDatabaseHelper().getObjectiveNameDao().queryForAll().size() == 0) {
+            HttpsURLConnection connection =
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/wvw/objective_names.json?lang="
+                            + Locale.getDefault().getLanguage())
+                            .openConnection();
+            final List<ObjectiveName> objectiveNames =
+                    new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
+                            new TypeToken<List<ObjectiveName>>() {
+                            }.getType());
+            Application.getDatabaseHelper().getEventNameDao().callBatchTasks(new Callable<Object>() {
+                @Override
+                public Object call() throws Exception {
+                    for (ObjectiveName objectiveName : objectiveNames) {
+                        Application.getDatabaseHelper().getObjectiveNameDao().create(objectiveName);
+                    }
+                    return null;
+                }
+            });
+        }
+        for (MatchDetails.Map map : matchDetails.maps) {
+            for (MatchDetails.Objective objective : map.objectives) {
+                if (!TextUtils.isEmpty(objective.owner_guild)) {
+                    try {
+                        objective.ownerGuildDetails = DatabaseHelper.getGuildDetails(objective.owner_guild);
+                    } catch (Exception e) {
+                        Log.w(Application.Constants.LOG_TAG, "Error loading guild details", e);
+                    }
+                }
+                objective.name = Application.getDatabaseHelper().getObjectiveNameDao().queryForId(objective.id);
+            }
+        }
+    }
+
 
     public static void loadWorldNames(List<Match> matches) throws Exception {
         if (Application.getDatabaseHelper().getWorldDao().queryForAll().size() == 0) {
@@ -224,5 +263,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         + "&lang=" + Locale.getDefault().getLanguage()).openConnection();
         Item item = new Gson().fromJson(new InputStreamReader(connection.getInputStream()), Item.class);
         return item;
+    }
+
+    public static GuildDetails getGuildDetails(String id) throws Exception {
+        Dao<GuildDetails, String> dao = DaoManager.createDao(Application.getDatabaseHelper().getConnectionSource(), GuildDetails.class);
+        GuildDetails guildDetails = dao.queryForId(id);
+        if (guildDetails == null) {
+            HttpsURLConnection connection =
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/guild_details.json?guild_id=" + id
+                            + "&lang=" + Locale.getDefault().getLanguage()).openConnection();
+            guildDetails =
+                    new Gson().fromJson(new InputStreamReader(connection.getInputStream()), GuildDetails.class);
+            dao.create(guildDetails);
+        }
+        return guildDetails;
     }
 }

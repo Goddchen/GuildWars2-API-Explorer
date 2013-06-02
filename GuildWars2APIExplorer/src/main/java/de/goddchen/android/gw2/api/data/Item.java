@@ -1,5 +1,6 @@
 package de.goddchen.android.gw2.api.data;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -29,13 +30,13 @@ public class Item {
     @DatabaseField
     public int vendor_value;
 
-    @DatabaseField
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
     public String[] game_types;
 
-    @DatabaseField
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
     public String[] flags;
 
-    @DatabaseField
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
     public String[] restrictions;
 
     @DatabaseField

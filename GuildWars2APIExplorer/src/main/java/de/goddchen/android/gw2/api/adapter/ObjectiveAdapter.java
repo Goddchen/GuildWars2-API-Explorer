@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import de.goddchen.android.gw2.api.R;
-import de.goddchen.android.gw2.api.data.MatchDetails;
 
 import java.util.List;
+
+import de.goddchen.android.gw2.api.R;
+import de.goddchen.android.gw2.api.data.MatchDetails;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -29,10 +30,16 @@ public class ObjectiveAdapter extends ArrayAdapter<MatchDetails.Objective> {
         if (objective.name == null || TextUtils.isEmpty(objective.name.name)) {
             ((TextView) convertView.findViewById(R.id.name)).setText("---");
         } else {
-            ((TextView) convertView.findViewById(R.id.name)).setText(getItem(position).name.name);
+            ((TextView) convertView.findViewById(R.id.name)).setText(objective.name.name);
         }
-        ((TextView) convertView.findViewById(R.id.owner)).setText(objective.owner);
-        convertView.findViewById(R.id.owner).setVisibility(View.GONE);
+        if (objective.ownerGuildDetails != null) {
+            convertView.findViewById(R.id.owner).setVisibility(View.VISIBLE);
+            ((TextView) convertView.findViewById(R.id.owner))
+                    .setText(String.format("%s [%s]",
+                            objective.ownerGuildDetails.guild_name, objective.ownerGuildDetails.tag));
+        } else {
+            convertView.findViewById(R.id.owner).setVisibility(View.GONE);
+        }
         if ("red".equalsIgnoreCase(objective.owner)) {
             convertView.setBackgroundColor(getContext().getResources().getColor(R.color.objective_owner_red));
         } else if ("green".equalsIgnoreCase(objective.owner)) {

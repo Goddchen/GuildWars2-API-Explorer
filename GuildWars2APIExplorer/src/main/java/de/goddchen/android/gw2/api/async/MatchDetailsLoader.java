@@ -2,18 +2,21 @@ package de.goddchen.android.gw2.api.async;
 
 import android.content.Context;
 import android.util.Log;
-import com.google.gson.Gson;
-import de.goddchen.android.gw2.api.Application;
-import de.goddchen.android.gw2.api.data.Match;
-import de.goddchen.android.gw2.api.data.MatchDetails;
-import de.goddchen.android.gw2.api.db.DatabaseHelper;
 
-import javax.net.ssl.HttpsURLConnection;
+import com.google.gson.Gson;
+
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import de.goddchen.android.gw2.api.Application;
+import de.goddchen.android.gw2.api.data.Match;
+import de.goddchen.android.gw2.api.data.MatchDetails;
+import de.goddchen.android.gw2.api.db.DatabaseHelper;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -46,6 +49,7 @@ public class MatchDetailsLoader extends FixedAsyncTaskLoader<MatchDetails> {
                 });
             }
             DatabaseHelper.loadObjectiveNames(details);
+            DatabaseHelper.loadGuildNames(details);
             return details;
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error loading match details", e);
