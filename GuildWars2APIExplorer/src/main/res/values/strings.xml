@@ -7,12 +7,14 @@
     <string name="recipes">Recipes</string>
     <string name="wvwvw">WvWvW</string>
     <string name="dialog_crash_title">Whoops!</string>
-    <string name="dialog_crash_message">Seems like the app did crash last time you were using it. Do you want to submit
+    <string name="dialog_crash_message">Seems like the app did crash last time you were using it. Do
+        you want to submit
         a ticket to our issue tracker?
     </string>
     <string name="refresh">Refresh</string>
     <string name="toast_error_getting_match_details">Error getting match details!</string>
-    <string name="search_by_id_hint">I know it sucks, but this is the only API that is offered right now... :( Search by
+    <string name="search_by_id_hint">I know it sucks, but this is the only API that is offered right
+        now... :( Search by
         ID... Who did come up with this? :( Pretty unusable like that...
     </string>
     <string name="search">Search</string>
@@ -26,12 +28,14 @@
     <string name="pref_wvwvw_refresh_300">5 Minutes</string>
     <string name="pref_wvwvw_refresh_title">WvWvW Auto Refresh Interval</string>
     <string name="change_home_world">Change Home World</string>
-    <string name="id_list_hint">If you\'re interested in the list of IDs anyway, here it is...</string>
+    <string name="id_list_hint">If you\'re interested in the list of IDs anyway, here it is...
+    </string>
     <string name="loading">Loading...</string>
     <string name="no_items">No Items</string>
     <string name="no_recipes">No Recipes</string>
     <string name="pref_events_refresh_title">Events Auto Refresh Interval</string>
-    <string name="url_issue_tracker">https://github.com/Goddchen/GuildWars2-API-Explorer/issues</string>
+    <string name="url_issue_tracker">https://github.com/Goddchen/GuildWars2-API-Explorer/issues
+    </string>
     <string name="pref_general">General</string>
     <string name="pref_version">Version</string>
     <string name="pref_contact">Contact developer</string>
@@ -40,5 +44,8 @@
     <string name="pref_rate_summary">Rate this app in the Play Store</string>
     <string name="pref_issue_title">Issue tracker</string>
     <string name="pref_issue_summary">Show the issue tracker</string>
+    <string name="guilds">Guilds</string>
+    <string name="colors">Colors</string>
+    <string name="build">Build</string>
 
 </resources>

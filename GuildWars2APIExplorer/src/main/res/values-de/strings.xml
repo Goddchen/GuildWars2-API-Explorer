@@ -7,17 +7,21 @@
     <string name="recipes">Rezepte</string>
     <string name="wvwvw">WvWvW</string>
     <string name="dialog_crash_title">Whoops!</string>
-    <string name="dialog_crash_message">Es scheint als wäre die App beim letzten Ausführen abgestützt.
+    <string name="dialog_crash_message">Es scheint als wäre die App beim letzten Ausführen
+        abgestützt.
         Möchtest du ein Ticket in unserem Issue-Tracker erstellen?
     </string>
     <string name="refresh">Aktualisieren</string>
     <string name="toast_error_getting_match_details">Fehler beim Abrufen der Match Details!</string>
-    <string name="search_by_id_hint">Das ist doch Mist... Aber das hier ist leider alles was die aktuelle API anbietet -
-        Suche nach ID... :( Wer hat sich das bitte ausgedacht? :( Ziemlich unbrauchbar in diesem Zustand...
+    <string name="search_by_id_hint">Das ist doch Mist... Aber das hier ist leider alles was die
+        aktuelle API anbietet -
+        Suche nach ID... :( Wer hat sich das bitte ausgedacht? :( Ziemlich unbrauchbar in diesem
+        Zustand...
     </string>
     <string name="search">Suchen</string>
     <string name="toast_error_getting_item_details">Fehler beim Abrufen der Item-Details!</string>
-    <string name="toast_error_getting_recipe_details">Fehler beim Abrufen der Rezept-Details!</string>
+    <string name="toast_error_getting_recipe_details">Fehler beim Abrufen der Rezept-Details!
+    </string>
     <string name="pref_wvwvw_refresh_disabled">Deaktiviert</string>
     <string name="pref_wvwvw_refresh_30">30 Sekunden</string>
     <string name="pref_wvwvw_refresh_60">1 Minute</string>
@@ -26,7 +30,9 @@
     <string name="pref_wvwvw_refresh_300">5 Minuten</string>
     <string name="pref_wvwvw_refresh_title">WvWvW Auto Refresh Abstand</string>
     <string name="change_home_world">Heimatwelt wechseln</string>
-    <string name="id_list_hint">Falls Du doch an der Liste von IDs interessiert bist, hier sind sie...</string>
+    <string name="id_list_hint">Falls Du doch an der Liste von IDs interessiert bist, hier sind
+        sie...
+    </string>
     <string name="loading">Lade...</string>
     <string name="no_items">Keine Items</string>
     <string name="no_recipes">Keine Rezepte</string>
@@ -39,5 +45,8 @@
     <string name="pref_rate_summary">Bewerte diese App im Play Store</string>
     <string name="pref_issue_title">Issue Tracker</string>
     <string name="pref_issue_summary">Öffne den Issue Tracker</string>
+    <string name="guilds">Guilds</string>
+    <string name="colors">Colors</string>
+    <string name="build">Build</string>
 
 </resources>

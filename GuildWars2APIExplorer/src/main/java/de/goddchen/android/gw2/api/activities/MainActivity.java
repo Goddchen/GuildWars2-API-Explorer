@@ -3,9 +3,11 @@ package de.goddchen.android.gw2.api.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.crittercism.app.Crittercism;
+
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.fragments.ItemSearchFragment;
 import de.goddchen.android.gw2.api.fragments.MatchesFragment;
@@ -23,6 +25,7 @@ public class MainActivity extends AnalyticsSherlockFragmentActivity implements V
         findViewById(R.id.events).setOnClickListener(this);
         findViewById(R.id.wvwvw).setOnClickListener(this);
         findViewById(R.id.recipes).setOnClickListener(this);
+        findViewById(R.id.build).setOnClickListener(this);
         if (Crittercism.didCrashOnLastAppLoad()) {
             CrashDialogFragment.newInstance().show(getSupportFragmentManager(), "crash");
         }
@@ -39,6 +42,8 @@ public class MainActivity extends AnalyticsSherlockFragmentActivity implements V
                 startActivity(new Intent(getApplicationContext(), WvWActivity.class));
             } else if (view.getId() == R.id.recipes) {
                 startActivity(new Intent(getApplicationContext(), RecipesActivity.class));
+            } else if (view.getId() == R.id.build) {
+                startActivity(new Intent(getApplicationContext(), BuildActivity.class));
             }
         } else {
             if (view.getId() == R.id.items) {

@@ -9,49 +9,79 @@
               android:weightSum="100">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_weight="30"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal">
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="30"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
 
         <com.google.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            ads:adUnitId="a1519cbaa10f9ae"
-            ads:adSize="BANNER"
-            ads:loadAdOnCreate="true"/>
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ads:adUnitId="a1519cbaa10f9ae"
+                ads:adSize="BANNER"
+                ads:loadAdOnCreate="true"/>
 
-        <Button
-            android:id="@+id/events"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dynamic_events"/>
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/wvwvw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/wvwvw"/>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal">
 
-        <Button
-            android:id="@+id/items"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/items"/>
+                <Button
+                        android:id="@+id/events"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dynamic_events"/>
 
-        <Button
-            android:id="@+id/recipes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/recipes"/>
+                <Button
+                        android:id="@+id/wvwvw"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wvwvw"/>
+
+                <Button
+                        android:id="@+id/items"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/items"/>
+
+                <Button
+                        android:id="@+id/recipes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recipes"/>
+
+                <Button
+                        android:id="@+id/guild"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/guilds"/>
+
+                <Button
+                        android:id="@+id/colors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/colors"/>
+
+                <Button
+                        android:id="@+id/build"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/build"/>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/fragment"
-        android:layout_width="0dp"
-        android:layout_weight="70"
-        android:layout_height="match_parent"/>
+            android:id="@+id/fragment"
+            android:layout_width="0dp"
+            android:layout_weight="70"
+            android:layout_height="match_parent"/>
 
 </LinearLayout>
