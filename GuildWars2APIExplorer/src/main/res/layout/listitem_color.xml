@@ -39,7 +39,7 @@
             <View
                     android:id="@+id/def"
                     android:layout_width="match_parent"
-                    android:layout_height="96dp"/>
+                    android:layout_height="48dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -57,7 +57,7 @@
             <View
                     android:id="@+id/cloth"
                     android:layout_width="match_parent"
-                    android:layout_height="96dp"/>
+                    android:layout_height="48dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -75,7 +75,7 @@
             <View
                     android:id="@+id/leather"
                     android:layout_width="match_parent"
-                    android:layout_height="96dp"/>
+                    android:layout_height="48dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -93,7 +93,7 @@
             <View
                     android:id="@+id/metal"
                     android:layout_width="match_parent"
-                    android:layout_height="96dp"/>
+                    android:layout_height="48dp"/>
         </LinearLayout>
     </LinearLayout>
 
