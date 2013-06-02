@@ -46,6 +46,7 @@
         <activity android:name=".activities.SettingsActivity"/>
         <activity android:name=".activities.BuildActivity"/>
         <activity android:name=".activities.ColorsActivity"/>
+        <activity android:name=".activities.GuildActivity"/>
     </application>
 
 </manifest>
