@@ -28,7 +28,7 @@ public class BuildFragment extends SherlockFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(Application.Loaders.WORLDS, null, mWorldLoaderCallbacks);
+        getLoaderManager().initLoader(Application.Loaders.BUILD, null, mBuildLoaderCallbacks);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class BuildFragment extends SherlockFragment {
         view.findViewById(R.id.content).setVisibility(View.GONE);
     }
 
-    private LoaderManager.LoaderCallbacks<Build> mWorldLoaderCallbacks =
+    private LoaderManager.LoaderCallbacks<Build> mBuildLoaderCallbacks =
             new LoaderManager.LoaderCallbacks<Build>() {
                 @Override
                 public Loader<Build> onCreateLoader(int i, Bundle bundle) {

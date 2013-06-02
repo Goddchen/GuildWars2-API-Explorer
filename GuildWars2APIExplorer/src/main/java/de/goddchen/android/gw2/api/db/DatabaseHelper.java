@@ -3,22 +3,32 @@ package de.goddchen.android.gw2.api.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import de.goddchen.android.gw2.api.Application;
-import de.goddchen.android.gw2.api.data.*;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import de.goddchen.android.gw2.api.Application;
+import de.goddchen.android.gw2.api.data.Event;
+import de.goddchen.android.gw2.api.data.EventName;
+import de.goddchen.android.gw2.api.data.Item;
+import de.goddchen.android.gw2.api.data.MapName;
+import de.goddchen.android.gw2.api.data.Match;
+import de.goddchen.android.gw2.api.data.MatchDetails;
+import de.goddchen.android.gw2.api.data.ObjectiveName;
+import de.goddchen.android.gw2.api.data.World;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -70,35 +80,35 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public Dao<Item, Integer> getItemDao() throws Exception {
         if (itemDao == null) {
-            itemDao = BaseDaoImpl.createDao(getConnectionSource(), Item.class);
+            itemDao = DaoManager.createDao(getConnectionSource(), Item.class);
         }
         return itemDao;
     }
 
     public Dao<World, Integer> getWorldDao() throws Exception {
         if (worldDao == null) {
-            worldDao = BaseDaoImpl.createDao(getConnectionSource(), World.class);
+            worldDao = DaoManager.createDao(getConnectionSource(), World.class);
         }
         return worldDao;
     }
 
     public Dao<MapName, Integer> getMapNameDao() throws Exception {
         if (mapNameDao == null) {
-            mapNameDao = BaseDaoImpl.createDao(getConnectionSource(), MapName.class);
+            mapNameDao = DaoManager.createDao(getConnectionSource(), MapName.class);
         }
         return mapNameDao;
     }
 
     public Dao<EventName, String> getEventNameDao() throws Exception {
         if (eventNameDao == null) {
-            eventNameDao = BaseDaoImpl.createDao(getConnectionSource(), EventName.class);
+            eventNameDao = DaoManager.createDao(getConnectionSource(), EventName.class);
         }
         return eventNameDao;
     }
 
     public Dao<ObjectiveName, Integer> getObjectiveNameDao() throws Exception {
         if (objectiveNameDao == null) {
-            objectiveNameDao = BaseDaoImpl.createDao(getConnectionSource(), ObjectiveName.class);
+            objectiveNameDao = DaoManager.createDao(getConnectionSource(), ObjectiveName.class);
         }
         return objectiveNameDao;
     }

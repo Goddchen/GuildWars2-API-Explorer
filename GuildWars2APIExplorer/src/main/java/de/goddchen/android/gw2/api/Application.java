@@ -1,9 +1,8 @@
 package de.goddchen.android.gw2.api;
 
-import android.content.Context;
 import com.crittercism.app.Crittercism;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+
 import de.goddchen.android.gw2.api.db.DatabaseHelper;
 
 /**
@@ -25,6 +24,8 @@ public class Application extends android.app.Application {
         public static final int RECIPE_DETAILS = 9;
         public static final int ITEM_IDS = 10;
         public static final int RECIPE_IDS = 11;
+        public static final int BUILD = 12;
+        public static final int COLORS = 13;
     }
 
     public static final class Extras {
@@ -54,13 +55,7 @@ public class Application extends android.app.Application {
     }
 
     private void setupORMLite() {
-        OpenHelperManager.setOpenHelperFactory(new OpenHelperManager.SqliteOpenHelperFactory() {
-            @Override
-            public OrmLiteSqliteOpenHelper getHelper(Context context) {
-                return new DatabaseHelper(getApplicationContext());
-            }
-        });
-        databaseHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplicationContext());
+        databaseHelper = OpenHelperManager.getHelper(getApplicationContext(), DatabaseHelper.class);
     }
 
     public static DatabaseHelper getDatabaseHelper() {
@@ -70,7 +65,7 @@ public class Application extends android.app.Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        OpenHelperManager.release();
+        OpenHelperManager.releaseHelper();
         databaseHelper = null;
     }
 }

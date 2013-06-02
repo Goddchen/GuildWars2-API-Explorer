@@ -45,6 +45,7 @@
         <activity android:name=".activities.RecipesActivity"/>
         <activity android:name=".activities.SettingsActivity"/>
         <activity android:name=".activities.BuildActivity"/>
+        <activity android:name=".activities.ColorsActivity"/>
     </application>
 
 </manifest>

@@ -26,6 +26,7 @@ public class MainActivity extends AnalyticsSherlockFragmentActivity implements V
         findViewById(R.id.wvwvw).setOnClickListener(this);
         findViewById(R.id.recipes).setOnClickListener(this);
         findViewById(R.id.build).setOnClickListener(this);
+        findViewById(R.id.colors).setOnClickListener(this);
         if (Crittercism.didCrashOnLastAppLoad()) {
             CrashDialogFragment.newInstance().show(getSupportFragmentManager(), "crash");
         }
@@ -44,6 +45,8 @@ public class MainActivity extends AnalyticsSherlockFragmentActivity implements V
                 startActivity(new Intent(getApplicationContext(), RecipesActivity.class));
             } else if (view.getId() == R.id.build) {
                 startActivity(new Intent(getApplicationContext(), BuildActivity.class));
+            } else if (view.getId() == R.id.colors) {
+                startActivity(new Intent(getApplicationContext(), ColorsActivity.class));
             }
         } else {
             if (view.getId() == R.id.items) {
