@@ -3,13 +3,14 @@ package de.goddchen.android.gw2.api.data;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Goddchen on 02.06.13.
  */
 @DatabaseTable(tableName = "guild_details")
-public class GuildDetails {
+public class GuildDetails implements Serializable {
 
     @DatabaseField(id = true)
     public String guild_id;
@@ -22,7 +23,7 @@ public class GuildDetails {
 
     public Emblem emblem;
 
-    public class Emblem {
+    public class Emblem implements Serializable {
         public int background_id;
 
         public int foreground_id;
