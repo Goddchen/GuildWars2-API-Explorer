@@ -3,6 +3,7 @@ package de.goddchen.android.gw2.api.fragments;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.view.View;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -27,6 +28,12 @@ public class ColorsFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(Application.Loaders.COLORS, null, mColorLoaderCallbacks);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getListView().setFastScrollEnabled(true);
     }
 
     private LoaderManager.LoaderCallbacks<List<Color>> mColorLoaderCallbacks =
