@@ -29,14 +29,14 @@ public class ColorAdapter extends ArrayAdapter<Color> {
         ((TextView) convertView.findViewById(R.id.name)).setText(color.name);
         ((TextView) convertView.findViewById(R.id.id))
                 .setText(String.format("ID: %d", color.id));
-        setColor(convertView.findViewById(R.id.def), color._default);
-        setColor(convertView.findViewById(R.id.cloth), color.cloth != null ? color.cloth : color._default);
-        setColor(convertView.findViewById(R.id.leather), color.leather != null ? color.leather : color._default);
-        setColor(convertView.findViewById(R.id.metal), color.metal != null ? color.metal : color._default);
+        setColor(convertView.findViewById(R.id.cloth), color.cloth);
+        setColor(convertView.findViewById(R.id.leather), color.leather);
+        setColor(convertView.findViewById(R.id.metal), color.metal);
         return convertView;
     }
 
     private void setColor(View view, Color.Config config) {
-        view.setBackgroundColor(config == null ? android.graphics.Color.BLACK : config.getRgbColor());
+        view.setBackgroundColor(
+                config == null ? android.graphics.Color.TRANSPARENT : config.getRgbColor());
     }
 }
