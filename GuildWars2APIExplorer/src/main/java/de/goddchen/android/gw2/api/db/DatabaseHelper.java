@@ -22,6 +22,7 @@ import java.util.concurrent.Callable;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.goddchen.android.gw2.api.Application;
+import de.goddchen.android.gw2.api.data.Color;
 import de.goddchen.android.gw2.api.data.Event;
 import de.goddchen.android.gw2.api.data.EventName;
 import de.goddchen.android.gw2.api.data.GuildDetails;
@@ -47,8 +48,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static Dao<ObjectiveName, Integer> objectiveNameDao;
 
+    private static Dao<Color, Long> colorDao;
+
     public DatabaseHelper(Context context) {
-        super(context, "gw2.db", null, 6);
+        super(context, "gw2.db", null, 7);
     }
 
     @Override
@@ -61,6 +64,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Event.class);
             TableUtils.createTable(connectionSource, ObjectiveName.class);
             TableUtils.createTable(connectionSource, GuildDetails.class);
+            TableUtils.createTable(connectionSource, Color.Config.class);
+            TableUtils.createTable(connectionSource, Color.class);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error creating database", e);
 
@@ -77,6 +82,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Event.class, true);
             TableUtils.dropTable(connectionSource, ObjectiveName.class, true);
             TableUtils.dropTable(connectionSource, GuildDetails.class, true);
+            TableUtils.dropTable(connectionSource, Color.Config.class, true);
+            TableUtils.dropTable(connectionSource, Color.class, true);
             onCreate(sqLiteDatabase, connectionSource);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error upgrading database", e);
@@ -116,6 +123,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             objectiveNameDao = DaoManager.createDao(getConnectionSource(), ObjectiveName.class);
         }
         return objectiveNameDao;
+    }
+
+    public Dao<Color, Long> getColorDao() throws Exception {
+        if (colorDao == null) {
+            colorDao = DaoManager.createDao(getConnectionSource(), Color.class);
+        }
+        return colorDao;
     }
 
     public static void loadMapNames(List<Event> events) throws Exception {

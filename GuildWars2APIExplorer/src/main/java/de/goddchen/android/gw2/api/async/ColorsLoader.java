@@ -3,6 +3,8 @@ package de.goddchen.android.gw2.api.async;
 import android.content.Context;
 import android.util.Log;
 
+import com.j256.ormlite.dao.Dao;
+
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,6 +16,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -31,31 +34,47 @@ public class ColorsLoader extends FixedAsyncTaskLoader<List<Color>> {
     @Override
     public List<Color> loadInBackground() {
         try {
-            List<Color> colors = new ArrayList<Color>();
-            HttpsURLConnection connection =
-                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/colors.json?"
-                            + "lang=" + Locale.getDefault().getLanguage())
-                            .openConnection();
-            JSONObject json = new JSONObject(IOUtils.toString(connection.getInputStream()));
-            JSONObject jsonColors = json.getJSONObject("colors");
-            Iterator<String> it = jsonColors.keys();
-            while (it.hasNext()) {
-                String id = it.next();
-                JSONObject jsonColor = jsonColors.getJSONObject(id);
-                Color color = new Color();
-                color.id = Long.valueOf(id);
-                color.name = jsonColor.optString("name");
-                JSONArray baseRgbs = jsonColor.optJSONArray("base_rgb");
-                if (baseRgbs != null && baseRgbs.length() == 3) {
-                    color.base_rgb = new int[3];
-                    for (int i = 0; i < 3; i++) {
-                        color.base_rgb[i] = baseRgbs.getInt(i);
+            final List<Color> colors = new ArrayList<Color>();
+            final Dao<Color, Long> colorDao = Application.getDatabaseHelper().getColorDao();
+            if (colorDao.countOf() == 0) {
+                HttpsURLConnection connection =
+                        (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/colors.json?"
+                                + "lang=" + Locale.getDefault().getLanguage())
+                                .openConnection();
+                JSONObject json = new JSONObject(IOUtils.toString(connection.getInputStream()));
+                JSONObject jsonColors = json.getJSONObject("colors");
+                Iterator<String> it = jsonColors.keys();
+                while (it.hasNext()) {
+                    String id = it.next();
+                    JSONObject jsonColor = jsonColors.getJSONObject(id);
+                    Color color = new Color();
+                    color.id = Long.valueOf(id);
+                    color.name = jsonColor.optString("name");
+                    JSONArray baseRgbs = jsonColor.optJSONArray("base_rgb");
+                    if (baseRgbs != null && baseRgbs.length() == 3) {
+                        color.base_rgb = new int[3];
+                        for (int i = 0; i < 3; i++) {
+                            color.base_rgb[i] = baseRgbs.getInt(i);
+                        }
                     }
+                    color.cloth = parseConfig(jsonColor.optJSONObject("cloth"));
+                    color.leather = parseConfig(jsonColor.optJSONObject("leather"));
+                    color.metal = parseConfig(jsonColor.optJSONObject("metal"));
+                    colors.add(color);
                 }
-                color.cloth = parseConfig(jsonColor.optJSONObject("cloth"));
-                color.leather = parseConfig(jsonColor.optJSONObject("leather"));
-                color.metal = parseConfig(jsonColor.optJSONObject("metal"));
-                colors.add(color);
+                colorDao.callBatchTasks(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        for (Color color : colors) {
+                            colorDao.create(color);
+                        }
+                        Log.d(Application.Constants.LOG_TAG,
+                                colors.size() + " colors persisted");
+                        return null;
+                    }
+                });
+            } else {
+                colors.addAll(colorDao.queryForAll());
             }
             Collections.sort(colors, new Comparator<Color>() {
                 @Override

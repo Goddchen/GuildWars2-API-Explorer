@@ -3,13 +3,19 @@ package de.goddchen.android.gw2.api.fragments;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.View;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.j256.ormlite.table.TableUtils;
 
 import java.util.List;
 
 import de.goddchen.android.gw2.api.Application;
+import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.adapter.ColorAdapter;
 import de.goddchen.android.gw2.api.async.ColorsLoader;
 import de.goddchen.android.gw2.api.data.Color;
@@ -22,6 +28,37 @@ public class ColorsFragment extends SherlockListFragment {
     public static ColorsFragment newInstance() {
         ColorsFragment fragment = new ColorsFragment();
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_colors, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.refresh) {
+            try {
+                TableUtils.clearTable(Application.getDatabaseHelper().getConnectionSource(),
+                        Color.Config.class);
+                TableUtils.clearTable(Application.getDatabaseHelper().getConnectionSource(),
+                        Color.class);
+                setListShown(false);
+                getLoaderManager()
+                        .restartLoader(Application.Loaders.COLORS, null, mColorLoaderCallbacks);
+            } catch (Exception e) {
+                Log.e(Application.Constants.LOG_TAG, "Error refreshing colors", e);
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -45,6 +82,7 @@ public class ColorsFragment extends SherlockListFragment {
 
                 @Override
                 public void onLoadFinished(Loader<List<Color>> listLoader, List<Color> colors) {
+                    setListShown(true);
                     if (colors != null) {
                         setListAdapter(new ColorAdapter(getActivity(), colors));
                     }
