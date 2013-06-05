@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Explorador API GuildWars 2</string>
+    <string name="items">Artículos</string>
+    <string name="dynamic_events">Eventos Dinámicos</string>
+    <string name="recipes">Recetas</string>
+    <string name="wvwvw">WvWvW</string>
+    <string name="dialog_crash_title">¡Disculpas!</string>
+    <string name="dialog_crash_message">Parece que el app falló la última vez que lo usó.
+¿Quiere registrar un ticket de soporte a nuestro
+rastreado de problemas?</string>
+    <string name="refresh">Actualizar</string>
+    <string name="toast_error_getting_match_details">¡Error obteniendo detalles de la pareja!</string>
+    <string name="search_by_id_hint">Yo sé que no es lo mejor, pero éste es el único API que se
+ofrece por ahora... :(  Buscar por
+ID... ¿A quién se le ocurrió ésto? :(  Casi inútil asi...</string>
+    <string name="search">Buscar</string>
+    <string name="toast_error_getting_item_details">¡Error obteniendo detalles del artículo!</string>
+    <string name="toast_error_getting_recipe_details">¡Error obteniendo detalles de la receta!</string>
+    <string name="pref_wvwvw_refresh_disabled">Deshabilitado</string>
+    <string name="pref_wvwvw_refresh_30">30 Segundos</string>
+    <string name="pref_wvwvw_refresh_60">1 Minuto</string>
+    <string name="pref_wvwvw_refresh_120">2 Minutos</string>
+    <string name="pref_wvwvw_refresh_180">3 Minutos</string>
+    <string name="pref_wvwvw_refresh_300">5 Minutos</string>
+    <string name="pref_wvwvw_refresh_title">WvWvW Intervalo de Auto-Actualización</string>
+    <string name="change_home_world">Cambiar Mundo Principal</string>
+    <string name="id_list_hint">Si todavía le interesa la lista de IDs, aquí está...</string>
+    <string name="loading">Cargando...</string>
+    <string name="no_items">Cero Artículos</string>
+    <string name="no_recipes">Cero Recetas</string>
+    <string name="pref_events_refresh_title">Eventos Intervalo de Auto-Actualización</string>
+    <string name="url_issue_tracker">https://github.com/Goddchen/GuildWars2-API-Explorer/issues</string>
+    <string name="pref_general">General</string>
+    <string name="pref_version">Versión</string>
+    <string name="pref_contact">Contactar desarrollador</string>
+    <string name="pref_contact_summary">Enviarme un email :)</string>
+    <string name="pref_rate_title">Calificar</string>
+    <string name="pref_rate_summary">Calificar éste app en el Play Store</string>
+    <string name="pref_issue_title">Rastreador de problemas</string>
+    <string name="pref_issue_summary">Mostrar el rastreador de problemas</string>
+    <string name="colors">Colores (Colorantes)</string>
+    <string name="build">Compilación</string>
+
+</resources>
