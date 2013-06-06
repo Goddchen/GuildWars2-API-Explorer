@@ -3,18 +3,22 @@ package de.goddchen.android.gw2.api.fragments;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.actionbarsherlock.app.SherlockListFragment;
+
+import java.util.List;
+
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.async.RecipeIdsLoader;
-
-import java.util.List;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -58,11 +62,18 @@ public class RecipeSearchFragment extends SherlockListFragment implements View.O
     public void onClick(View view) {
         if (view.getId() == R.id.search) {
             EditText id = (EditText) getView().findViewById(R.id.id);
+            String idString = id.getText().toString();
             if (id.length() > 0) {
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment, RecipeFragment.newInstance(Integer.valueOf(id.getText().toString())))
-                        .addToBackStack("recipe-details")
-                        .commit();
+                if (!TextUtils.isDigitsOnly(idString)) {
+                    Toast.makeText(getActivity(), R.string.toast_only_digits,
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.fragment,
+                                    RecipeFragment.newInstance(Integer.valueOf(idString)))
+                            .addToBackStack("recipe-details")
+                            .commit();
+                }
             }
         }
     }

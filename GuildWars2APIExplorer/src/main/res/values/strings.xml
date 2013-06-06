@@ -46,5 +46,6 @@
     <string name="pref_issue_summary">Show the issue tracker</string>
     <string name="colors">Colors (Dyes)</string>
     <string name="build">Build</string>
+    <string name="toast_only_digits">Only digits are allowed!</string>
 
 </resources>
