@@ -15,7 +15,7 @@ import de.goddchen.android.gw2.api.fragments.RecipeSearchFragment;
 import de.goddchen.android.gw2.api.fragments.WorldsFragment;
 import de.goddchen.android.gw2.api.fragments.dialogs.CrashDialogFragment;
 
-public class MainActivity extends AnalyticsSherlockFragmentActivity implements View.OnClickListener {
+public class MainActivity extends BaseFragmentActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

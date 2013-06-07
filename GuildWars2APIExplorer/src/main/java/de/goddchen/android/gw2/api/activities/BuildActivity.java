@@ -10,7 +10,7 @@ import de.goddchen.android.gw2.api.fragments.BuildFragment;
 /**
  * Created by Goddchen on 02.06.13.
  */
-public class BuildActivity extends AnalyticsSherlockFragmentActivity {
+public class BuildActivity extends BaseFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

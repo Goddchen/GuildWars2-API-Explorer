@@ -48,5 +48,6 @@
     <string name="colors">Farben</string>
     <string name="build">Build</string>
     <string name="toast_only_digits">Nur Zahlen sind erlaubt!</string>
+    <string name="toast_error_loading_data">Error loading data</string>
 
 </resources>

@@ -8,7 +8,7 @@ import de.goddchen.android.gw2.api.fragments.ItemSearchFragment;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class ItemsActivity extends AnalyticsSherlockFragmentActivity {
+public class ItemsActivity extends BaseFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

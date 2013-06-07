@@ -4,18 +4,26 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.actionbarsherlock.app.SherlockFragment;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import java.util.Locale;
+
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
+import de.goddchen.android.gw2.api.activities.BaseFragmentActivity;
 import de.goddchen.android.gw2.api.adapter.IngredientAdapter;
+import de.goddchen.android.gw2.api.async.GsonRequest;
 import de.goddchen.android.gw2.api.async.RecipeLoader;
+import de.goddchen.android.gw2.api.data.Item;
 import de.goddchen.android.gw2.api.data.Recipe;
 
 /**
@@ -52,6 +60,28 @@ public class RecipeFragment extends SherlockFragment {
         getLoaderManager().initLoader(Application.Loaders.RECIPE_DETAILS, null, mRecipeLoaderCallbacks);
     }
 
+    private void loadItem(final TextView view, Recipe recipe, final String format) {
+        view.setText("Loading...");
+        ((BaseFragmentActivity) getActivity()).getRequestQueue()
+                .add(new GsonRequest<Item>(
+                        "https://api.guildwars2.com/v1/item_details.json?item_id=" + recipe.output_item_id
+                                + "&lang=" + Locale.getDefault().getLanguage(),
+                        Item.class,
+                        new Response.Listener<Item>() {
+                            @Override
+                            public void onResponse(Item item) {
+                                view.setText(String.format(format, item.name));
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                view.setText("---");
+                            }
+                        }
+                ));
+    }
+
     private LoaderManager.LoaderCallbacks<Recipe> mRecipeLoaderCallbacks =
             new LoaderManager.LoaderCallbacks<Recipe>() {
                 @Override
@@ -75,10 +105,8 @@ public class RecipeFragment extends SherlockFragment {
                     } else {
                         ((TextView) getView().findViewById(R.id.type))
                                 .setText(String.format("Type: %s", recipe.type));
-                        ((TextView) getView().findViewById(R.id.output_item))
-                                .setText(String.format("Output item: %s",
-                                        recipe.outputItem == null || TextUtils.isEmpty(recipe.outputItem.name) ? "---"
-                                                : recipe.outputItem.name));
+                        loadItem((TextView) getView().findViewById(R.id.output_item),
+                                recipe, "Output item: %s");
                         ((TextView) getView().findViewById(R.id.output_item_count))
                                 .setText(String.format("Output item count: %d", recipe.output_item_count));
                         ((TextView) getView().findViewById(R.id.min_rating))

@@ -50,6 +50,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static Dao<Color, Long> colorDao;
 
+    private static Dao<GuildDetails, String> guildDetailsDao;
+
     public DatabaseHelper(Context context) {
         super(context, "gw2.db", null, 7);
     }
@@ -132,6 +134,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return colorDao;
     }
 
+    public Dao<GuildDetails, String> getGuildDetailsDao() throws  Exception {
+        if(guildDetailsDao == null) {
+            guildDetailsDao = DaoManager.createDao(getConnectionSource(), GuildDetails.class);
+        }
+        return guildDetailsDao;
+    }
+
     public static void loadMapNames(List<Event> events) throws Exception {
         if (Application.getDatabaseHelper().getMapNameDao().queryForAll().size() == 0) {
             HttpsURLConnection connection =
@@ -209,7 +218,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public static void loadGuildNames(MatchDetails matchDetails) throws Exception {
+    /*public static void loadGuildNames(MatchDetails matchDetails) throws Exception {
         if (Application.getDatabaseHelper().getObjectiveNameDao().queryForAll().size() == 0) {
             HttpsURLConnection connection =
                     (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/wvw/objective_names.json?lang="
@@ -241,7 +250,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 objective.name = Application.getDatabaseHelper().getObjectiveNameDao().queryForId(objective.id);
             }
         }
-    }
+    }*/
 
 
     public static void loadWorldNames(List<Match> matches) throws Exception {
@@ -279,7 +288,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return item;
     }
 
-    public static GuildDetails getGuildDetails(String id) throws Exception {
+    /*public static GuildDetails getGuildDetails(String id) throws Exception {
         Dao<GuildDetails, String> dao = DaoManager.createDao(Application.getDatabaseHelper().getConnectionSource(), GuildDetails.class);
         GuildDetails guildDetails = dao.queryForId(id);
         if (guildDetails == null) {
@@ -291,5 +300,5 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             dao.create(guildDetails);
         }
         return guildDetails;
-    }
+    }*/
 }

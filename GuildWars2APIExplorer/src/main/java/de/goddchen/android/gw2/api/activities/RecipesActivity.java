@@ -8,7 +8,7 @@ import de.goddchen.android.gw2.api.fragments.RecipeSearchFragment;
 /**
  * Created by Goddchen on 23.05.13.
  */
-public class RecipesActivity extends AnalyticsSherlockFragmentActivity {
+public class RecipesActivity extends BaseFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

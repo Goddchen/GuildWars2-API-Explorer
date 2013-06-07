@@ -30,10 +30,6 @@ public class RecipeLoader extends FixedAsyncTaskLoader<Recipe> {
                     (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/recipe_details.json?recipe_id=" + mId
                             + "&lang=" + Locale.getDefault().getLanguage()).openConnection();
             Recipe recipe = new Gson().fromJson(new InputStreamReader(connection.getInputStream()), Recipe.class);
-            recipe.outputItem = DatabaseHelper.getItem(recipe.output_item_id);
-            for (Recipe.Ingredient ingredient : recipe.ingredients) {
-                ingredient.item = DatabaseHelper.getItem(ingredient.item_id);
-            }
             return recipe;
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error loading recipe details", e);
