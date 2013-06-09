@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GuildWars 2 API Explorer</string>
+    <string name="items">Oggetti</string>
+    <string name="dynamic_events">Eventi Dinamici</string>
+    <string name="recipes">Ricette</string>
+    <string name="wvwvw">WvWvW</string>
+    <string name="dialog_crash_title">Oooops!</string>
+    <string name="dialog_crash_message">L\'applicazione è terminata in modo anomalo l\'ultima volta che è stata utilizzata. Vuoi inviare una segnalazione al supporto?</string>
+    <string name="refresh">Aggiorna</string>
+    <string name="toast_error_getting_match_details">Errore nel recupero dettagli del match!</string>
+    <string name="search_by_id_hint">So che fa schifo, ma ad oggi questa è l\'unica API a disposizione :( Ricerca by id, a chi è venuto in mente?</string>
+    <string name="search">Cerca</string>
+    <string name="toast_error_getting_item_details">Errore nel recupero dettagli dell\'oggetto!</string>
+    <string name="toast_error_getting_recipe_details">Errore nel recupero dettagli della ricetta!</string>
+    <string name="pref_wvwvw_refresh_disabled">Disabilitato</string>
+    <string name="pref_wvwvw_refresh_30">30 secondi</string>
+    <string name="pref_wvwvw_refresh_60">1 Minuto</string>
+    <string name="pref_wvwvw_refresh_120">2 Minuti</string>
+    <string name="pref_wvwvw_refresh_180">3 minuti</string>
+    <string name="pref_wvwvw_refresh_300">5 Minuti</string>
+    <string name="pref_wvwvw_refresh_title">WvWvW intervallo di aggiornamento</string>
+    <string name="change_home_world">Cambia il mondo principale</string>
+    <string name="id_list_hint">Se ti interessa comunque la lista degli id, eccola qua...</string>
+    <string name="loading">Caricamento ..</string>
+    <string name="no_items">Nessun Oggetto</string>
+    <string name="no_recipes">Nessuna Ricetta</string>
+    <string name="pref_events_refresh_title">Intervallo di Aggiornamento degli Eventi</string>
+    <string name="url_issue_tracker">https://github.com/Goddchen/GuildWars2-API-Explorer/issues</string>
+    <string name="pref_general">Generale</string>
+    <string name="pref_version">Versione</string>
+    <string name="pref_contact">Contatta lo Sviluppatore</string>
+    <string name="pref_contact_summary">Inviami una mail :)</string>
+    <string name="pref_rate_title">Vota</string>
+    <string name="pref_rate_summary">Vota quest\'app nel Play Store</string>
+    <string name="pref_issue_title">Issue tracker</string>
+    <string name="pref_issue_summary">Mostra l\'issue tracker</string>
+    <string name="colors">Colori</string>
+    <string name="build">Versione</string>
+
+</resources>
