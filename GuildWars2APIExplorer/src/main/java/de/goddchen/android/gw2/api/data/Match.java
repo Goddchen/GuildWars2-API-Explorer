@@ -19,4 +19,6 @@ public class Match implements Serializable {
     public World blueWorld;
 
     public World greenWorld;
+
+    public String start_time, end_time;
 }
