@@ -8,7 +8,7 @@ import de.goddchen.android.gw2.api.fragments.MatchesFragment;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class WvWActivity extends AnalyticsSherlockFragmentActivity {
+public class WvWActivity extends BaseFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

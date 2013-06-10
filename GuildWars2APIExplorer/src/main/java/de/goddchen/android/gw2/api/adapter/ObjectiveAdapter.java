@@ -2,15 +2,24 @@ package de.goddchen.android.gw2.api.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.List;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
+import java.util.List;
+import java.util.Locale;
+
+import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
+import de.goddchen.android.gw2.api.activities.BaseFragmentActivity;
+import de.goddchen.android.gw2.api.async.GsonRequest;
+import de.goddchen.android.gw2.api.data.GuildDetails;
 import de.goddchen.android.gw2.api.data.MatchDetails;
 
 /**
@@ -32,11 +41,21 @@ public class ObjectiveAdapter extends ArrayAdapter<MatchDetails.Objective> {
         } else {
             ((TextView) convertView.findViewById(R.id.name)).setText(objective.name.name);
         }
-        if (objective.ownerGuildDetails != null) {
+        if (!TextUtils.isEmpty(objective.owner_guild)) {
             convertView.findViewById(R.id.owner).setVisibility(View.VISIBLE);
-            ((TextView) convertView.findViewById(R.id.owner))
-                    .setText(String.format("%s [%s]",
-                            objective.ownerGuildDetails.guild_name, objective.ownerGuildDetails.tag));
+            try {
+                GuildDetails guildDetails = Application.getDatabaseHelper().getGuildDetailsDao()
+                        .queryForId(objective.owner_guild);
+                if (guildDetails != null) {
+                    ((TextView) convertView.findViewById(R.id.owner)).setText(
+                            String.format("%s [%s]", guildDetails.guild_name, guildDetails.tag));
+                } else {
+                    loadGuildDetails((TextView) convertView.findViewById(R.id.owner), objective);
+                }
+            } catch (Exception e) {
+                Log.w(Application.Constants.LOG_TAG, "Error loading guild details", e);
+                ((TextView) convertView.findViewById(R.id.owner)).setText("---");
+            }
         } else {
             convertView.findViewById(R.id.owner).setVisibility(View.GONE);
         }
@@ -51,5 +70,37 @@ public class ObjectiveAdapter extends ArrayAdapter<MatchDetails.Objective> {
             convertView.findViewById(R.id.owner).setVisibility(View.VISIBLE);
         }
         return convertView;
+    }
+
+    private void loadGuildDetails(final TextView view, MatchDetails.Objective objective) {
+        view.setText(R.string.loading);
+        ((BaseFragmentActivity) getContext()).getRequestQueue()
+                .add(new GsonRequest<GuildDetails>(
+                        "https://api.guildwars2.com/v1/guild_details.json?guild_id="
+                                + objective.owner_guild
+                                + "&lang=" + Locale.getDefault().getLanguage(),
+                        GuildDetails.class,
+                        new Response.Listener<GuildDetails>() {
+                            @Override
+                            public void onResponse(GuildDetails guildDetails) {
+                                try {
+                                    Application.getDatabaseHelper().getGuildDetailsDao().create
+                                            (guildDetails);
+                                } catch (Exception e) {
+                                    Log.w(Application.Constants.LOG_TAG,
+                                            "Error saving guild details", e);
+                                }
+                                view.setText(String.format("%s [%s]",
+                                        guildDetails.guild_name,
+                                        guildDetails.tag));
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                view.setText("---");
+                            }
+                        }
+                ));
     }
 }

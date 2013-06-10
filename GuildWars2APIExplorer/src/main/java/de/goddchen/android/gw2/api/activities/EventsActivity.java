@@ -11,7 +11,7 @@ import de.goddchen.android.gw2.api.fragments.WorldsFragment;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class EventsActivity extends AnalyticsSherlockFragmentActivity {
+public class EventsActivity extends BaseFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

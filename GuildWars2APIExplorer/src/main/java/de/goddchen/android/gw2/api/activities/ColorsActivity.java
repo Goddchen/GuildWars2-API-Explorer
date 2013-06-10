@@ -10,7 +10,7 @@ import de.goddchen.android.gw2.api.fragments.ColorsFragment;
 /**
  * Created by Goddchen on 02.06.13.
  */
-public class ColorsActivity extends AnalyticsSherlockFragmentActivity {
+public class ColorsActivity extends BaseFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

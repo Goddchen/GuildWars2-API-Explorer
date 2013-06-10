@@ -49,7 +49,6 @@ public class MatchDetailsLoader extends FixedAsyncTaskLoader<MatchDetails> {
                 });
             }
             DatabaseHelper.loadObjectiveNames(details);
-            DatabaseHelper.loadGuildNames(details);
             return details;
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error loading match details", e);

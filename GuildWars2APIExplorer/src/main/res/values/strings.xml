@@ -47,5 +47,6 @@
     <string name="colors">Colors (Dyes)</string>
     <string name="build">Build</string>
     <string name="toast_only_digits">Only digits are allowed!</string>
+    <string name="toast_error_loading_data">Error loading data</string>
 
 </resources>

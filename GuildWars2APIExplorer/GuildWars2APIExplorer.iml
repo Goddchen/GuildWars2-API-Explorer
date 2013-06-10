@@ -76,6 +76,7 @@
     <orderEntry type="library" name="libGoogleAnalyticsV2" level="project" />
     <orderEntry type="library" name="actionbarsherlock.aar" level="project" />
     <orderEntry type="library" name="library.aar" level="project" />
+    <orderEntry type="library" name="volley.aar" level="project" />
   </component>
 </module>
 
