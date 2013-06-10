@@ -2,7 +2,6 @@ package de.goddchen.android.gw2.api.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -53,12 +52,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Dao<GuildDetails, String> guildDetailsDao;
 
     public DatabaseHelper(Context context) {
-        super(context, "gw2.db", null, 7);
+        super(context, "gw2.db", null, 8);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         try {
+            TableUtils.createTable(connectionSource, Item.Consumable.class);
             TableUtils.createTable(connectionSource, Item.class);
             TableUtils.createTable(connectionSource, World.class);
             TableUtils.createTable(connectionSource, EventName.class);
@@ -77,6 +77,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i2) {
         try {
+            TableUtils.dropTable(connectionSource, Item.Consumable.class, true);
             TableUtils.dropTable(connectionSource, Item.class, true);
             TableUtils.dropTable(connectionSource, World.class, true);
             TableUtils.dropTable(connectionSource, EventName.class, true);
@@ -134,8 +135,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return colorDao;
     }
 
-    public Dao<GuildDetails, String> getGuildDetailsDao() throws  Exception {
-        if(guildDetailsDao == null) {
+    public Dao<GuildDetails, String> getGuildDetailsDao() throws Exception {
+        if (guildDetailsDao == null) {
             guildDetailsDao = DaoManager.createDao(getConnectionSource(), GuildDetails.class);
         }
         return guildDetailsDao;

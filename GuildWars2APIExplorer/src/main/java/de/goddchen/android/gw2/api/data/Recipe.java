@@ -13,19 +13,20 @@ public class Recipe implements Serializable {
 
     public int output_item_id;
 
-    public Item outputItem;
-
     public int output_item_count;
 
     public int min_rating;
 
     public int time_to_craft_ms;
 
+    public String[] disciplines;
+
+    public String[] flags;
+
     public List<Ingredient> ingredients;
 
     public class Ingredient implements Serializable {
         public int item_id;
-        public Item item;
         public int count;
     }
 }

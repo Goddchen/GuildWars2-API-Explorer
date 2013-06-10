@@ -4,18 +4,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.actionbarsherlock.app.SherlockFragment;
+
+import java.util.Arrays;
+
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.async.ItemLoader;
 import de.goddchen.android.gw2.api.data.Item;
-
-import java.util.Arrays;
 
 /**
  * Created by Goddchen on 23.05.13.
@@ -73,25 +76,46 @@ public class ItemFragment extends SherlockFragment {
                         });
                     } else {
                         ((TextView) getView().findViewById(R.id.name))
-                                .setText(String.format("Name: %s", item.name));
+                                .setText(getString(R.string.item_name, item.name));
                         ((TextView) getView().findViewById(R.id.description))
-                                .setText(String.format("Description: %s", item.description));
+                                .setText(getString(R.string.item_description,
+                                        item.description == null ? "" :
+                                                Html.fromHtml(item.description)));
                         ((TextView) getView().findViewById(R.id.type))
-                                .setText(String.format("Type: %s", item.type));
+                                .setText(getString(R.string.item_type, item.type));
                         ((TextView) getView().findViewById(R.id.level))
-                                .setText(String.format("Level: %d", item.level));
+                                .setText(getString(R.string.item_level, item.level));
                         ((TextView) getView().findViewById(R.id.rarity))
-                                .setText(String.format("Rarity: %s", item.rarity));
+                                .setText(getString(R.string.item_rarity, item.rarity));
                         ((TextView) getView().findViewById(R.id.vendor_value))
-                                .setText(String.format("Vendor value: %d", item.vendor_value));
+                                .setText(getString(R.string.item_vendor_value, item.vendor_value));
                         ((TextView) getView().findViewById(R.id.game_types))
-                                .setText(String.format("Game types: %s", Arrays.toString(item.game_types)));
+                                .setText(getString(R.string.item_game_types,
+                                        Arrays.toString(item.game_types)));
                         ((TextView) getView().findViewById(R.id.flags))
-                                .setText(String.format("Flags: %s", Arrays.toString(item.flags)));
+                                .setText(getString(R.string.item_flags, Arrays.toString(item.flags)));
                         ((TextView) getView().findViewById(R.id.restrictions))
-                                .setText(String.format("Restrictions: %s", Arrays.toString(item.restrictions)));
+                                .setText(getString(R.string.item_restrictions,
+                                        Arrays.toString(item.restrictions)));
                         ((TextView) getView().findViewById(R.id.crafting_material))
-                                .setText(String.format("Crafting material: %s", item.crafting_material));
+                                .setText(getString(R.string.item_crafting_material,
+                                        item.crafting_material));
+                        if (item.consumable != null) {
+                            getView().findViewById(R.id.consumable_wrapper)
+                                    .setVisibility(View.VISIBLE);
+                            ((TextView) getView().findViewById(R.id.consumable_description))
+                                    .setText(getString(R.string.consumable_description,
+                                            item.consumable.description == null ? "" :
+                                                    Html.fromHtml(item.consumable.description)));
+                            ((TextView) getView().findViewById(R.id.consumable_type))
+                                    .setText(getString(R.string.consumable_type,
+                                            item.consumable.type));
+                            ((TextView) getView().findViewById(R.id.consumable_duration))
+                                    .setText(getString(R.string.consumable_duration,
+                                            item.consumable.duration_ms / 1000f / 60f));
+                        } else {
+                            getView().findViewById(R.id.consumable_wrapper).setVisibility(View.GONE);
+                        }
                     }
                 }
 

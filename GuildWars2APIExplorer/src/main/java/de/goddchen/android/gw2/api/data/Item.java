@@ -4,6 +4,8 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 /**
  * Created by Goddchen on 22.05.13.
  */
@@ -41,4 +43,22 @@ public class Item {
 
     @DatabaseField
     public String crafting_material;
+
+    @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+    public Consumable consumable;
+
+    @DatabaseTable(tableName = "consumable")
+    public static class Consumable implements Serializable {
+        @DatabaseField(generatedId = true)
+        public long id;
+
+        @DatabaseField
+        public String type;
+
+        @DatabaseField
+        public long duration_ms;
+
+        @DatabaseField
+        public String description;
+    }
 }

@@ -48,5 +48,26 @@
     <string name="build">Build</string>
     <string name="toast_only_digits">Only digits are allowed!</string>
     <string name="toast_error_loading_data">Error loading data</string>
+    <string name="label_consumable">Consumable</string>
+    <string name="consumable_type">Type: %s</string>
+    <string name="consumable_description">Description: %s</string>
+    <string name="consumable_duration">Duration: %.02f minute(s)</string>
+    <string name="item_name">Name: %s</string>
+    <string name="item_description">Description: %s</string>
+    <string name="item_type">Type: %s</string>
+    <string name="item_level">Level: %d</string>
+    <string name="item_rarity">Rarity: %s</string>
+    <string name="item_vendor_value">Vendor value: %d</string>
+    <string name="item_game_types">Game types: %s</string>
+    <string name="item_flags">Flags: %s</string>
+    <string name="item_restrictions">Restrictions: %s</string>
+    <string name="item_crafting_material">Crafting material: %s</string>
+    <string name="recipe_type">Type: %s</string>
+    <string name="recipe_output_item">Output item: %s</string>
+    <string name="recipe_output_item_count">Output item count: %d</string>
+    <string name="recipe_min_rating">Min. rating: %d</string>
+    <string name="recipe_time_to_craft">Time to craft (ms): %d</string>
+    <string name="recipe_disciplines">Disciplines: %s</string>
+    <string name="recipe_flags">Flags: %s</string>
 
 </resources>

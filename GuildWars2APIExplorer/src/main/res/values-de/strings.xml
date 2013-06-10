@@ -48,6 +48,27 @@
     <string name="colors">Farben</string>
     <string name="build">Build</string>
     <string name="toast_only_digits">Nur Zahlen sind erlaubt!</string>
-    <string name="toast_error_loading_data">Error loading data</string>
+    <string name="toast_error_loading_data">Fehler beim Laden der Daten</string>
+    <string name="label_consumable">Consumable</string>
+    <string name="consumable_type">Typ: %s</string>
+    <string name="consumable_description">Beschreibung: %s</string>
+    <string name="consumable_duration">Dauer: %.02f Minute(n)</string>
+    <string name="item_name">Name: %s</string>
+    <string name="item_description">Beschreibung: %s</string>
+    <string name="item_type">Typ: %s</string>
+    <string name="item_level">Level: %d</string>
+    <string name="item_rarity">Seltenheit: %s</string>
+    <string name="item_vendor_value">Händler-Wert: %d</string>
+    <string name="item_game_types">Spiel-Typen: %s</string>
+    <string name="item_flags">Eigenschaften: %s</string>
+    <string name="item_restrictions">Einschränkungen: %s</string>
+    <string name="item_crafting_material">Crafting Material: %s</string>
+    <string name="recipe_type">Typ: %s</string>
+    <string name="recipe_output_item">Hergestelltes Item: %s</string>
+    <string name="recipe_output_item_count">Anzahl hergestellter Items: %d</string>
+    <string name="recipe_min_rating">Min. Level: %d</string>
+    <string name="recipe_time_to_craft">Herstellungsdauer (ms): %d</string>
+    <string name="recipe_disciplines">Berufe: %s</string>
+    <string name="recipe_flags">Eigenschaften: %s</string>
 
 </resources>

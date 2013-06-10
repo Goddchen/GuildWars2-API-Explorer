@@ -15,6 +15,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import de.goddchen.android.gw2.api.Application;
@@ -104,15 +105,23 @@ public class RecipeFragment extends SherlockFragment {
                         });
                     } else {
                         ((TextView) getView().findViewById(R.id.type))
-                                .setText(String.format("Type: %s", recipe.type));
+                                .setText(getString(R.string.recipe_type, recipe.type));
                         loadItem((TextView) getView().findViewById(R.id.output_item),
-                                recipe, "Output item: %s");
+                                recipe, getString(R.string.recipe_output_item));
                         ((TextView) getView().findViewById(R.id.output_item_count))
-                                .setText(String.format("Output item count: %d", recipe.output_item_count));
+                                .setText(getString(R.string.recipe_output_item_count,
+                                        recipe.output_item_count));
                         ((TextView) getView().findViewById(R.id.min_rating))
-                                .setText(String.format("Min. rating: %d", recipe.min_rating));
+                                .setText(getString(R.string.recipe_min_rating, recipe.min_rating));
                         ((TextView) getView().findViewById(R.id.time_to_craft))
-                                .setText(String.format("Time to craft (ms): %d", recipe.time_to_craft_ms));
+                                .setText(getString(R.string.recipe_time_to_craft,
+                                        recipe.time_to_craft_ms));
+                        ((TextView) getView().findViewById(R.id.disciplines))
+                                .setText(getString(R.string.recipe_disciplines,
+                                        Arrays.toString(recipe.disciplines)));
+                        ((TextView) getView().findViewById(R.id.flags))
+                                .setText(getString(R.string.recipe_flags,
+                                        Arrays.toString(recipe.flags)));
                         ListView ingredients = (ListView) getView().findViewById(R.id.ingredients);
                         ingredients.setAdapter(new IngredientAdapter(getActivity(), recipe.ingredients));
                     }
