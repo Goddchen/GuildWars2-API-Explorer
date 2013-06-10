@@ -7,6 +7,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -124,6 +125,18 @@ public class RecipeFragment extends SherlockFragment {
                                         Arrays.toString(recipe.flags)));
                         ListView ingredients = (ListView) getView().findViewById(R.id.ingredients);
                         ingredients.setAdapter(new IngredientAdapter(getActivity(), recipe.ingredients));
+                        ingredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Recipe.Ingredient ingredient = (Recipe.Ingredient) parent
+                                        .getItemAtPosition(position);
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment,
+                                                ItemFragment.newInstance(ingredient.item_id))
+                                        .addToBackStack("item-details")
+                                        .commit();
+                            }
+                        });
                     }
                 }
 
