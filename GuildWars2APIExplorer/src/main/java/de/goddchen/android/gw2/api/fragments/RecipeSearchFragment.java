@@ -1,5 +1,6 @@
 package de.goddchen.android.gw2.api.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -7,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -68,6 +70,10 @@ public class RecipeSearchFragment extends SherlockListFragment implements View.O
                     Toast.makeText(getActivity(), R.string.toast_only_digits,
                             Toast.LENGTH_SHORT).show();
                 } else {
+                    InputMethodManager inputMethodManager =
+                            (InputMethodManager) getActivity()
+                                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     getFragmentManager().beginTransaction()
                             .replace(R.id.fragment,
                                     RecipeFragment.newInstance(Integer.valueOf(idString)))
