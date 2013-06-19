@@ -2,18 +2,21 @@ package de.goddchen.android.gw2.api.async;
 
 import android.content.Context;
 import android.util.Log;
-import com.google.gson.Gson;
-import de.goddchen.android.gw2.api.Application;
-import de.goddchen.android.gw2.api.data.Event;
-import de.goddchen.android.gw2.api.db.DatabaseHelper;
 
-import javax.net.ssl.HttpsURLConnection;
+import com.google.gson.Gson;
+
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import de.goddchen.android.gw2.api.Application;
+import de.goddchen.android.gw2.api.data.Event;
+import de.goddchen.android.gw2.api.db.DatabaseHelper;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -40,14 +43,16 @@ public class EventsLoader extends FixedAsyncTaskLoader<List<Event>> {
             Collections.sort(events, new Comparator<Event>() {
                 @Override
                 public int compare(Event event, Event event2) {
-                    if (event.state.equals(event2.state)) {
+                    int stateCompare = -(Integer.valueOf(event.getStatePriority())
+                            .compareTo(event2.getStatePriority()));
+                    if (stateCompare != 0) {
+                        return stateCompare;
+                    } else {
                         if (event.eventName == null || event2.eventName == null) {
-                            return -1;
+                            return 0;
                         } else {
                             return event.eventName.name.compareTo(event2.eventName.name);
                         }
-                    } else {
-                        return -(Integer.valueOf(event.getStatePriority()).compareTo(event2.getStatePriority()));
                     }
                 }
             });
