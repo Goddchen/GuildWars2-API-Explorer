@@ -9,6 +9,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.crittercism.app.Crittercism;
 
 import de.goddchen.android.gw2.api.R;
+import de.goddchen.android.gw2.api.fragments.BuildFragment;
+import de.goddchen.android.gw2.api.fragments.ColorsFragment;
+import de.goddchen.android.gw2.api.fragments.ContinentsFragment;
 import de.goddchen.android.gw2.api.fragments.ItemSearchFragment;
 import de.goddchen.android.gw2.api.fragments.MatchesFragment;
 import de.goddchen.android.gw2.api.fragments.RecipeSearchFragment;
@@ -27,6 +30,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         findViewById(R.id.recipes).setOnClickListener(this);
         findViewById(R.id.build).setOnClickListener(this);
         findViewById(R.id.colors).setOnClickListener(this);
+        findViewById(R.id.maps).setOnClickListener(this);
         if (Crittercism.didCrashOnLastAppLoad()) {
             CrashDialogFragment.newInstance().show(getSupportFragmentManager(), "crash");
         }
@@ -47,6 +51,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 startActivity(new Intent(getApplicationContext(), BuildActivity.class));
             } else if (view.getId() == R.id.colors) {
                 startActivity(new Intent(getApplicationContext(), ColorsActivity.class));
+            } else if (view.getId() == R.id.maps) {
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
             }
         } else {
             if (view.getId() == R.id.items) {
@@ -64,6 +70,18 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             } else if (view.getId() == R.id.recipes) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, RecipeSearchFragment.newInstance())
+                        .commit();
+            } else if (view.getId() == R.id.maps) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, ContinentsFragment.newInstance())
+                        .commit();
+            } else if (view.getId() == R.id.colors) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, ColorsFragment.newInstance())
+                        .commit();
+            } else if (view.getId() == R.id.build) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, BuildFragment.newInstance())
                         .commit();
             }
         }

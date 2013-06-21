@@ -22,14 +22,19 @@ import javax.net.ssl.HttpsURLConnection;
 
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.data.Color;
+import de.goddchen.android.gw2.api.data.Continent;
 import de.goddchen.android.gw2.api.data.Event;
 import de.goddchen.android.gw2.api.data.EventName;
+import de.goddchen.android.gw2.api.data.Floor;
 import de.goddchen.android.gw2.api.data.GuildDetails;
 import de.goddchen.android.gw2.api.data.Item;
+import de.goddchen.android.gw2.api.data.Map;
 import de.goddchen.android.gw2.api.data.MapName;
 import de.goddchen.android.gw2.api.data.Match;
 import de.goddchen.android.gw2.api.data.MatchDetails;
 import de.goddchen.android.gw2.api.data.ObjectiveName;
+import de.goddchen.android.gw2.api.data.POI;
+import de.goddchen.android.gw2.api.data.Region;
 import de.goddchen.android.gw2.api.data.World;
 
 /**
@@ -51,8 +56,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static Dao<GuildDetails, String> guildDetailsDao;
 
+    private static Dao<Continent, Long> continentDao;
+
+    private static Dao<Floor, Long> floorDao;
+
+    private static Dao<Region, Long> regionDao;
+
+    private static Dao<Map, Long> mapDao;
+
+    private static Dao<POI, Long> poiDao;
+
     public DatabaseHelper(Context context) {
-        super(context, "gw2.db", null, 8);
+        super(context, "gw2.db", null, 9);
     }
 
     @Override
@@ -68,9 +83,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, GuildDetails.class);
             TableUtils.createTable(connectionSource, Color.Config.class);
             TableUtils.createTable(connectionSource, Color.class);
+            TableUtils.createTable(connectionSource, Continent.class);
+            TableUtils.createTable(connectionSource, Floor.class);
+            TableUtils.createTable(connectionSource, Region.class);
+            TableUtils.createTable(connectionSource, Map.class);
+            TableUtils.createTable(connectionSource, POI.class);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error creating database", e);
-
         }
     }
 
@@ -87,6 +106,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, GuildDetails.class, true);
             TableUtils.dropTable(connectionSource, Color.Config.class, true);
             TableUtils.dropTable(connectionSource, Color.class, true);
+            TableUtils.dropTable(connectionSource, Continent.class, true);
+            TableUtils.dropTable(connectionSource, Floor.class, true);
+            TableUtils.dropTable(connectionSource, Region.class, true);
+            TableUtils.dropTable(connectionSource, Map.class, true);
+            TableUtils.dropTable(connectionSource, POI.class, true);
             onCreate(sqLiteDatabase, connectionSource);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error upgrading database", e);
@@ -140,6 +164,41 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             guildDetailsDao = DaoManager.createDao(getConnectionSource(), GuildDetails.class);
         }
         return guildDetailsDao;
+    }
+
+    public Dao<Continent, Long> getContinentDao() throws Exception {
+        if (continentDao == null) {
+            continentDao = DaoManager.createDao(getConnectionSource(), Continent.class);
+        }
+        return continentDao;
+    }
+
+    public Dao<Floor, Long> getFloorDao() throws Exception {
+        if (floorDao == null) {
+            floorDao = DaoManager.createDao(getConnectionSource(), Floor.class);
+        }
+        return floorDao;
+    }
+
+    public Dao<Region, Long> getRegionDao() throws Exception {
+        if (regionDao == null) {
+            regionDao = DaoManager.createDao(getConnectionSource(), Region.class);
+        }
+        return regionDao;
+    }
+
+    public Dao<Map, Long> getMapDao() throws Exception {
+        if (mapDao == null) {
+            mapDao = DaoManager.createDao(getConnectionSource(), Map.class);
+        }
+        return mapDao;
+    }
+
+    public Dao<POI, Long> getPoiDao() throws Exception {
+        if (poiDao == null) {
+            poiDao = DaoManager.createDao(getConnectionSource(), POI.class);
+        }
+        return poiDao;
     }
 
     public static void loadMapNames(List<Event> events) throws Exception {

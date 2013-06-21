@@ -26,6 +26,8 @@ public class Application extends android.app.Application {
         public static final int RECIPE_IDS = 11;
         public static final int BUILD = 12;
         public static final int COLORS = 13;
+        public static final int CONTINENTS = 14;
+        public static final int FLOOR_METADATA = 15;
     }
 
     public static final class Extras {

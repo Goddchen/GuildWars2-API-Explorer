@@ -18,6 +18,9 @@ dependencies {
     compile "org.apache.commons:commons-io:1.3.2"
     compile "com.j256.ormlite:ormlite-android:4.45"
     compile "com.google.code.gson:gson:2.2.4"
+    compile "org.osmdroid:osmdroid-android:3.0.10"
+    compile "org.osmdroid:osmdroid-parent:3.0.10"
+    compile "org.slf4j:slf4j-android:1.6.1-RC1"
     compile fileTree(dir: 'libs', include: '*.jar',)
     compile project(':submodules:ActionBarSherlock:actionbarsherlock')
     compile project(':submodules:ViewPagerIndicator:library')

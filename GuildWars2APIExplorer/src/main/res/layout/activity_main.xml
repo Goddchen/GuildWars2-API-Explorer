@@ -55,6 +55,12 @@
                     android:text="@string/colors"/>
 
             <Button
+                    android:id="@+id/maps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/maps"/>
+
+            <Button
                     android:id="@+id/build"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

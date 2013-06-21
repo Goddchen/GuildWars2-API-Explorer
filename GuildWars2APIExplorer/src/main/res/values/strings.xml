@@ -71,5 +71,6 @@
     <string name="recipe_flags">Flags: %s</string>
     <string name="match_start_time">Start: %s</string>
     <string name="match_end_time">End: %s</string>
+    <string name="maps">Maps</string>
 
 </resources>

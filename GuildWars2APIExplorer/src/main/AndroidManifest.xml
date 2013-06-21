@@ -4,12 +4,14 @@
           android:versionCode="12"
           android:versionName="1.0-beta9-hotfix1">
 
-<uses-sdk
+    <uses-sdk
             android:minSdkVersion="8"
             android:targetSdkVersion="17"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <supports-screens
             android:smallScreens="true"
@@ -37,15 +39,17 @@
         <activity android:name=".activities.ItemsActivity"/>
         <activity android:name=".activities.EventsActivity"/>
 
-        <!-- AdMob -->
-        <activity
-                android:name="com.google.ads.AdActivity"
-                android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
         <activity android:name=".activities.WvWActivity"/>
         <activity android:name=".activities.RecipesActivity"/>
         <activity android:name=".activities.SettingsActivity"/>
         <activity android:name=".activities.BuildActivity"/>
         <activity android:name=".activities.ColorsActivity"/>
+        <activity android:name=".activities.MapsActivity"/>
+
+        <!-- AdMob -->
+        <activity
+                android:name="com.google.ads.AdActivity"
+                android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
 
         <!-- Used for install referral measurement-->
         <service android:name="com.google.analytics.tracking.android.CampaignTrackingService"/>
