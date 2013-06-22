@@ -40,6 +40,30 @@ public class Map implements Serializable {
     @DatabaseField
     public String continent_name;
 
+    @DatabaseField
+    public int map_rect_x1;
+
+    @DatabaseField
+    public int map_rect_y1;
+
+    @DatabaseField
+    public int map_rect_x2;
+
+    @DatabaseField
+    public int map_rect_y2;
+
+    @DatabaseField
+    public int continent_rect_x1;
+
+    @DatabaseField
+    public int continent_rect_y1;
+
+    @DatabaseField
+    public int continent_rect_x2;
+
+    @DatabaseField
+    public int continent_rect_y2;
+
     @ForeignCollectionField
     public transient ForeignCollection<POI> pois;
 

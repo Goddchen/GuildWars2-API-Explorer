@@ -86,6 +86,18 @@ public class FloorLoader extends FixedAsyncTaskLoader<Floor> {
                     JSONObject jsonMap = jsonRegion.getJSONObject("maps").getJSONObject(mapKey);
                     Map map = gson.fromJson(jsonMap.toString(), Map.class);
                     map.id = Long.parseLong(mapKey);
+                    map.continent_rect_x1 = jsonMap.getJSONArray("continent_rect").getJSONArray
+                            (0).getInt(0);
+                    map.continent_rect_y1 = jsonMap.getJSONArray("continent_rect").getJSONArray
+                            (0).getInt(1);
+                    map.continent_rect_x2 = jsonMap.getJSONArray("continent_rect").getJSONArray
+                            (1).getInt(0);
+                    map.continent_rect_y2 = jsonMap.getJSONArray("continent_rect").getJSONArray
+                            (1).getInt(1);
+                    map.map_rect_x1 = jsonMap.getJSONArray("map_rect").getJSONArray(0).getInt(0);
+                    map.map_rect_y1 = jsonMap.getJSONArray("map_rect").getJSONArray(0).getInt(1);
+                    map.map_rect_x2 = jsonMap.getJSONArray("map_rect").getJSONArray(1).getInt(0);
+                    map.map_rect_y2 = jsonMap.getJSONArray("map_rect").getJSONArray(1).getInt(1);
                     if (Application.getDatabaseHelper().getMapDao().idExists(map.id)) {
                         map.region = region;
                         region.maps.update(map);

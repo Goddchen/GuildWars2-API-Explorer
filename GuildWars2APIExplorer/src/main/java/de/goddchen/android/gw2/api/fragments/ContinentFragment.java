@@ -40,6 +40,7 @@ import de.goddchen.android.gw2.api.async.OverlayLoader;
 import de.goddchen.android.gw2.api.data.Continent;
 import de.goddchen.android.gw2.api.data.Event;
 import de.goddchen.android.gw2.api.data.Floor;
+import de.goddchen.android.gw2.api.data.Map;
 import de.goddchen.android.gw2.api.data.POI;
 import de.goddchen.android.gw2.api.data.Task;
 import de.goddchen.android.gw2.api.fragments.dialogs.ProgressDialogFragment;
@@ -125,25 +126,38 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
         });
         ((FrameLayout) view.findViewById(R.id.map_wrapper)).addView(mMapView);
         if (getArguments().containsKey(EXTRA_EVENT)) {
-            final Event event = (Event) getArguments().getSerializable(EXTRA_EVENT);
-            OverlayItem overlayItem = new OverlayItem(event.name, null,
-                    TileSystem.PixelXYToLatLong(
-                            (int) (mContinent.dims_x / 2 + event.center_x),
-                            (int) (mContinent.dims_y / 2 + event.center_y),
-                            mContinent.max_zoom, null));
-            overlayItem.setMarker(getResources().getDrawable(R.drawable.marker_event));
-            mEventOverlay = new ItemizedIconOverlay<OverlayItem>(getActivity(),
-                    Arrays.asList(overlayItem), null) {
-                @Override
-                protected boolean onTap(int index) {
-                    Toast.makeText(getActivity(), event.name, Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-            };
-            mMapView.getController().setZoom(4);
-            mMapView.getController().animateTo(
-                    TileSystem.PixelXYToLatLong((int) event.center_x, (int) event.center_y,
-                            mContinent.max_zoom, null));
+            try {
+                final Event event = (Event) getArguments().getSerializable(EXTRA_EVENT);
+                Map map = Application.getDatabaseHelper().getMapDao().queryForId(event.map_id);
+                float percentageX = (float)
+                        (event.center_x - map.map_rect_x1) / (map.map_rect_x2 - map.map_rect_x1);
+                float percentageY = (float)
+                        (event.center_y - map.map_rect_y1) / (map.map_rect_y2 - map.map_rect_y1);
+                int continentX = (int) (map.continent_rect_x1 + (map.continent_rect_x2 - map
+                        .continent_rect_x1) * percentageX);
+                int continentY = (int) (map.continent_rect_y1 + (map.continent_rect_y2 - map
+                        .continent_rect_y1) * percentageY);
+                OverlayItem overlayItem = new OverlayItem(event.name, null,
+                        TileSystem.PixelXYToLatLong(
+                                continentX,
+                                continentY,
+                                mContinent.max_zoom, null));
+                overlayItem.setMarker(getResources().getDrawable(R.drawable.marker_event));
+                mEventOverlay = new ItemizedIconOverlay<OverlayItem>(getActivity(),
+                        Arrays.asList(overlayItem), null) {
+                    @Override
+                    protected boolean onTap(int index) {
+                        Toast.makeText(getActivity(), event.name, Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                };
+                mMapView.getController().setZoom(6);
+                mMapView.getController().animateTo(
+                        TileSystem.PixelXYToLatLong(continentX, continentY,
+                                mContinent.max_zoom, null));
+            } catch (Exception e) {
+                Log.e(Application.Constants.LOG_TAG, "Error loading event coordinates", e);
+            }
         }
         try {
             Floor floor = Application.getDatabaseHelper().getFloorDao().queryForFirst(

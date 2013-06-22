@@ -14,7 +14,7 @@ public class Event implements Serializable {
     public int world_id;
 
     @DatabaseField
-    public int map_id;
+    public long map_id;
 
     @DatabaseField
     public String event_id;
@@ -22,19 +22,20 @@ public class Event implements Serializable {
     @DatabaseField
     public String state;
 
+    @DatabaseField
     public String name;
 
+    @DatabaseField
     public double center_x;
 
+    @DatabaseField
     public double center_y;
 
+    @DatabaseField
     public double center_z;
 
+    @DatabaseField
     public int level;
-
-    /*public EventName eventName;
-
-    public MapName mapName;*/
 
     public int getStatePriority() {
         if ("active".equalsIgnoreCase(state)) {
