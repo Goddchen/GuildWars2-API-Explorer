@@ -23,6 +23,8 @@ public class ProgressDialogFragment extends SherlockDialogFragment {
         ProgressDialog dialog = new ProgressDialog(getActivity());
         dialog.setMessage(getString(R.string.please_wait));
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         return dialog;
     }
 }

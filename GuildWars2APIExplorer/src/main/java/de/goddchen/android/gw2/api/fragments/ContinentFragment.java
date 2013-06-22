@@ -95,6 +95,19 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        try {
+            Floor floor = Application.getDatabaseHelper().getFloorDao().queryForFirst(
+                    Application.getDatabaseHelper().getFloorDao().queryBuilder().where().eq
+                            ("floor_id", 1).and().eq("continent_id", mContinent.id).prepare());
+            if (floor != null) {
+                mFloor = floor;
+                displayFloorMetadata();
+            } else {
+                ProgressDialogFragment.newInstance().show(getFragmentManager(), "floor-loading");
+            }
+        } catch (Exception e) {
+            Log.w(Application.Constants.LOG_TAG, "Error loading floor from db", e);
+        }
         getLoaderManager()
                 .initLoader(Application.Loaders.FLOOR_METADATA, null, mFloorLoaderCallbacks);
     }
@@ -159,17 +172,6 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
                 Log.e(Application.Constants.LOG_TAG, "Error loading event coordinates", e);
             }
         }
-        try {
-            Floor floor = Application.getDatabaseHelper().getFloorDao().queryForFirst(
-                    Application.getDatabaseHelper().getFloorDao().queryBuilder().where().eq
-                            ("floor_id", 1).and().eq("continent_id", mContinent.id).prepare());
-            if (floor != null) {
-                mFloor = floor;
-                displayFloorMetadata();
-            }
-        } catch (Exception e) {
-            Log.w(Application.Constants.LOG_TAG, "Error loading floor from db", e);
-        }
     }
 
     private void displayFloorMetadata() {
@@ -188,10 +190,8 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
                     mWaypointOverlay == null ||
                     mLandMarkOverlay == null ||
                     mSkillChallengeOverlay == null) {
-                if (getLoaderManager().hasRunningLoaders()) {
-                    getLoaderManager().restartLoader(Application.Loaders.FLOOR_MARKERS, null,
-                            mOverlayLoaderCallbacks);
-                }
+                getLoaderManager().initLoader(Application.Loaders.FLOOR_MARKERS, null,
+                        mOverlayLoaderCallbacks);
             } else {
                 if (mMapView.getZoomLevel() >= 4) {
                     if (mMapView.getOverlayManager().size() < 2) {
@@ -224,6 +224,15 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
 
                 @Override
                 public void onLoadFinished(Loader<Floor> floorLoader, Floor floor) {
+                    try {
+                        Fragment fragment = getFragmentManager().findFragmentByTag
+                                ("floor-loading");
+                        if (fragment != null && fragment instanceof ProgressDialogFragment) {
+                            ((ProgressDialogFragment) fragment).dismiss();
+                        }
+                    } catch (Exception e) {
+                        Log.w(Application.Constants.LOG_TAG, "Error dismissing progress dialog");
+                    }
                     if (floor != null) {
                         mFloor = floor;
                         displayFloorMetadata();
@@ -248,6 +257,8 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
                 @Override
                 public void onLoadFinished(Loader<List<ItemizedOverlay<OverlayItem>>> listLoader,
                                            List<ItemizedOverlay<OverlayItem>> itemizedOverlays) {
+                    Log.d(Application.Constants.LOG_TAG, "Loaded " + (itemizedOverlays == null ?
+                            0 : itemizedOverlays.size()) + " overlays");
                     if (itemizedOverlays != null) {
                         mTaskOverlay = itemizedOverlays.get(0);
                         mWaypointOverlay = itemizedOverlays.get(1);
