@@ -24,6 +24,8 @@ import de.goddchen.android.gw2.api.data.Floor;
 import de.goddchen.android.gw2.api.data.Map;
 import de.goddchen.android.gw2.api.data.POI;
 import de.goddchen.android.gw2.api.data.Region;
+import de.goddchen.android.gw2.api.data.SkillChallenge;
+import de.goddchen.android.gw2.api.data.Task;
 
 /**
  * Created by Goddchen on 21.06.13.
@@ -93,6 +95,9 @@ public class FloorLoader extends FixedAsyncTaskLoader<Floor> {
                     map = Application.getDatabaseHelper().getMapDao().queryForId(map.id);
 
                     parsePOIs(gson, map, jsonMap);
+                    parseTasks(gson, map, jsonMap);
+                    parseSkillChallenges(gson, map, jsonMap);
+                    parseSectors(gson, map, jsonMap);
                 }
             }
             return floor;
@@ -118,15 +123,45 @@ public class FloorLoader extends FixedAsyncTaskLoader<Floor> {
         }
     }
 
-    private void parseSectors() {
+    private void parseSectors(Gson gson, Map map, JSONObject jsonMap) throws Exception {
 
     }
 
-    private void parseTasks() {
-
+    private void parseTasks(Gson gson, Map map, JSONObject mapJson) throws Exception {
+        List<Task> tasks = gson.fromJson(mapJson.getJSONArray("tasks").toString(),
+                new TypeToken<List<Task>>() {
+                }.getType());
+        for (Task task : tasks) {
+            task.map = map;
+            task.coord_x = task.coord[0];
+            task.coord_y = task.coord[1];
+            if (Application.getDatabaseHelper().getTaskDao().idExists(task.task_id)) {
+                map.tasks.update(task);
+            } else {
+                map.tasks.add(task);
+            }
+        }
     }
 
-    private void parseSkillChallenges() {
-
+    private void parseSkillChallenges(Gson gson, Map map, JSONObject jsonMap) throws Exception {
+        List<SkillChallenge> skillChallenges = gson.fromJson(jsonMap.getJSONArray
+                ("skill_challenges").toString(),
+                new TypeToken<List<SkillChallenge>>() {
+                }.getType());
+        for (SkillChallenge skillChallenge : skillChallenges) {
+            skillChallenge.map = map;
+            skillChallenge.coord_x = skillChallenge.coord[0];
+            skillChallenge.coord_y = skillChallenge.coord[1];
+            if (Application.getDatabaseHelper().getSkillChallengeDao().countOf(
+                    Application.getDatabaseHelper().getSkillChallengeDao().queryBuilder()
+                            .setCountOf(true)
+                            .where().eq("map_id", map.id).and().eq("coord_x",
+                            skillChallenge.coord_x).and().eq("coord_y",
+                            skillChallenge.coord_y).prepare()) > 0) {
+                map.skill_challenges.update(skillChallenge);
+            } else {
+                map.skill_challenges.add(skillChallenge);
+            }
+        }
     }
 }

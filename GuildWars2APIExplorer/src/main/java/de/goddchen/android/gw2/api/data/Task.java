@@ -24,9 +24,11 @@ public class Task implements Serializable {
     public int level;
 
     @DatabaseField
-    public float coord_x;
+    public double coord_x;
 
     @DatabaseField
-    public float coord_y;
+    public double coord_y;
+
+    public double[] coord;
 
 }

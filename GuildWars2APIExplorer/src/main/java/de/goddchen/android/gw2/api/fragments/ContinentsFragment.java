@@ -33,11 +33,17 @@ public class ContinentsFragment extends SherlockListFragment {
         setListShown(false);
         getLoaderManager().initLoader(Application.Loaders.CONTINENTS, null,
                 mContinentLoaderCallbacks);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         try {
             List<Continent> continents = Application.getDatabaseHelper().getContinentDao()
                     .queryForAll();
             if (continents != null && !continents.isEmpty()) {
                 setListAdapter(new ContinentAdapter(getActivity(), continents));
+                setListShown(true);
             }
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error loading continents from db", e);

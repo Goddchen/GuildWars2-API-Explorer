@@ -35,6 +35,8 @@ import de.goddchen.android.gw2.api.data.MatchDetails;
 import de.goddchen.android.gw2.api.data.ObjectiveName;
 import de.goddchen.android.gw2.api.data.POI;
 import de.goddchen.android.gw2.api.data.Region;
+import de.goddchen.android.gw2.api.data.SkillChallenge;
+import de.goddchen.android.gw2.api.data.Task;
 import de.goddchen.android.gw2.api.data.World;
 
 /**
@@ -66,6 +68,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static Dao<POI, Long> poiDao;
 
+    private static Dao<Task, Long> taskDao;
+
+    private static Dao<SkillChallenge, Long> skillChallengeDao;
+
     public DatabaseHelper(Context context) {
         super(context, "gw2.db", null, 9);
     }
@@ -88,6 +94,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Region.class);
             TableUtils.createTable(connectionSource, Map.class);
             TableUtils.createTable(connectionSource, POI.class);
+            TableUtils.createTable(connectionSource, Task.class);
+            TableUtils.createTable(connectionSource, SkillChallenge.class);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error creating database", e);
         }
@@ -111,6 +119,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Region.class, true);
             TableUtils.dropTable(connectionSource, Map.class, true);
             TableUtils.dropTable(connectionSource, POI.class, true);
+            TableUtils.dropTable(connectionSource, Task.class, true);
+            TableUtils.dropTable(connectionSource, SkillChallenge.class, true);
             onCreate(sqLiteDatabase, connectionSource);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error upgrading database", e);
@@ -199,6 +209,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             poiDao = DaoManager.createDao(getConnectionSource(), POI.class);
         }
         return poiDao;
+    }
+
+    public Dao<Task, Long> getTaskDao() throws Exception {
+        if (taskDao == null) {
+            taskDao = DaoManager.createDao(getConnectionSource(), Task.class);
+        }
+        return taskDao;
+    }
+
+    public Dao<SkillChallenge, Long> getSkillChallengeDao() throws Exception {
+        if (skillChallengeDao == null) {
+            skillChallengeDao = DaoManager.createDao(getConnectionSource(), SkillChallenge.class);
+        }
+        return skillChallengeDao;
     }
 
     public static void loadMapNames(List<Event> events) throws Exception {

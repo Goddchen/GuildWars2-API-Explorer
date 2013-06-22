@@ -28,6 +28,7 @@ public class Application extends android.app.Application {
         public static final int COLORS = 13;
         public static final int CONTINENTS = 14;
         public static final int FLOOR_METADATA = 15;
+        public static final int FLOOR_MARKERS = 16;
     }
 
     public static final class Extras {

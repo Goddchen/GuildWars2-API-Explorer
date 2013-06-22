@@ -18,9 +18,11 @@ public class SkillChallenge implements Serializable {
     public Map map;
 
     @DatabaseField
-    public float coord_x;
+    public double coord_x;
 
     @DatabaseField
-    public float coord_y;
+    public double coord_y;
+
+    public double[] coord;
 
 }
