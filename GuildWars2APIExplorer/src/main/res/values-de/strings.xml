@@ -73,5 +73,7 @@
     <string name="match_start_time">Start: %s</string>
     <string name="match_end_time">Ende: %s</string>
     <string name="maps">Maps</string>
+    <string name="toast_no_search_results">Keine Suchergebnisse</string>
+    <string name="please_wait">Bitte warten...</string>
 
 </resources>

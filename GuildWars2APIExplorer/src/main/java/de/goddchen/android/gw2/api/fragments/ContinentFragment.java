@@ -1,12 +1,20 @@
 package de.goddchen.android.gw2.api.fragments;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -22,15 +30,22 @@ import org.osmdroid.views.overlay.OverlayItem;
 import java.util.List;
 
 import de.goddchen.android.gw2.api.Application;
+import de.goddchen.android.gw2.api.R;
+import de.goddchen.android.gw2.api.adapter.MapSearchResultAdapter;
 import de.goddchen.android.gw2.api.async.FloorLoader;
+import de.goddchen.android.gw2.api.async.MapSearchLoader;
 import de.goddchen.android.gw2.api.async.OverlayLoader;
 import de.goddchen.android.gw2.api.data.Continent;
 import de.goddchen.android.gw2.api.data.Floor;
+import de.goddchen.android.gw2.api.data.POI;
+import de.goddchen.android.gw2.api.data.Task;
+import de.goddchen.android.gw2.api.fragments.dialogs.ProgressDialogFragment;
+import microsoft.mappoint.TileSystem;
 
 /**
  * Created by Goddchen on 21.06.13.
  */
-public class ContinentFragment extends SherlockFragment {
+public class ContinentFragment extends SherlockFragment implements View.OnClickListener {
 
     private static final String EXTRA_CONTINENT = "contintent";
 
@@ -59,6 +74,20 @@ public class ContinentFragment extends SherlockFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_continent, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager()
+                .initLoader(Application.Loaders.FLOOR_METADATA, null, mFloorLoaderCallbacks);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.search).setOnClickListener(this);
         ITileSource tileSource = new XYTileSource(mContinent.name + " tiles",
                 null, mContinent.min_zoom, mContinent.max_zoom, 256, ".jpg",
                 String.format("https://tiles.guildwars2.com/%d/1/", mContinent.id));
@@ -80,19 +109,7 @@ public class ContinentFragment extends SherlockFragment {
                 return false;
             }
         });
-        return mMapView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager()
-                .initLoader(Application.Loaders.FLOOR_METADATA, null, mFloorLoaderCallbacks);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        ((FrameLayout) view.findViewById(R.id.map_wrapper)).addView(mMapView);
         try {
             Floor floor = Application.getDatabaseHelper().getFloorDao().queryForFirst(
                     Application.getDatabaseHelper().getFloorDao().queryBuilder().where().eq
@@ -189,4 +206,103 @@ public class ContinentFragment extends SherlockFragment {
                 }
             };
 
+    private LoaderManager.LoaderCallbacks<List<List<?>>> mSearchLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<List<List<?>>>() {
+                @Override
+                public Loader<List<List<?>>> onCreateLoader(int i, Bundle bundle) {
+                    return new MapSearchLoader(getActivity(), mContinent,
+                            ((EditText) getView().findViewById(R.id.query)).getText().toString());
+                }
+
+                @Override
+                public void onLoadFinished(Loader<List<List<?>>> listLoader, List<List<?>> lists) {
+                    try {
+                        Fragment fragment = getFragmentManager().findFragmentByTag
+                                ("loading-search");
+                        if (fragment != null && fragment instanceof ProgressDialogFragment) {
+                            ((ProgressDialogFragment) fragment).dismiss();
+                        }
+                    } catch (Exception e) {
+                        Log.w(Application.Constants.LOG_TAG, "Error dismissing progress dialog");
+                    }
+                    if (lists != null) {
+                        List<POI> pois = (List<POI>) lists.get(0);
+                        List<Task> tasks = (List<Task>) lists.get(1);
+                        if (pois.size() + tasks.size() == 0) {
+                            Toast.makeText(getActivity(), R.string.toast_no_search_results,
+                                    Toast.LENGTH_SHORT).show();
+                        } else if (pois.size() + tasks.size() == 1) {
+                            if (pois.size() == 1) {
+                                POI poi = pois.get(0);
+                                Toast.makeText(getActivity(), poi.name, Toast.LENGTH_SHORT).show();
+                                if (mMapView.getZoomLevel() < 4) {
+                                    mMapView.getController().setZoom(4);
+                                }
+                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
+                                        poi.coord_x, (int) poi.coord_y, mContinent.max_zoom, null));
+                            } else if (tasks.size() == 1) {
+                                Task task = tasks.get(0);
+                                Toast.makeText(getActivity(), task.objective, Toast.LENGTH_SHORT).show();
+                                if (mMapView.getZoomLevel() < 4) {
+                                    mMapView.getController().setZoom(4);
+                                }
+                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
+                                        task.coord_x, (int) task.coord_y, mContinent.max_zoom, null));
+                            }
+                        } else if (pois.size() + tasks.size() > 1) {
+                            final MapSearchResultAdapter adapter = new MapSearchResultAdapter
+                                    (getActivity(), pois, tasks);
+                            new AlertDialog.Builder(getActivity())
+                                    .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Object item = adapter.getItem(which);
+                                            if (item instanceof POI) {
+                                                Toast.makeText(getActivity(), ((POI) item).name,
+                                                        Toast.LENGTH_SHORT).show();
+                                                if (mMapView.getZoomLevel() < 4) {
+                                                    mMapView.getController().setZoom(4);
+                                                }
+                                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
+                                                        ((POI) item).coord_x, (int) ((POI) item).coord_y,
+                                                        mContinent.max_zoom, null));
+                                            } else if (item instanceof Task) {
+                                                Toast.makeText(getActivity(), ((Task) item).objective,
+                                                        Toast.LENGTH_SHORT).show();
+                                                if (mMapView.getZoomLevel() < 4) {
+                                                    mMapView.getController().setZoom(4);
+                                                }
+                                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
+                                                        ((Task) item).coord_x, (int) ((Task) item).coord_y,
+                                                        mContinent.max_zoom,
+                                                        null));
+                                            }
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(Loader<List<List<?>>> listLoader) {
+
+                }
+            };
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.search) {
+            EditText query = (EditText) getView().findViewById(R.id.query);
+            if (query.length() > 0) {
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(query.getWindowToken(), 0);
+                getLoaderManager().restartLoader(Application.Loaders.MAP_SEARCH, null,
+                        mSearchLoaderCallbacks);
+                ProgressDialogFragment.newInstance().show(getFragmentManager(),
+                        "loading-search");
+            }
+        }
+    }
 }

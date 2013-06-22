@@ -72,14 +72,13 @@
     <orderEntry type="library" name="ormlite-android-4.45" level="project" />
     <orderEntry type="library" name="gson-2.2.4" level="project" />
     <orderEntry type="library" name="osmdroid-android-3.0.10" level="project" />
+    <orderEntry type="library" name="slf4j-android-1.6.1-RC1" level="project" />
     <orderEntry type="library" name="crittercism_v3_0_8_sdkonly" level="project" />
     <orderEntry type="library" name="GoogleAdMobAdsSdk-6.4.1" level="project" />
     <orderEntry type="library" name="libGoogleAnalyticsV2" level="project" />
     <orderEntry type="library" name="actionbarsherlock.aar" level="project" />
     <orderEntry type="library" name="library.aar" level="project" />
     <orderEntry type="library" name="volley.aar" level="project" />
-    <orderEntry type="library" name="slf4j-android-1.6.1-RC1" level="project" />
-    <orderEntry type="library" name="slf4j-api-1.6.1" level="project" />
   </component>
 </module>
 
