@@ -122,137 +122,16 @@ public class ContinentFragment extends SherlockFragment {
                 getLoaderManager().restartLoader(Application.Loaders.FLOOR_MARKERS, null,
                         mOverlayLoaderCallbacks);
             } else {
-                mMapView.getOverlayManager().clear();
-                //Display POI marker
-            /*if (mTaskOverlay == null) {
-                List<OverlayItem> taskOverlayItems = new ArrayList<OverlayItem>();
-                for (Region region : mFloor.regions) {
-                    for (final Map map : region.maps) {
-                        for (Task task : map.tasks) {
-                            OverlayItem overlayItem = new OverlayItem(task.objective, null,
-                                    TileSystem.PixelXYToLatLong((int) task.coord_x, (int) task.coord_y,
-                                            mContinent.max_zoom, null));
-                            overlayItem.setMarker(getResources().getDrawable(R.drawable.marker_task));
-                            taskOverlayItems.add(overlayItem);
-                        }
-                    }
-                }
-                mTaskOverlay = new ItemizedIconOverlay<OverlayItem>(
-                        getActivity(),
-                        taskOverlayItems,
-                        null) {
-                    @Override
-                    protected boolean onTap(int index) {
-                        Toast.makeText(getActivity(), getItem(index).getTitle(),
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                };
-            }
-            if (mWaypointOverlay == null) {
-                List<OverlayItem> waypointsOverlayItems = new ArrayList<OverlayItem>();
-                for (Region region : mFloor.regions) {
-                    for (final Map map : region.maps) {
-                        for (POI poi : map.pois) {
-                            OverlayItem overlayItem = new OverlayItem(poi.name, null,
-                                    TileSystem.PixelXYToLatLong((int) poi.coord_x, (int) poi.coord_y,
-                                            mContinent.max_zoom, null));
-                            if ("waypoint".equals(poi.type)) {
-                                overlayItem.setMarker(getResources().getDrawable(R.drawable.marker_waypoint));
-                                waypointsOverlayItems.add(overlayItem);
-                            }
-                        }
-                    }
-                }
-                mWaypointOverlay = new ItemizedIconOverlay<OverlayItem>(
-                        getActivity(),
-                        waypointsOverlayItems,
-                        null) {
-                    @Override
-                    protected boolean onTap(int index) {
-                        Toast.makeText(getActivity(), getItem(index).getTitle(),
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                };
-            }
-            if (mLandMarkOverlay == null) {
-                List<OverlayItem> landmarkOverlayItems = new ArrayList<OverlayItem>();
-                for (Region region : mFloor.regions) {
-                    for (final Map map : region.maps) {
-                        for (POI poi : map.pois) {
-                            OverlayItem overlayItem = new OverlayItem(poi.name, null,
-                                    TileSystem.PixelXYToLatLong((int) poi.coord_x, (int) poi.coord_y,
-                                            mContinent.max_zoom, null));
-                            if ("landmark".equals(poi.type)) {
-                                overlayItem.setMarker(getResources().getDrawable(R.drawable
-                                        .marker_landmark));
-                                landmarkOverlayItems.add(overlayItem);
-                            }
-                        }
-                    }
-                }
-                mLandMarkOverlay = new ItemizedIconOverlay<OverlayItem>(
-                        getActivity(),
-                        landmarkOverlayItems,
-                        null) {
-                    @Override
-                    protected boolean onTap(int index) {
-                        Toast.makeText(getActivity(), getItem(index).getTitle(),
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                };
-            }
-            if (mVistaOverlay == null) {
-                List<OverlayItem> vistaOverlayItems = new ArrayList<OverlayItem>();
-                for (Region region : mFloor.regions) {
-                    for (final Map map : region.maps) {
-                        for (POI poi : map.pois) {
-                            OverlayItem overlayItem = new OverlayItem(poi.name, null,
-                                    TileSystem.PixelXYToLatLong((int) poi.coord_x, (int) poi.coord_y,
-                                            mContinent.max_zoom, null));
-                            if ("vista".equals(poi.type)) {
-                                overlayItem.setMarker(getResources().getDrawable(R.drawable
-                                        .marker_vista));
-                                vistaOverlayItems.add(overlayItem);
-                            }
-                        }
-                    }
-                }
-                mVistaOverlay = new ItemizedIconOverlay<OverlayItem>(
-                        getActivity(),
-                        vistaOverlayItems,
-                        null) {
-                };
-            }
-            if (mSkillChallengeOverlay == null) {
-                List<OverlayItem> skillChallengeOverlayItems = new ArrayList<OverlayItem>();
-                for (Region region : mFloor.regions) {
-                    for (final Map map : region.maps) {
-                        for (SkillChallenge skillChallenge : map.skill_challenges) {
-                            OverlayItem overlayItem = new OverlayItem(null, null,
-                                    TileSystem.PixelXYToLatLong((int) skillChallenge.coord_x,
-                                            (int) skillChallenge.coord_y,
-                                            mContinent.max_zoom, null));
-                            overlayItem.setMarker(getResources().getDrawable(R.drawable
-                                    .marker_skill_challenge));
-                            skillChallengeOverlayItems.add(overlayItem);
-                        }
-                    }
-                }
-                mSkillChallengeOverlay = new ItemizedIconOverlay<OverlayItem>(
-                        getActivity(),
-                        skillChallengeOverlayItems,
-                        null) {
-                };
-            }*/
                 if (mMapView.getZoomLevel() >= 4) {
-                    mMapView.getOverlayManager().add(mLandMarkOverlay);
-                    mMapView.getOverlayManager().add(mWaypointOverlay);
-                    mMapView.getOverlayManager().add(mTaskOverlay);
-                    mMapView.getOverlayManager().add(mVistaOverlay);
-                    mMapView.getOverlayManager().add(mSkillChallengeOverlay);
+                    if (mMapView.getOverlayManager().size() == 0) {
+                        mMapView.getOverlayManager().add(mLandMarkOverlay);
+                        mMapView.getOverlayManager().add(mWaypointOverlay);
+                        mMapView.getOverlayManager().add(mTaskOverlay);
+                        mMapView.getOverlayManager().add(mVistaOverlay);
+                        mMapView.getOverlayManager().add(mSkillChallengeOverlay);
+                    }
+                } else {
+                    mMapView.getOverlayManager().clear();
                 }
             }
         } catch (Exception e) {

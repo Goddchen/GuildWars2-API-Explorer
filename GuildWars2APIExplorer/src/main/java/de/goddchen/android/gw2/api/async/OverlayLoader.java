@@ -42,6 +42,10 @@ public class OverlayLoader extends FixedAsyncTaskLoader<List<ItemizedOverlay<Ove
             List<ItemizedOverlay<OverlayItem>> overlays = new
                     ArrayList<ItemizedOverlay<OverlayItem>>();
             List<OverlayItem> taskOverlayItems = new ArrayList<OverlayItem>();
+            List<OverlayItem> waypointsOverlayItems = new ArrayList<OverlayItem>();
+            List<OverlayItem> landmarkOverlayItems = new ArrayList<OverlayItem>();
+            List<OverlayItem> vistaOverlayItems = new ArrayList<OverlayItem>();
+            List<OverlayItem> skillChallengeOverlayItems = new ArrayList<OverlayItem>();
             for (Region region : mFloor.regions) {
                 for (final Map map : region.maps) {
                     for (Task task : map.tasks) {
@@ -51,6 +55,33 @@ public class OverlayLoader extends FixedAsyncTaskLoader<List<ItemizedOverlay<Ove
                         overlayItem.setMarker(getContext().getResources()
                                 .getDrawable(R.drawable.marker_task));
                         taskOverlayItems.add(overlayItem);
+                    }
+                    for (POI poi : map.pois) {
+                        OverlayItem overlayItem = new OverlayItem(poi.name, null,
+                                TileSystem.PixelXYToLatLong((int) poi.coord_x, (int) poi.coord_y,
+                                        mContinent.max_zoom, null));
+                        if ("waypoint".equals(poi.type)) {
+                            overlayItem.setMarker(getContext().getResources()
+                                    .getDrawable(R.drawable.marker_waypoint));
+                            waypointsOverlayItems.add(overlayItem);
+                        } else if ("landmark".equals(poi.type)) {
+                            overlayItem.setMarker(getContext().getResources()
+                                    .getDrawable(R.drawable.marker_landmark));
+                            landmarkOverlayItems.add(overlayItem);
+                        } else if ("vista".equals(poi.type)) {
+                            overlayItem.setMarker(getContext().getResources()
+                                    .getDrawable(R.drawable.marker_vista));
+                            vistaOverlayItems.add(overlayItem);
+                        }
+                    }
+                    for (SkillChallenge skillChallenge : map.skill_challenges) {
+                        OverlayItem overlayItem = new OverlayItem(null, null,
+                                TileSystem.PixelXYToLatLong((int) skillChallenge.coord_x,
+                                        (int) skillChallenge.coord_y,
+                                        mContinent.max_zoom, null));
+                        overlayItem.setMarker(getContext().getResources()
+                                .getDrawable(R.drawable.marker_skill_challenge));
+                        skillChallengeOverlayItems.add(overlayItem);
                     }
                 }
             }
@@ -65,21 +96,6 @@ public class OverlayLoader extends FixedAsyncTaskLoader<List<ItemizedOverlay<Ove
                     return true;
                 }
             });
-            List<OverlayItem> waypointsOverlayItems = new ArrayList<OverlayItem>();
-            for (Region region : mFloor.regions) {
-                for (final Map map : region.maps) {
-                    for (POI poi : map.pois) {
-                        OverlayItem overlayItem = new OverlayItem(poi.name, null,
-                                TileSystem.PixelXYToLatLong((int) poi.coord_x, (int) poi.coord_y,
-                                        mContinent.max_zoom, null));
-                        if ("waypoint".equals(poi.type)) {
-                            overlayItem.setMarker(getContext().getResources()
-                                    .getDrawable(R.drawable.marker_waypoint));
-                            waypointsOverlayItems.add(overlayItem);
-                        }
-                    }
-                }
-            }
             overlays.add(new ItemizedIconOverlay<OverlayItem>(
                     getContext(),
                     waypointsOverlayItems,
@@ -91,21 +107,6 @@ public class OverlayLoader extends FixedAsyncTaskLoader<List<ItemizedOverlay<Ove
                     return true;
                 }
             });
-            List<OverlayItem> landmarkOverlayItems = new ArrayList<OverlayItem>();
-            for (Region region : mFloor.regions) {
-                for (final Map map : region.maps) {
-                    for (POI poi : map.pois) {
-                        OverlayItem overlayItem = new OverlayItem(poi.name, null,
-                                TileSystem.PixelXYToLatLong((int) poi.coord_x, (int) poi.coord_y,
-                                        mContinent.max_zoom, null));
-                        if ("landmark".equals(poi.type)) {
-                            overlayItem.setMarker(getContext().getResources()
-                                    .getDrawable(R.drawable.marker_landmark));
-                            landmarkOverlayItems.add(overlayItem);
-                        }
-                    }
-                }
-            }
             overlays.add(new ItemizedIconOverlay<OverlayItem>(
                     getContext(),
                     landmarkOverlayItems,
@@ -117,40 +118,11 @@ public class OverlayLoader extends FixedAsyncTaskLoader<List<ItemizedOverlay<Ove
                     return true;
                 }
             });
-            List<OverlayItem> vistaOverlayItems = new ArrayList<OverlayItem>();
-            for (Region region : mFloor.regions) {
-                for (final Map map : region.maps) {
-                    for (POI poi : map.pois) {
-                        OverlayItem overlayItem = new OverlayItem(poi.name, null,
-                                TileSystem.PixelXYToLatLong((int) poi.coord_x, (int) poi.coord_y,
-                                        mContinent.max_zoom, null));
-                        if ("vista".equals(poi.type)) {
-                            overlayItem.setMarker(getContext().getResources()
-                                    .getDrawable(R.drawable.marker_vista));
-                            vistaOverlayItems.add(overlayItem);
-                        }
-                    }
-                }
-            }
             overlays.add(new ItemizedIconOverlay<OverlayItem>(
                     getContext(),
                     vistaOverlayItems,
                     null) {
             });
-            List<OverlayItem> skillChallengeOverlayItems = new ArrayList<OverlayItem>();
-            for (Region region : mFloor.regions) {
-                for (final Map map : region.maps) {
-                    for (SkillChallenge skillChallenge : map.skill_challenges) {
-                        OverlayItem overlayItem = new OverlayItem(null, null,
-                                TileSystem.PixelXYToLatLong((int) skillChallenge.coord_x,
-                                        (int) skillChallenge.coord_y,
-                                        mContinent.max_zoom, null));
-                        overlayItem.setMarker(getContext().getResources()
-                                .getDrawable(R.drawable.marker_skill_challenge));
-                        skillChallengeOverlayItems.add(overlayItem);
-                    }
-                }
-            }
             overlays.add(new ItemizedIconOverlay<OverlayItem>(
                     getContext(),
                     skillChallengeOverlayItems,
