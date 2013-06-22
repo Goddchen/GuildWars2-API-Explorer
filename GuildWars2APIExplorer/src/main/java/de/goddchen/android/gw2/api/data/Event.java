@@ -22,9 +22,19 @@ public class Event implements Serializable {
     @DatabaseField
     public String state;
 
-    public EventName eventName;
+    public String name;
 
-    public MapName mapName;
+    public double center_x;
+
+    public double center_y;
+
+    public double center_z;
+
+    public int level;
+
+    /*public EventName eventName;
+
+    public MapName mapName;*/
 
     public int getStatePriority() {
         if ("active".equalsIgnoreCase(state)) {

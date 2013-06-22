@@ -38,8 +38,9 @@ public class EventsLoader extends FixedAsyncTaskLoader<List<Event>> {
                             .openConnection();
             List<Event> events = new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                     Response.class).events;
-            DatabaseHelper.loadEventNames(events);
-            DatabaseHelper.loadMapNames(events);
+//            DatabaseHelper.loadEventNames(events);
+//            DatabaseHelper.loadMapNames(events);
+            DatabaseHelper.loadEventDetails(events);
             Collections.sort(events, new Comparator<Event>() {
                 @Override
                 public int compare(Event event, Event event2) {
@@ -48,10 +49,10 @@ public class EventsLoader extends FixedAsyncTaskLoader<List<Event>> {
                     if (stateCompare != 0) {
                         return stateCompare;
                     } else {
-                        if (event.eventName == null || event2.eventName == null) {
+                        if (event.name == null || event2.name == null) {
                             return 0;
                         } else {
-                            return event.eventName.name.compareTo(event2.eventName.name);
+                            return event.name.compareTo(event2.name);
                         }
                     }
                 }

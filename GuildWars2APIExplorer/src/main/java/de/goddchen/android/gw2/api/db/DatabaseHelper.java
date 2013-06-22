@@ -12,8 +12,13 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
+
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -24,6 +29,7 @@ import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.data.Color;
 import de.goddchen.android.gw2.api.data.Continent;
 import de.goddchen.android.gw2.api.data.Event;
+import de.goddchen.android.gw2.api.data.EventDetails;
 import de.goddchen.android.gw2.api.data.EventName;
 import de.goddchen.android.gw2.api.data.Floor;
 import de.goddchen.android.gw2.api.data.GuildDetails;
@@ -72,6 +78,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static Dao<SkillChallenge, Long> skillChallengeDao;
 
+    private static Dao<EventDetails, String> eventDetailsDao;
+
     public DatabaseHelper(Context context) {
         super(context, "gw2.db", null, 9);
     }
@@ -96,6 +104,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, POI.class);
             TableUtils.createTable(connectionSource, Task.class);
             TableUtils.createTable(connectionSource, SkillChallenge.class);
+            TableUtils.createTable(connectionSource, EventDetails.class);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error creating database", e);
         }
@@ -121,6 +130,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, POI.class, true);
             TableUtils.dropTable(connectionSource, Task.class, true);
             TableUtils.dropTable(connectionSource, SkillChallenge.class, true);
+            TableUtils.dropTable(connectionSource, EventDetails.class, true);
             onCreate(sqLiteDatabase, connectionSource);
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error upgrading database", e);
@@ -225,7 +235,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return skillChallengeDao;
     }
 
-    public static void loadMapNames(List<Event> events) throws Exception {
+    public Dao<EventDetails, String> getEventDetailsDao() throws Exception {
+        if (eventDetailsDao == null) {
+            eventDetailsDao = DaoManager.createDao(getConnectionSource(), EventDetails.class);
+        }
+        return eventDetailsDao;
+    }
+
+    /*public static void loadMapNames(List<Event> events) throws Exception {
         if (Application.getDatabaseHelper().getMapNameDao().queryForAll().size() == 0) {
             HttpsURLConnection connection =
                     (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/map_names.json?lang="
@@ -248,30 +265,47 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         for (Event event : events) {
             event.mapName = Application.getDatabaseHelper().getMapNameDao().queryForId(event.map_id);
         }
-    }
+    }*/
 
-    public static void loadEventNames(List<Event> events) throws Exception {
-        if (Application.getDatabaseHelper().getEventNameDao().queryForAll().size() == 0) {
+    public static void loadEventDetails(List<Event> events) throws Exception {
+        if (Application.getDatabaseHelper().getEventDetailsDao().queryForAll().size() == 0) {
             HttpsURLConnection connection =
-                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/event_names.json?lang="
+                    (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/event_details" +
+                            ".json?lang="
                             + Locale.getDefault().getLanguage())
                             .openConnection();
-            final List<EventName> eventNames =
-                    new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
-                            new TypeToken<List<EventName>>() {
-                            }.getType());
-            Application.getDatabaseHelper().getEventNameDao().callBatchTasks(new Callable<Object>() {
+            final JSONObject jsonResponse = new JSONObject(IOUtils.toString(connection
+                    .getInputStream()));
+            final List<EventDetails> eventDetails = new ArrayList<EventDetails>();
+            Iterator<String> eventKeys = jsonResponse.getJSONObject("events").keys();
+            Gson gson = new Gson();
+            while (eventKeys.hasNext()) {
+                String eventKey = eventKeys.next();
+                EventDetails details = gson.fromJson(jsonResponse.getJSONObject("events")
+                        .getJSONObject(eventKey).toString(), EventDetails.class);
+                details.id = eventKey;
+                eventDetails.add(details);
+            }
+            Application.getDatabaseHelper().getEventDetailsDao().callBatchTasks(new Callable<Object>() {
                 @Override
                 public Object call() throws Exception {
-                    for (EventName eventName : eventNames) {
-                        Application.getDatabaseHelper().getEventNameDao().create(eventName);
+                    for (EventDetails details : eventDetails) {
+                        Application.getDatabaseHelper().getEventDetailsDao().create(details);
                     }
                     return null;
                 }
             });
         }
         for (Event event : events) {
-            event.eventName = Application.getDatabaseHelper().getEventNameDao().queryForId(event.event_id);
+            EventDetails eventDetails = Application.getDatabaseHelper().getEventDetailsDao()
+                    .queryForId(event.event_id);
+            if (eventDetails != null) {
+                event.name = eventDetails.name;
+                event.level = eventDetails.level;
+                event.center_x = eventDetails.location.center[0];
+                event.center_y = eventDetails.location.center[1];
+                event.center_z = eventDetails.location.center[2];
+            }
         }
     }
 

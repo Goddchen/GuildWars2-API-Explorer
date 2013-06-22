@@ -24,9 +24,11 @@ import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
+import java.util.Arrays;
 import java.util.List;
 
 import de.goddchen.android.gw2.api.Application;
@@ -36,6 +38,7 @@ import de.goddchen.android.gw2.api.async.FloorLoader;
 import de.goddchen.android.gw2.api.async.MapSearchLoader;
 import de.goddchen.android.gw2.api.async.OverlayLoader;
 import de.goddchen.android.gw2.api.data.Continent;
+import de.goddchen.android.gw2.api.data.Event;
 import de.goddchen.android.gw2.api.data.Floor;
 import de.goddchen.android.gw2.api.data.POI;
 import de.goddchen.android.gw2.api.data.Task;
@@ -49,6 +52,8 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
 
     private static final String EXTRA_CONTINENT = "contintent";
 
+    private static final String EXTRA_EVENT = "event";
+
     private Continent mContinent;
 
     private MapView mMapView;
@@ -56,12 +61,21 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
     private Floor mFloor;
 
     private ItemizedOverlay<OverlayItem> mLandMarkOverlay, mTaskOverlay, mWaypointOverlay,
-            mVistaOverlay, mSkillChallengeOverlay;
+            mVistaOverlay, mSkillChallengeOverlay, mEventOverlay;
 
     public static ContinentFragment newInstance(Continent continent) {
         ContinentFragment fragment = new ContinentFragment();
         Bundle args = new Bundle();
         args.putSerializable(EXTRA_CONTINENT, continent);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static ContinentFragment newInstance(Continent continent, Event event) {
+        ContinentFragment fragment = new ContinentFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(EXTRA_CONTINENT, continent);
+        args.putSerializable(EXTRA_EVENT, event);
         fragment.setArguments(args);
         return fragment;
     }
@@ -110,6 +124,27 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
             }
         });
         ((FrameLayout) view.findViewById(R.id.map_wrapper)).addView(mMapView);
+        if (getArguments().containsKey(EXTRA_EVENT)) {
+            final Event event = (Event) getArguments().getSerializable(EXTRA_EVENT);
+            OverlayItem overlayItem = new OverlayItem(event.name, null,
+                    TileSystem.PixelXYToLatLong(
+                            (int) (mContinent.dims_x / 2 + event.center_x),
+                            (int) (mContinent.dims_y / 2 + event.center_y),
+                            mContinent.max_zoom, null));
+            overlayItem.setMarker(getResources().getDrawable(R.drawable.marker_event));
+            mEventOverlay = new ItemizedIconOverlay<OverlayItem>(getActivity(),
+                    Arrays.asList(overlayItem), null) {
+                @Override
+                protected boolean onTap(int index) {
+                    Toast.makeText(getActivity(), event.name, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            };
+            mMapView.getController().setZoom(4);
+            mMapView.getController().animateTo(
+                    TileSystem.PixelXYToLatLong((int) event.center_x, (int) event.center_y,
+                            mContinent.max_zoom, null));
+        }
         try {
             Floor floor = Application.getDatabaseHelper().getFloorDao().queryForFirst(
                     Application.getDatabaseHelper().getFloorDao().queryBuilder().where().eq
@@ -125,6 +160,9 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
 
     private void displayFloorMetadata() {
         try {
+            if (mEventOverlay != null) {
+                mMapView.getOverlayManager().add(mEventOverlay);
+            }
             if (mFloor == null) {
                 mFloor = Application.getDatabaseHelper().getFloorDao().queryForFirst(
                         Application.getDatabaseHelper().getFloorDao().queryBuilder()
@@ -140,15 +178,17 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
                         mOverlayLoaderCallbacks);
             } else {
                 if (mMapView.getZoomLevel() >= 4) {
-                    if (mMapView.getOverlayManager().size() == 0) {
-                        mMapView.getOverlayManager().add(mLandMarkOverlay);
-                        mMapView.getOverlayManager().add(mWaypointOverlay);
-                        mMapView.getOverlayManager().add(mTaskOverlay);
-                        mMapView.getOverlayManager().add(mVistaOverlay);
-                        mMapView.getOverlayManager().add(mSkillChallengeOverlay);
-                    }
+                    mMapView.getOverlayManager().add(mLandMarkOverlay);
+                    mMapView.getOverlayManager().add(mWaypointOverlay);
+                    mMapView.getOverlayManager().add(mTaskOverlay);
+                    mMapView.getOverlayManager().add(mVistaOverlay);
+                    mMapView.getOverlayManager().add(mSkillChallengeOverlay);
                 } else {
-                    mMapView.getOverlayManager().clear();
+                    mMapView.getOverlayManager().remove(mLandMarkOverlay);
+                    mMapView.getOverlayManager().remove(mWaypointOverlay);
+                    mMapView.getOverlayManager().remove(mTaskOverlay);
+                    mMapView.getOverlayManager().remove(mVistaOverlay);
+                    mMapView.getOverlayManager().remove(mSkillChallengeOverlay);
                 }
             }
         } catch (Exception e) {

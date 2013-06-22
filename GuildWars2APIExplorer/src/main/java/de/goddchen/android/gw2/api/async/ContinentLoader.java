@@ -45,6 +45,8 @@ public class ContinentLoader extends FixedAsyncTaskLoader<List<Continent>> {
                 Continent continent = gson.fromJson(jsonResponse.getJSONObject("continents")
                         .getJSONObject(key).toString(), Continent.class);
                 continent.id = id;
+                continent.dims_x = continent.continent_dims[0];
+                continent.dims_y = continent.continent_dims[1];
                 Application.getDatabaseHelper().getContinentDao().createOrUpdate(continent);
                 continents.add(continent);
             }

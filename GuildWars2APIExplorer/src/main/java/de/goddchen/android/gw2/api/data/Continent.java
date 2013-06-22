@@ -29,4 +29,6 @@ public class Continent implements Serializable {
     @DatabaseField
     public int max_zoom;
 
+    public long[] continent_dims;
+
 }

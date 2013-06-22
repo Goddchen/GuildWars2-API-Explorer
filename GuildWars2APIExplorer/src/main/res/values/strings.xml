@@ -74,5 +74,7 @@
     <string name="maps">Maps</string>
     <string name="toast_no_search_results">No search results</string>
     <string name="please_wait">Please wait...</string>
+    <string name="toast_use_map_once">Please load the map at least once before using this feature
+    </string>
 
 </resources>
