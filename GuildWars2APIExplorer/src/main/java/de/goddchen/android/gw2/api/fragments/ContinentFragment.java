@@ -96,20 +96,21 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         try {
-            Floor floor = Application.getDatabaseHelper().getFloorDao().queryForFirst(
+            mFloor = Application.getDatabaseHelper().getFloorDao().queryForFirst(
                     Application.getDatabaseHelper().getFloorDao().queryBuilder().where().eq
                             ("floor_id", 1).and().eq("continent_id", mContinent.id).prepare());
-            if (floor != null) {
-                mFloor = floor;
-                displayFloorMetadata();
+            if (mFloor != null) {
+                getLoaderManager().restartLoader(Application.Loaders.FLOOR_MARKERS, null,
+                        mOverlayLoaderCallbacks);
             } else {
                 ProgressDialogFragment.newInstance().show(getFragmentManager(), "floor-loading");
+                getLoaderManager()
+                        .initLoader(Application.Loaders.FLOOR_METADATA, null,
+                                mFloorLoaderCallbacks);
             }
         } catch (Exception e) {
             Log.w(Application.Constants.LOG_TAG, "Error loading floor from db", e);
         }
-        getLoaderManager()
-                .initLoader(Application.Loaders.FLOOR_METADATA, null, mFloorLoaderCallbacks);
     }
 
     @Override
@@ -133,7 +134,7 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
 
             @Override
             public boolean onZoom(ZoomEvent zoomEvent) {
-                displayFloorMetadata();
+                displayOverlays();
                 return false;
             }
         });
@@ -164,6 +165,7 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
                         return true;
                     }
                 };
+                mMapView.getOverlayManager().add(mEventOverlay);
                 mMapView.getController().setZoom(6);
                 mMapView.getController().animateTo(
                         TileSystem.PixelXYToLatLong(continentX, continentY,
@@ -174,40 +176,32 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
         }
     }
 
-    private void displayFloorMetadata() {
+    private void displayOverlays() {
         try {
-            if (mEventOverlay != null) {
-                mMapView.getOverlayManager().add(mEventOverlay);
-            }
-            if (mFloor == null) {
-                mFloor = Application.getDatabaseHelper().getFloorDao().queryForFirst(
-                        Application.getDatabaseHelper().getFloorDao().queryBuilder()
-                                .where().eq("continent_id", mContinent.id).and()
-                                .eq("floor_id", 1).prepare());
-            }
-            if (mTaskOverlay == null ||
-                    mVistaOverlay == null ||
-                    mWaypointOverlay == null ||
-                    mLandMarkOverlay == null ||
-                    mSkillChallengeOverlay == null) {
-                getLoaderManager().initLoader(Application.Loaders.FLOOR_MARKERS, null,
-                        mOverlayLoaderCallbacks);
-            } else {
-                if (mMapView.getZoomLevel() >= 4) {
-                    if (mMapView.getOverlayManager().size() < 2) {
+            if (mMapView.getZoomLevel() >= 4) {
+                if (mMapView.getOverlayManager().size() < 2) {
+                    if (mLandMarkOverlay != null) {
                         mMapView.getOverlayManager().add(mLandMarkOverlay);
+                    }
+                    if (mWaypointOverlay != null) {
                         mMapView.getOverlayManager().add(mWaypointOverlay);
+                    }
+                    if (mTaskOverlay != null) {
                         mMapView.getOverlayManager().add(mTaskOverlay);
+                    }
+                    if (mVistaOverlay != null) {
                         mMapView.getOverlayManager().add(mVistaOverlay);
+                    }
+                    if (mSkillChallengeOverlay != null) {
                         mMapView.getOverlayManager().add(mSkillChallengeOverlay);
                     }
-                } else {
-                    mMapView.getOverlayManager().remove(mLandMarkOverlay);
-                    mMapView.getOverlayManager().remove(mWaypointOverlay);
-                    mMapView.getOverlayManager().remove(mTaskOverlay);
-                    mMapView.getOverlayManager().remove(mVistaOverlay);
-                    mMapView.getOverlayManager().remove(mSkillChallengeOverlay);
                 }
+            } else {
+                mMapView.getOverlayManager().remove(mLandMarkOverlay);
+                mMapView.getOverlayManager().remove(mWaypointOverlay);
+                mMapView.getOverlayManager().remove(mTaskOverlay);
+                mMapView.getOverlayManager().remove(mVistaOverlay);
+                mMapView.getOverlayManager().remove(mSkillChallengeOverlay);
             }
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error displaying markers", e);
@@ -235,7 +229,8 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
                     }
                     if (floor != null) {
                         mFloor = floor;
-                        displayFloorMetadata();
+                        getLoaderManager().restartLoader(Application.Loaders.FLOOR_MARKERS, null,
+                                mOverlayLoaderCallbacks);
                     }
                 }
 
@@ -257,15 +252,19 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
                 @Override
                 public void onLoadFinished(Loader<List<ItemizedOverlay<OverlayItem>>> listLoader,
                                            List<ItemizedOverlay<OverlayItem>> itemizedOverlays) {
-                    Log.d(Application.Constants.LOG_TAG, "Loaded " + (itemizedOverlays == null ?
-                            0 : itemizedOverlays.size()) + " overlays");
+                    if (itemizedOverlays == null) {
+                        Log.w(Application.Constants.LOG_TAG, "Error loading overlays");
+                    } else {
+                        Log.d(Application.Constants.LOG_TAG, "Loaded " + itemizedOverlays.size()
+                                + " overlays");
+                    }
                     if (itemizedOverlays != null) {
                         mTaskOverlay = itemizedOverlays.get(0);
                         mWaypointOverlay = itemizedOverlays.get(1);
                         mLandMarkOverlay = itemizedOverlays.get(2);
                         mVistaOverlay = itemizedOverlays.get(3);
                         mSkillChallengeOverlay = itemizedOverlays.get(4);
-                        displayFloorMetadata();
+                        displayOverlays();
                     }
                 }
 
