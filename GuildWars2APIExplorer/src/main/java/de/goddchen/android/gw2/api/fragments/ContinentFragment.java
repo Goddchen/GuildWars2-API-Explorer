@@ -188,15 +188,19 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
                     mWaypointOverlay == null ||
                     mLandMarkOverlay == null ||
                     mSkillChallengeOverlay == null) {
-                getLoaderManager().restartLoader(Application.Loaders.FLOOR_MARKERS, null,
-                        mOverlayLoaderCallbacks);
+                if (getLoaderManager().hasRunningLoaders()) {
+                    getLoaderManager().restartLoader(Application.Loaders.FLOOR_MARKERS, null,
+                            mOverlayLoaderCallbacks);
+                }
             } else {
                 if (mMapView.getZoomLevel() >= 4) {
-                    mMapView.getOverlayManager().add(mLandMarkOverlay);
-                    mMapView.getOverlayManager().add(mWaypointOverlay);
-                    mMapView.getOverlayManager().add(mTaskOverlay);
-                    mMapView.getOverlayManager().add(mVistaOverlay);
-                    mMapView.getOverlayManager().add(mSkillChallengeOverlay);
+                    if (mMapView.getOverlayManager().size() < 2) {
+                        mMapView.getOverlayManager().add(mLandMarkOverlay);
+                        mMapView.getOverlayManager().add(mWaypointOverlay);
+                        mMapView.getOverlayManager().add(mTaskOverlay);
+                        mMapView.getOverlayManager().add(mVistaOverlay);
+                        mMapView.getOverlayManager().add(mSkillChallengeOverlay);
+                    }
                 } else {
                     mMapView.getOverlayManager().remove(mLandMarkOverlay);
                     mMapView.getOverlayManager().remove(mWaypointOverlay);
