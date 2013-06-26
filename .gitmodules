@@ -1,9 +1,0 @@
-[submodule "submodules/ActionBarSherlock"]
-	path = submodules/ActionBarSherlock
-	url = https://github.com/JakeWharton/ActionBarSherlock.git
-[submodule "submodules/ViewPagerIndicator"]
-	path = submodules/ViewPagerIndicator
-	url = https://github.com/JakeWharton/Android-ViewPagerIndicator.git
-[submodule "submodules/volley"]
-	path = submodules/volley
-	url = https://android.googlesource.com/platform/frameworks/volley
