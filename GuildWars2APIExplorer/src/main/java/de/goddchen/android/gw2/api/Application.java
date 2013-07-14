@@ -30,6 +30,8 @@ public class Application extends android.app.Application {
         public static final int FLOOR_METADATA = 15;
         public static final int FLOOR_MARKERS = 16;
         public static final int MAP_SEARCH = 17;
+        public static final int ITEMS = 18;
+        public static final int RECIPES = 19;
     }
 
     public static final class Extras {
@@ -45,6 +47,28 @@ public class Application extends android.app.Application {
         public static final String WVWVW_REFRESH = "wvwvw.auto.refresh";
         public static final String HOME_WORLD = "home.world";
         public static final String EVENTS_REFRESH = "events.auto.refresh";
+        public static final String LAST_ITEM_SYNC_BUILD = "last.item.sync.build";
+        public static final String LAST_RECIPE_SYNC_BUILD = "last.recipe.sync.build";
+    }
+
+    public static final class Actions {
+        public static final String ITEMS_SYNC_FINISHED =
+                "de.goddchen.android.gw2.api.action.itemsyncfinished";
+        public static final String ITEMS_SYNC_STARTED =
+                "de.goddchen.android.gw2.api.action.itemsyncstarted";
+        public static final String ITEMS_SYNC_FAILED =
+                "de.goddchen.android.gw2.api.action.itemsyncfailed";
+        public static final String RECIPE_SYNC_FINISHED =
+                "de.goddchen.android.gw2.api.action.recipesyncfinished";
+        public static final String RECIPE_SYNC_STARTED =
+                "de.goddchen.android.gw2.api.action.recipesyncstarted";
+        public static final String RECIPE_SYNC_FAILED =
+                "de.goddchen.android.gw2.api.action.recipesyncfailed";
+    }
+
+    public static final class Notifications {
+        public static final int ITEM_SYNC = 0;
+        public static final int RECIPE_SYNC = 1;
     }
 
     private static DatabaseHelper databaseHelper;

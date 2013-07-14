@@ -1,9 +1,11 @@
 package de.goddchen.android.gw2.api.activities;
 
 import android.os.Bundle;
+
 import com.actionbarsherlock.view.MenuItem;
+
 import de.goddchen.android.gw2.api.R;
-import de.goddchen.android.gw2.api.fragments.RecipeSearchFragment;
+import de.goddchen.android.gw2.api.fragments.RecipesFragment;
 
 /**
  * Created by Goddchen on 23.05.13.
@@ -15,7 +17,7 @@ public class RecipesActivity extends BaseFragmentActivity {
         setContentView(R.layout.activity_fragment_container);
         if (getSupportFragmentManager().findFragmentById(R.id.fragment) == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment, RecipeSearchFragment.newInstance())
+                    .add(R.id.fragment, RecipesFragment.newInstance())
                     .commit();
         }
     }

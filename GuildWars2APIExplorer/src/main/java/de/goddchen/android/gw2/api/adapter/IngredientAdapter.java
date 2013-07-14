@@ -31,13 +31,15 @@ public class IngredientAdapter extends ArrayAdapter<Recipe.Ingredient> {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Recipe.Ingredient ingredient = getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.simple_list_item_1, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.simple_list_item_1,
+                    parent, false);
         }
         final TextView textView = (TextView) convertView.findViewById(R.id.text1);
         textView.setText(de.goddchen.android.gw2.api.R.string.loading);
         ((BaseFragmentActivity) getContext()).getRequestQueue()
                 .add(new GsonRequest<Item>(
-                        "https://api.guildwars2.com/v1/item_details.json?item_id=" + ingredient.item_id
+                        "https://api.guildwars2.com/v1/item_details.json?item_id=" + ingredient
+                                .item.item_id
                                 + "&lang=" + Locale.getDefault().getLanguage(),
                         Item.class,
                         new Response.Listener<Item>() {

@@ -4,7 +4,7 @@
           android:versionCode="14"
           android:versionName="1.0-beta10-hotfix1">
 
-<uses-sdk
+    <uses-sdk
             android:minSdkVersion="8"
             android:targetSdkVersion="17"/>
 
@@ -53,6 +53,9 @@
 
         <!-- Used for install referral measurement-->
         <service android:name="com.google.analytics.tracking.android.CampaignTrackingService"/>
+        <service android:name=".services.ItemSyncService"/>
+        <service android:name=".services.RecipeSyncService"/>
+
         <receiver
                 android:name="com.google.analytics.tracking.android.CampaignTrackingReceiver"
                 android:exported="true">

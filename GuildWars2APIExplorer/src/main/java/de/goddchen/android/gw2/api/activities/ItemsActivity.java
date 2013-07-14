@@ -1,9 +1,11 @@
 package de.goddchen.android.gw2.api.activities;
 
 import android.os.Bundle;
+
 import com.actionbarsherlock.view.MenuItem;
+
 import de.goddchen.android.gw2.api.R;
-import de.goddchen.android.gw2.api.fragments.ItemSearchFragment;
+import de.goddchen.android.gw2.api.fragments.ItemsFragment;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -15,7 +17,7 @@ public class ItemsActivity extends BaseFragmentActivity {
         setContentView(R.layout.activity_fragment_container);
         if (getSupportFragmentManager().findFragmentById(R.id.fragment) == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment, ItemSearchFragment.newInstance())
+                    .add(R.id.fragment, ItemsFragment.newInstance())
                     .commit();
         }
     }
