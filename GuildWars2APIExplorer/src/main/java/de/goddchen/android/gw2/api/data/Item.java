@@ -47,6 +47,10 @@ public class Item {
     @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     public Consumable consumable;
 
+    public String icon_file_id;
+
+    public String icon_file_signature;
+
     @DatabaseTable(tableName = "consumable")
     public static class Consumable implements Serializable {
         @DatabaseField(generatedId = true)

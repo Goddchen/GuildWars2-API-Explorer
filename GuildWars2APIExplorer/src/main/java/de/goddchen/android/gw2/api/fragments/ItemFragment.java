@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.Arrays;
 
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
+import de.goddchen.android.gw2.api.activities.BaseFragmentActivity;
+import de.goddchen.android.gw2.api.async.BitmapLruImageCache;
 import de.goddchen.android.gw2.api.async.ItemLoader;
 import de.goddchen.android.gw2.api.data.Item;
 
@@ -115,6 +120,15 @@ public class ItemFragment extends SherlockFragment {
                                             item.consumable.duration_ms / 1000f / 60f));
                         } else {
                             getView().findViewById(R.id.consumable_wrapper).setVisibility(View.GONE);
+                        }
+                        if (TextUtils.isEmpty(item.icon_file_id) || TextUtils.isEmpty(item.icon_file_signature)) {
+                            getView().findViewById(R.id.icon).setVisibility(View.GONE);
+                        } else {
+                            NetworkImageView iconView = (NetworkImageView) getView().findViewById(R.id.icon);
+                            iconView.setDefaultImageResId(android.R.drawable.ic_menu_gallery);
+                            iconView.setImageUrl(String.format("https://render.guildwars2.com/file/%s/%s.png",
+                                    item.icon_file_signature, item.icon_file_id),
+                                    new ImageLoader(((BaseFragmentActivity) getActivity()).getRequestQueue(), new BitmapLruImageCache(1024 * 1024)));
                         }
                     }
                 }
