@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -47,6 +48,8 @@ public class ItemSyncService extends Service {
 
     private Dao<Item, Integer> mItemDao;
 
+    private PowerManager.WakeLock mWakeLock;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -73,6 +76,8 @@ public class ItemSyncService extends Service {
 
     private void startDownload() {
         try {
+            mWakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "item-sync");
+            mWakeLock.acquire(1000l * 60 * 30);
             mCurrentBuild = new Gson().fromJson(new InputStreamReader(
                     new URL("https://api.guildwars2.com/v1/build.json?lang="
                             + Locale.getDefault().getLanguage())
@@ -138,6 +143,7 @@ public class ItemSyncService extends Service {
                 mCurrentBuild.build_id).commit();
         sendBroadcast(new Intent(Application.Actions.ITEMS_SYNC_FINISHED));
         mExecutorService.shutdown();
+        mWakeLock.release();
         stopSelf();
     }
 

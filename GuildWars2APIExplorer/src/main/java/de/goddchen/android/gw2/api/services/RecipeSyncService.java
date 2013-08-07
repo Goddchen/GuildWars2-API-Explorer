@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -47,6 +48,8 @@ public class RecipeSyncService extends Service {
 
     private Build mCurrentBuild;
 
+    private PowerManager.WakeLock mWakeLock;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -83,6 +86,9 @@ public class RecipeSyncService extends Service {
                 .edit().putLong(Application.Preferences.LAST_RECIPE_SYNC_BUILD,
                 mCurrentBuild.build_id).commit();
         sendBroadcast(new Intent(Application.Actions.RECIPE_SYNC_FINISHED));
+        mExecutorService.shutdown();
+        mWakeLock.release();
+        stopSelf();
     }
 
     @Override
@@ -98,6 +104,8 @@ public class RecipeSyncService extends Service {
 
     private void startDownload() {
         try {
+            mWakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "recipe-sync");
+            mWakeLock.acquire(1000l * 60 * 30);
             mCurrentBuild = new Gson().fromJson(new InputStreamReader(
                     new URL("https://api.guildwars2.com/v1/build.json?lang="
                             + Locale.getDefault().getLanguage())
