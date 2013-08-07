@@ -81,7 +81,7 @@ public class RecipeSyncService extends Service {
     }
 
     private void halt() {
-        mNotificationManager.cancel(Application.Notifications.RECIPE_SYNC);
+        stopForeground(true);
         PreferenceManager.getDefaultSharedPreferences(this)
                 .edit().putLong(Application.Preferences.LAST_RECIPE_SYNC_BUILD,
                 mCurrentBuild.build_id).commit();
@@ -99,13 +99,18 @@ public class RecipeSyncService extends Service {
                 startDownload();
             }
         }).start();
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     private void startDownload() {
         try {
             mWakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "recipe-sync");
             mWakeLock.acquire(1000l * 60 * 30);
+            mNotificationBuilder.setTicker("Syncing recipes");
+            mNotificationBuilder.setOngoing(true);
+            mNotificationBuilder.setContentTitle("Syncing recipes");
+            mNotificationBuilder.setSmallIcon(R.drawable.ic_stat_notification);
+            startForeground(Application.Notifications.RECIPE_SYNC, mNotificationBuilder.build());
             mCurrentBuild = new Gson().fromJson(new InputStreamReader(
                     new URL("https://api.guildwars2.com/v1/build.json?lang="
                             + Locale.getDefault().getLanguage())
@@ -116,12 +121,6 @@ public class RecipeSyncService extends Service {
                 sendBroadcast(new Intent(Application.Actions.RECIPE_SYNC_STARTED));
                 ConnectivityManager connectivityManager = (ConnectivityManager)
                         getSystemService(Context.CONNECTIVITY_SERVICE);
-                mNotificationBuilder.setTicker("Syncing recipes");
-                mNotificationBuilder.setOngoing(true);
-                mNotificationBuilder.setContentTitle("Syncing recipes");
-                mNotificationBuilder.setSmallIcon(R.drawable.ic_stat_notification);
-                mNotificationManager.notify(Application.Notifications.RECIPE_SYNC,
-                        mNotificationBuilder.build());
                 mRecipeDao = Application.getDatabaseHelper().getRecipeDao();
                 HttpsURLConnection connection =
                         (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/recipes" +
@@ -137,10 +136,13 @@ public class RecipeSyncService extends Service {
                     }
                     mExecutorService.submit(new DownloadRecipeRunnable(mIDs.get(i)));
                 }
+            } else {
+                halt();
             }
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error syncing recipes", e);
             sendBroadcast(new Intent(Application.Actions.RECIPE_SYNC_FAILED));
+            halt();
         }
     }
 

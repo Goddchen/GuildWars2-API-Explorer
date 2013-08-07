@@ -71,13 +71,18 @@ public class ItemSyncService extends Service {
                 startDownload();
             }
         }).start();
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     private void startDownload() {
         try {
             mWakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "item-sync");
             mWakeLock.acquire(1000l * 60 * 30);
+            mNotificationBuilder.setTicker("Syncing items");
+            mNotificationBuilder.setOngoing(true);
+            mNotificationBuilder.setContentTitle("Syncing items");
+            mNotificationBuilder.setSmallIcon(R.drawable.ic_stat_notification);
+            startForeground(Application.Notifications.ITEM_SYNC, mNotificationBuilder.build());
             mCurrentBuild = new Gson().fromJson(new InputStreamReader(
                     new URL("https://api.guildwars2.com/v1/build.json?lang="
                             + Locale.getDefault().getLanguage())
@@ -88,12 +93,6 @@ public class ItemSyncService extends Service {
                 sendBroadcast(new Intent(Application.Actions.ITEMS_SYNC_STARTED));
                 ConnectivityManager connectivityManager = (ConnectivityManager)
                         getSystemService(Context.CONNECTIVITY_SERVICE);
-                mNotificationBuilder.setTicker("Syncing items");
-                mNotificationBuilder.setOngoing(true);
-                mNotificationBuilder.setContentTitle("Syncing items");
-                mNotificationBuilder.setSmallIcon(R.drawable.ic_stat_notification);
-                mNotificationManager.notify(Application.Notifications.ITEM_SYNC,
-                        mNotificationBuilder.build());
                 mItemDao = Application.getDatabaseHelper().getItemDao();
                 HttpsURLConnection connection =
                         (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/items.json")
@@ -109,10 +108,13 @@ public class ItemSyncService extends Service {
                     }
                     mExecutorService.submit(new DownloadItemRunnable(mIDs.get(i)));
                 }
+            } else {
+                halt();
             }
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error syncing items", e);
             sendBroadcast(new Intent(Application.Actions.ITEMS_SYNC_FAILED));
+            halt();
         }
     }
 
@@ -137,7 +139,7 @@ public class ItemSyncService extends Service {
     }
 
     private void halt() {
-        mNotificationManager.cancel(Application.Notifications.ITEM_SYNC);
+        stopForeground(true);
         PreferenceManager.getDefaultSharedPreferences(this)
                 .edit().putLong(Application.Preferences.LAST_ITEM_SYNC_BUILD,
                 mCurrentBuild.build_id).commit();
