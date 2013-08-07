@@ -47,8 +47,10 @@ public class Item {
     @DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     public Consumable consumable;
 
+    @DatabaseField
     public String icon_file_id;
 
+    @DatabaseField
     public String icon_file_signature;
 
     @DatabaseTable(tableName = "consumable")
