@@ -64,14 +64,14 @@ public class RecipeSyncService extends Service {
     }
 
     private synchronized void recipeDownloaded(Recipe recipe) {
-        if (++mProgress == mIDs.size()) {
-            halt();
-        }
         mNotificationBuilder.setProgress(mIDs.size(), mProgress, false);
         mNotificationBuilder.setContentText(getString(R.string.format_progress_int,
                 mProgress, mIDs.size()));
         mNotificationManager.notify(Application.Notifications.RECIPE_SYNC,
                 mNotificationBuilder.build());
+        if (++mProgress == mIDs.size()) {
+            halt();
+        }
     }
 
     private synchronized void recipeDownloadFailed(int id) {

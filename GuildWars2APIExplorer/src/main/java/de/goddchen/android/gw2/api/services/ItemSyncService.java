@@ -117,9 +117,6 @@ public class ItemSyncService extends Service {
     }
 
     private synchronized void itemDownloaded(Item item) {
-        if (++mProgress == mIDs.size()) {
-            halt();
-        }
         mNotificationBuilder.setProgress(mIDs.size(), mProgress, false);
         mNotificationBuilder.setContentText(getString(R.string.format_progress_int,
                 mProgress, mIDs.size()));
@@ -128,6 +125,9 @@ public class ItemSyncService extends Service {
                 item.name.substring(0, 20) + "...");
         mNotificationManager.notify(Application.Notifications.ITEM_SYNC,
                 mNotificationBuilder.build());
+        if (++mProgress == mIDs.size()) {
+            halt();
+        }
     }
 
     private synchronized void itemDownloadFailed(int id) {
