@@ -29,6 +29,13 @@
                     android:textStyle="bold"
                     android:gravity="center_horizontal"/>
 
+            <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/icon"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="center_horizontal"/>
+
             <TextView
                     android:id="@+id/description"
                     android:layout_width="match_parent"
