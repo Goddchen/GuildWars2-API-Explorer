@@ -20,7 +20,6 @@ import java.util.List;
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.async.RecipesLoader;
-import de.goddchen.android.gw2.api.data.Item;
 import de.goddchen.android.gw2.api.data.Recipe;
 import de.goddchen.android.gw2.api.fragments.dialogs.ShouldSyncDialogFragment;
 
@@ -102,10 +101,10 @@ public class RecipesFragment extends SherlockListFragment {
                                 android.R.layout.simple_list_item_1, recipes) {
                             @Override
                             public View getView(int position, View convertView, ViewGroup parent) {
+                                Recipe recipe = getItem(position);
                                 View view = super.getView(position, convertView, parent);
-                                Item outputItem = getItem(position).outputItem;
                                 ((TextView) view.findViewById(android.R.id.text1))
-                                        .setText(outputItem == null ? "???" : outputItem.name);
+                                        .setText(recipe.outputItem == null ? ("??? (#" + recipe.recipe_id + ")") : recipe.outputItem.name);
                                 return view;
                             }
                         });
