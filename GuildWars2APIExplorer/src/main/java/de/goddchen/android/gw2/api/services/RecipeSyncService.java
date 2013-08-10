@@ -72,6 +72,13 @@ public class RecipeSyncService extends Service {
         mNotificationBuilder.setProgress(mIDs.size(), mProgress, false);
         mNotificationBuilder.setContentText(getString(R.string.format_progress_int,
                 mProgress, mIDs.size()));
+        if (recipe.outputItem != null) {
+            mNotificationBuilder.setContentInfo(recipe.outputItem.name.length() < 20 ?
+                    recipe.outputItem.name :
+                    recipe.outputItem.name.substring(0, 20) + "...");
+        } else {
+            mNotificationBuilder.setContentInfo(null);
+        }
         mNotificationManager.notify(Application.Notifications.RECIPE_SYNC,
                 mNotificationBuilder.build());
         mProgress++;
@@ -131,12 +138,6 @@ public class RecipeSyncService extends Service {
             if (mCurrentBuild.build_id != lastSyncBuild) {
                 sendBroadcast(new Intent(Application.Actions.RECIPE_SYNC_STARTED));
                 mRecipeDao = Application.getDatabaseHelper().getRecipeDao();
-                HttpsURLConnection connection =
-                        (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/recipes" +
-                                ".json").openConnection();
-                APIResponse apiResponse =
-                        new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
-                                APIResponse.class);
                 if (mSharedPreferences.contains(Application.Preferences.RECIPE_SYNC_IDS)) {
                     mIDs = new Gson().fromJson(mSharedPreferences.getString(Application.Preferences.RECIPE_SYNC_IDS, "[]"),
                             new TypeToken<List<Integer>>() {
@@ -146,6 +147,12 @@ public class RecipeSyncService extends Service {
                         mExecutorService.submit(new DownloadRecipeRunnable(mIDs.get(i)));
                     }
                 } else {
+                    HttpsURLConnection connection =
+                            (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/recipes" +
+                                    ".json").openConnection();
+                    APIResponse apiResponse =
+                            new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
+                                    APIResponse.class);
                     mIDs = apiResponse.recipes;
                     mSharedPreferences.edit()
                             .putString(Application.Preferences.RECIPE_SYNC_IDS, new Gson().toJson(mIDs))

@@ -54,8 +54,12 @@
 
         <!-- Used for install referral measurement-->
         <service android:name="com.google.analytics.tracking.android.CampaignTrackingService"/>
-        <service android:name=".services.ItemSyncService"/>
-        <service android:name=".services.RecipeSyncService"/>
+        <service
+                android:name=".services.ItemSyncService"
+                android:process="de.goddchen.android.gw2.api.item.sync"/>
+        <service
+                android:name=".services.RecipeSyncService"
+                android:process="de.goddchen.android.gw2.api.recipe.sync"/>
 
         <receiver
                 android:name="com.google.analytics.tracking.android.CampaignTrackingReceiver"

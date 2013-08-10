@@ -1,6 +1,7 @@
 package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -28,6 +29,8 @@ import de.goddchen.android.gw2.api.fragments.dialogs.ShouldSyncDialogFragment;
  */
 public class RecipesFragment extends SherlockListFragment {
 
+    private Handler mHandler;
+
     public static RecipesFragment newInstance() {
         RecipesFragment fragment = new RecipesFragment();
         return fragment;
@@ -37,6 +40,7 @@ public class RecipesFragment extends SherlockListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mHandler = new Handler();
     }
 
     @Override
@@ -109,8 +113,13 @@ public class RecipesFragment extends SherlockListFragment {
                             }
                         });
                         if (recipes.size() == 0) {
-                            ShouldSyncDialogFragment.newInstance(ShouldSyncDialogFragment.TYPE_RECIPE_SYNC)
-                                    .show(getFragmentManager(), "should-sync");
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ShouldSyncDialogFragment.newInstance(ShouldSyncDialogFragment.TYPE_RECIPE_SYNC)
+                                            .show(getFragmentManager(), "should-sync");
+                                }
+                            });
                         }
                     }
                 }
