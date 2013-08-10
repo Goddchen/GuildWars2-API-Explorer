@@ -3,6 +3,7 @@ package de.goddchen.android.gw2.api.async;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -21,7 +22,8 @@ public class RecipesLoader extends FixedAsyncTaskLoader<List<Recipe>> {
     @Override
     public List<Recipe> loadInBackground() {
         try {
-            List<Recipe> recipes = Application.getDatabaseHelper().getRecipeDao().queryForAll();
+            List<Recipe> recipes = new ArrayList<Recipe>();
+            recipes.addAll(Application.getDatabaseHelper().getRecipeDao().queryForAll());
             Collections.sort(recipes, new Comparator<Recipe>() {
                 @Override
                 public int compare(Recipe recipe, Recipe recipe2) {

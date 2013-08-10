@@ -78,5 +78,7 @@
     </string>
     <string name="format_progress_int" formatted="false">%d of %d</string>
     <string name="hint_search">Name</string>
+    <string name="action_sync">Sync</string>
+    <string name="confirm_sync">This will download thousands of objects.\nContinue?</string>
 
 </resources>

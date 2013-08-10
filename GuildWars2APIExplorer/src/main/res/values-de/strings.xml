@@ -78,5 +78,7 @@
     <string name="toast_use_map_once">Bitte öffne die Karte mindestens ein Mal bevor du dieses
         Feature nutzt
     </string>
+    <string name="action_sync">Synchronisieren</string>
+    <string name="confirm_sync">Es wird ein Download von mehreren tausend Objekten gestartet.\nMöchtest du fortfahren?</string>
 
 </resources>

@@ -1,10 +1,11 @@
 package de.goddchen.android.gw2.api.services;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -12,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.dao.Dao;
 
 import java.io.InputStreamReader;
@@ -50,6 +52,8 @@ public class ItemSyncService extends Service {
 
     private PowerManager.WakeLock mWakeLock;
 
+    private SharedPreferences mSharedPreferences;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -61,6 +65,7 @@ public class ItemSyncService extends Service {
         mNotificationBuilder = new NotificationCompat.Builder(this);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mExecutorService = Executors.newFixedThreadPool(10);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
@@ -71,7 +76,7 @@ public class ItemSyncService extends Service {
                 startDownload();
             }
         }).start();
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     private void startDownload() {
@@ -91,22 +96,30 @@ public class ItemSyncService extends Service {
                     .getLong(Application.Preferences.LAST_ITEM_SYNC_BUILD, -1);
             if (mCurrentBuild.build_id != lastSyncBuild) {
                 sendBroadcast(new Intent(Application.Actions.ITEMS_SYNC_STARTED));
-                ConnectivityManager connectivityManager = (ConnectivityManager)
-                        getSystemService(Context.CONNECTIVITY_SERVICE);
                 mItemDao = Application.getDatabaseHelper().getItemDao();
-                HttpsURLConnection connection =
-                        (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/items.json")
-                                .openConnection();
-                APIResponse apiResponse = new Gson()
-                        .fromJson(new InputStreamReader(connection.getInputStream()),
-                                APIResponse.class);
-                mIDs = apiResponse.items;
-                for (int i = 0; i < mIDs.size(); i++) {
-                    while (connectivityManager.getActiveNetworkInfo() == null
-                            || !connectivityManager.getActiveNetworkInfo().isConnected()) {
-                        Thread.sleep(1000 * 60);
+                if (mSharedPreferences.contains(Application.Preferences.ITEM_SYNC_IDS)) {
+                    mIDs = new Gson().fromJson(mSharedPreferences.getString(Application.Preferences.ITEM_SYNC_IDS, "[]"),
+                            new TypeToken<List<Integer>>() {
+                            }.getType());
+                    mProgress = mSharedPreferences.getInt(Application.Preferences.ITEM_SYNC_POSITION, 0);
+                    for (int i = mProgress - 10; i < mIDs.size(); i++) {
+                        mExecutorService.submit(new DownloadItemRunnable(mIDs.get(i)));
                     }
-                    mExecutorService.submit(new DownloadItemRunnable(mIDs.get(i)));
+                } else {
+                    HttpsURLConnection connection =
+                            (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/items.json")
+                                    .openConnection();
+                    APIResponse apiResponse = new Gson()
+                            .fromJson(new InputStreamReader(connection.getInputStream()),
+                                    APIResponse.class);
+                    mIDs = apiResponse.items;
+                    mSharedPreferences.edit()
+                            .putString(Application.Preferences.ITEM_SYNC_IDS, new Gson().toJson(mIDs))
+                            .putInt(Application.Preferences.ITEM_SYNC_POSITION, 0)
+                            .commit();
+                    for (int i = 0; i < mIDs.size(); i++) {
+                        mExecutorService.submit(new DownloadItemRunnable(mIDs.get(i)));
+                    }
                 }
             } else {
                 halt();
@@ -127,22 +140,28 @@ public class ItemSyncService extends Service {
                 item.name.substring(0, 20) + "...");
         mNotificationManager.notify(Application.Notifications.ITEM_SYNC,
                 mNotificationBuilder.build());
-        if (++mProgress == mIDs.size()) {
+        mProgress++;
+        mSharedPreferences.edit().putInt(Application.Preferences.ITEM_SYNC_POSITION, mProgress).commit();
+        if (mProgress == mIDs.size()) {
             halt();
         }
     }
 
     private synchronized void itemDownloadFailed(int id) {
-        if (++mProgress == mIDs.size()) {
+        mProgress++;
+        mSharedPreferences.edit().putInt(Application.Preferences.ITEM_SYNC_POSITION, mProgress).commit();
+        if (mProgress == mIDs.size()) {
             halt();
         }
     }
 
     private void halt() {
         stopForeground(true);
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .edit().putLong(Application.Preferences.LAST_ITEM_SYNC_BUILD,
-                mCurrentBuild.build_id).commit();
+        mSharedPreferences.edit()
+                .putLong(Application.Preferences.LAST_ITEM_SYNC_BUILD, mCurrentBuild.build_id)
+                .remove(Application.Preferences.ITEM_SYNC_POSITION)
+                .remove(Application.Preferences.ITEM_SYNC_IDS)
+                .commit();
         sendBroadcast(new Intent(Application.Actions.ITEMS_SYNC_FINISHED));
         mExecutorService.shutdown();
         mWakeLock.release();
@@ -172,5 +191,16 @@ public class ItemSyncService extends Service {
 
     private class APIResponse {
         List<Integer> items;
+    }
+
+    public static boolean isRunning(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo runningService :
+                activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if (ItemSyncService.class.getName().equals(runningService.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

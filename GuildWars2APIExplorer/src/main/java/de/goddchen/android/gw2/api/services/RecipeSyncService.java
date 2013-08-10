@@ -1,10 +1,11 @@
 package de.goddchen.android.gw2.api.services;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -12,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.j256.ormlite.dao.Dao;
 
 import java.io.InputStreamReader;
@@ -50,12 +52,15 @@ public class RecipeSyncService extends Service {
 
     private PowerManager.WakeLock mWakeLock;
 
+    private SharedPreferences mSharedPreferences;
+
     @Override
     public void onCreate() {
         super.onCreate();
         mExecutorService = Executors.newFixedThreadPool(10);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationBuilder = new NotificationCompat.Builder(this);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
@@ -69,22 +74,28 @@ public class RecipeSyncService extends Service {
                 mProgress, mIDs.size()));
         mNotificationManager.notify(Application.Notifications.RECIPE_SYNC,
                 mNotificationBuilder.build());
-        if (++mProgress == mIDs.size()) {
+        mProgress++;
+        mSharedPreferences.edit().putInt(Application.Preferences.RECIPE_SYNC_POSITION, mProgress).commit();
+        if (mProgress == mIDs.size()) {
             halt();
         }
     }
 
     private synchronized void recipeDownloadFailed(int id) {
-        if (++mProgress == mIDs.size()) {
+        mProgress++;
+        mSharedPreferences.edit().putInt(Application.Preferences.RECIPE_SYNC_POSITION, mProgress).commit();
+        if (mProgress == mIDs.size()) {
             halt();
         }
     }
 
     private void halt() {
         stopForeground(true);
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .edit().putLong(Application.Preferences.LAST_RECIPE_SYNC_BUILD,
-                mCurrentBuild.build_id).commit();
+        mSharedPreferences.edit()
+                .putLong(Application.Preferences.LAST_RECIPE_SYNC_BUILD, mCurrentBuild.build_id)
+                .remove(Application.Preferences.RECIPE_SYNC_IDS)
+                .remove(Application.Preferences.RECIPE_SYNC_POSITION)
+                .commit();
         sendBroadcast(new Intent(Application.Actions.RECIPE_SYNC_FINISHED));
         mExecutorService.shutdown();
         mWakeLock.release();
@@ -119,8 +130,6 @@ public class RecipeSyncService extends Service {
                     .getLong(Application.Preferences.LAST_RECIPE_SYNC_BUILD, -1);
             if (mCurrentBuild.build_id != lastSyncBuild) {
                 sendBroadcast(new Intent(Application.Actions.RECIPE_SYNC_STARTED));
-                ConnectivityManager connectivityManager = (ConnectivityManager)
-                        getSystemService(Context.CONNECTIVITY_SERVICE);
                 mRecipeDao = Application.getDatabaseHelper().getRecipeDao();
                 HttpsURLConnection connection =
                         (HttpsURLConnection) new URL("https://api.guildwars2.com/v1/recipes" +
@@ -128,13 +137,23 @@ public class RecipeSyncService extends Service {
                 APIResponse apiResponse =
                         new Gson().fromJson(new InputStreamReader(connection.getInputStream()),
                                 APIResponse.class);
-                mIDs = apiResponse.recipes;
-                for (int i = 0; i < mIDs.size(); i++) {
-                    while (connectivityManager.getActiveNetworkInfo() == null
-                            || !connectivityManager.getActiveNetworkInfo().isConnected()) {
-                        Thread.sleep(1000 * 60);
+                if (mSharedPreferences.contains(Application.Preferences.RECIPE_SYNC_IDS)) {
+                    mIDs = new Gson().fromJson(mSharedPreferences.getString(Application.Preferences.RECIPE_SYNC_IDS, "[]"),
+                            new TypeToken<List<Integer>>() {
+                            }.getType());
+                    mProgress = mSharedPreferences.getInt(Application.Preferences.RECIPE_SYNC_POSITION, 0);
+                    for (int i = mProgress; i < mIDs.size(); i++) {
+                        mExecutorService.submit(new DownloadRecipeRunnable(mIDs.get(i)));
                     }
-                    mExecutorService.submit(new DownloadRecipeRunnable(mIDs.get(i)));
+                } else {
+                    mIDs = apiResponse.recipes;
+                    mSharedPreferences.edit()
+                            .putString(Application.Preferences.RECIPE_SYNC_IDS, new Gson().toJson(mIDs))
+                            .putInt(Application.Preferences.RECIPE_SYNC_POSITION, 0)
+                            .commit();
+                    for (int i = 0; i < mIDs.size(); i++) {
+                        mExecutorService.submit(new DownloadRecipeRunnable(mIDs.get(i)));
+                    }
                 }
             } else {
                 halt();
@@ -195,5 +214,16 @@ public class RecipeSyncService extends Service {
 
     private class APIResponse {
         public List<Integer> recipes;
+    }
+
+    public static boolean isRunning(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo runningService :
+                activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if (RecipeSyncService.class.getName().equals(runningService.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

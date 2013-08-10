@@ -49,6 +49,10 @@ public class Application extends android.app.Application {
         public static final String EVENTS_REFRESH = "events.auto.refresh";
         public static final String LAST_ITEM_SYNC_BUILD = "last.item.sync.build";
         public static final String LAST_RECIPE_SYNC_BUILD = "last.recipe.sync.build";
+        public static final String ITEM_SYNC_IDS = "item.sync.ids";
+        public static final String ITEM_SYNC_POSITION = "item.sync.position";
+        public static final String RECIPE_SYNC_IDS = "recipe.sync.ids";
+        public static final String RECIPE_SYNC_POSITION = "recipe.sync.position";
     }
 
     public static final class Actions {

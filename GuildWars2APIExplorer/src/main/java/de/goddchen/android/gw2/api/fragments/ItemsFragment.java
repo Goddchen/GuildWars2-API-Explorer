@@ -11,10 +11,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.j256.ormlite.android.AndroidDatabaseResults;
 
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
+import de.goddchen.android.gw2.api.fragments.dialogs.ShouldSyncDialogFragment;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -24,6 +28,12 @@ public class ItemsFragment extends SherlockListFragment {
     public static ItemsFragment newInstance() {
         ItemsFragment fragment = new ItemsFragment();
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -52,6 +62,9 @@ public class ItemsFragment extends SherlockListFragment {
                     ((TextView) view.findViewById(android.R.id.text1)).setText(cursor.getString(cursor.getColumnIndex("name")));
                 }
             });
+            if (cursor.getCount() == 0) {
+                ShouldSyncDialogFragment.newInstance(ShouldSyncDialogFragment.TYPE_ITEM_SYNC).show(getFragmentManager(), "should-sync");
+            }
         } catch (Exception e) {
             Log.e(Application.Constants.LOG_TAG, "Error getting cursor", e);
         }
@@ -65,5 +78,20 @@ public class ItemsFragment extends SherlockListFragment {
                 .replace(R.id.fragment, ItemFragment.newInstance(itemId))
                 .addToBackStack("item")
                 .commit();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_items, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.sync) {
+            ShouldSyncDialogFragment.newInstance(ShouldSyncDialogFragment.TYPE_ITEM_SYNC).show(getFragmentManager(), "should-sync");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

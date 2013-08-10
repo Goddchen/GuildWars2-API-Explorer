@@ -11,6 +11,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import java.util.List;
 
@@ -19,6 +22,7 @@ import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.async.RecipesLoader;
 import de.goddchen.android.gw2.api.data.Item;
 import de.goddchen.android.gw2.api.data.Recipe;
+import de.goddchen.android.gw2.api.fragments.dialogs.ShouldSyncDialogFragment;
 
 /**
  * Created by Goddchen on 22.05.13.
@@ -28,6 +32,12 @@ public class RecipesFragment extends SherlockListFragment {
     public static RecipesFragment newInstance() {
         RecipesFragment fragment = new RecipesFragment();
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -62,6 +72,21 @@ public class RecipesFragment extends SherlockListFragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_recipes, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.sync) {
+            ShouldSyncDialogFragment.newInstance(ShouldSyncDialogFragment.TYPE_RECIPE_SYNC).show(getFragmentManager(), "should-sync");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private LoaderManager.LoaderCallbacks<List<Recipe>> mRecipesLoaderCallbacks =
             new LoaderManager.LoaderCallbacks<List<Recipe>>() {
                 @Override
@@ -84,6 +109,10 @@ public class RecipesFragment extends SherlockListFragment {
                                 return view;
                             }
                         });
+                        if (recipes.size() == 0) {
+                            ShouldSyncDialogFragment.newInstance(ShouldSyncDialogFragment.TYPE_RECIPE_SYNC)
+                                    .show(getFragmentManager(), "should-sync");
+                        }
                     }
                 }
 
