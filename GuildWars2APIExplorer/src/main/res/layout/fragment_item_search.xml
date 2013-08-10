@@ -28,25 +28,38 @@
 
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/list_content">
 
-        <ListView
-                android:id="@android:id/list"
+        <EditText
+                android:id="@+id/query"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawSelectorOnTop="false"
-                android:fastScrollEnabled="true"/>
+                android:layout_height="wrap_content"
+                android:hint="Search for name"
+                android:inputType="text"/>
 
-        <TextView
-                android:id="@android:id/empty"
+        <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/no_items"/>
-    </FrameLayout>
+                android:layout_height="match_parent">
+
+            <ListView
+                    android:id="@android:id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="false"
+                    android:fastScrollEnabled="true"/>
+
+            <TextView
+                    android:id="@android:id/empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/no_items"/>
+        </FrameLayout>
+    </LinearLayout>
 
 </FrameLayout>

@@ -4,9 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,6 +30,8 @@ import de.goddchen.android.gw2.api.fragments.dialogs.ShouldSyncDialogFragment;
  */
 public class ItemsFragment extends SherlockListFragment {
 
+    private EditText mQuery;
+
     public static ItemsFragment newInstance() {
         ItemsFragment fragment = new ItemsFragment();
         return fragment;
@@ -37,9 +44,32 @@ public class ItemsFragment extends SherlockListFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_item_search, container, false);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getListView().setFastScrollEnabled(true);
+        mQuery = (EditText) view.findViewById(R.id.query);
+        mQuery.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (getListAdapter() != null) {
+                    ((CursorAdapter) getListAdapter()).getFilter().filter(editable);
+                }
+            }
+        });
     }
 
     @Override
@@ -60,6 +90,19 @@ public class ItemsFragment extends SherlockListFragment {
                 @Override
                 public void bindView(View view, Context context, Cursor cursor) {
                     ((TextView) view.findViewById(android.R.id.text1)).setText(cursor.getString(cursor.getColumnIndex("name")));
+                }
+            });
+            ((CursorAdapter) getListAdapter()).setFilterQueryProvider(new FilterQueryProvider() {
+                @Override
+                public Cursor runQuery(CharSequence charSequence) {
+                    try {
+                        return ((AndroidDatabaseResults) Application.getDatabaseHelper().getItemDao().queryBuilder().orderBy("name", true)
+                                .selectColumns("name", "_id")
+                                .where().like("name", "%" + charSequence + "%").iterator().getRawResults()).getRawCursor();
+                    } catch (Exception e) {
+                        Log.w(Application.Constants.LOG_TAG, "Error getting filter cursor", e);
+                        return null;
+                    }
                 }
             });
             if (cursor.getCount() == 0) {
