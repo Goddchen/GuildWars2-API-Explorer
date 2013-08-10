@@ -191,26 +191,7 @@ public class RecipeSyncService extends Service {
                 APIRecipe apiRecipe = new Gson().fromJson(new InputStreamReader
                         (recipeConnection
                                 .getInputStream()), APIRecipe.class);
-                Recipe recipe = new Recipe();
-                recipe.disciplines = apiRecipe.disciplines;
-                recipe.flags = apiRecipe.flags;
-                recipe.min_rating = apiRecipe.min_rating;
-                recipe.output_item_count = apiRecipe.output_item_count;
-                recipe.recipe_id = apiRecipe.recipe_id;
-                recipe.time_to_craft_ms = apiRecipe.time_to_craft_ms;
-                recipe.type = apiRecipe.type;
-                recipe.outputItem = Application.getDatabaseHelper().getItemDao()
-                        .queryForId(apiRecipe.output_item_id);
-                mRecipeDao.createOrUpdate(recipe);
-                for (APIRecipe.Ingredient apiIngredient : apiRecipe.ingredients) {
-                    Recipe.Ingredient ingredient = new Recipe.Ingredient();
-                    ingredient.count = apiIngredient.count;
-                    ingredient.item = Application.getDatabaseHelper().getItemDao()
-                            .queryForId(apiIngredient.item_id);
-                    ingredient.recipe = recipe;
-                    Application.getDatabaseHelper().getDao(Recipe.Ingredient.class)
-                            .createOrUpdate(ingredient);
-                }
+                Recipe recipe = new Recipe(apiRecipe);
                 recipeDownloaded(recipe);
             } catch (Exception e) {
                 Log.e(Application.Constants.LOG_TAG, "Error downloading recipe", e);

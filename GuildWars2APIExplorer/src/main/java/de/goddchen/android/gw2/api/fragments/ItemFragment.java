@@ -21,7 +21,6 @@ import java.util.Arrays;
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.activities.BaseFragmentActivity;
-import de.goddchen.android.gw2.api.async.BitmapLruImageCache;
 import de.goddchen.android.gw2.api.async.ItemLoader;
 import de.goddchen.android.gw2.api.data.Item;
 
@@ -128,7 +127,8 @@ public class ItemFragment extends SherlockFragment {
                             iconView.setDefaultImageResId(android.R.drawable.ic_menu_gallery);
                             iconView.setImageUrl(String.format("https://render.guildwars2.com/file/%s/%s.png",
                                     item.icon_file_signature, item.icon_file_id),
-                                    new ImageLoader(((BaseFragmentActivity) getActivity()).getRequestQueue(), new BitmapLruImageCache(1024 * 1024)));
+                                    new ImageLoader(((BaseFragmentActivity) getActivity()).getRequestQueue(),
+                                            ((BaseFragmentActivity) getActivity()).getImageCache()));
                         }
                     }
                 }

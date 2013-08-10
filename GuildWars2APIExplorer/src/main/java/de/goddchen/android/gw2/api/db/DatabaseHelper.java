@@ -84,7 +84,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Dao<Recipe, Integer> recipeDao;
 
     public DatabaseHelper(Context context) {
-        super(context, "gw2.db", null, 11);
+        super(context, "gw2.db", null, 12);
     }
 
     @Override

@@ -5,10 +5,11 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.analytics.tracking.android.EasyTracker;
 
-import de.goddchen.android.gw2.api.receivers.BroadcastReceiver;
+import de.goddchen.android.gw2.api.async.BitmapLruImageCache;
 
 /**
  * Created by Goddchen on 29.05.13.
@@ -17,14 +18,13 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
 
     private RequestQueue mRequestQueue;
 
-    private BroadcastReceiver mBroadcastReceiver;
+    private ImageLoader.ImageCache mImageCache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mRequestQueue = Volley.newRequestQueue(this);
-        mBroadcastReceiver = getBroadcastReceiver();
-        mBroadcastReceiver.register(this);
+        mImageCache = new BitmapLruImageCache(4 * 1024 * 1024);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
                 return true;
             }
         });
-        mBroadcastReceiver.unregister(this);
+        mImageCache = null;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
         return mRequestQueue;
     }
 
-    protected BroadcastReceiver getBroadcastReceiver() {
-        return new BroadcastReceiver();
+    public ImageLoader.ImageCache getImageCache() {
+        return mImageCache;
     }
 }

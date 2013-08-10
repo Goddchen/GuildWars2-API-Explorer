@@ -42,6 +42,9 @@ public class Recipe implements Serializable {
     @ForeignCollectionField
     public ForeignCollection<Ingredient> ingredients;
 
+    @DatabaseField
+    public int raw_output_item_id;
+
     @DatabaseTable
     public static class Ingredient implements Serializable {
         @DatabaseField(generatedId = true)
@@ -55,12 +58,16 @@ public class Recipe implements Serializable {
 
         @DatabaseField
         public int count;
+
+        @DatabaseField
+        public int raw_item_id;
     }
 
     public Recipe() {
     }
 
     public Recipe(APIRecipe apiRecipe) throws Exception {
+        raw_output_item_id = apiRecipe.output_item_id;
         disciplines = apiRecipe.disciplines;
         flags = apiRecipe.flags;
         min_rating = apiRecipe.min_rating;
@@ -73,6 +80,7 @@ public class Recipe implements Serializable {
         Application.getDatabaseHelper().getRecipeDao().createOrUpdate(this);
         for (APIRecipe.Ingredient apiIngredient : apiRecipe.ingredients) {
             Recipe.Ingredient ingredient = new Recipe.Ingredient();
+            ingredient.raw_item_id = apiIngredient.item_id;
             ingredient.count = apiIngredient.count;
             ingredient.item = Application.getDatabaseHelper().getItemDao()
                     .queryForId(apiIngredient.item_id);

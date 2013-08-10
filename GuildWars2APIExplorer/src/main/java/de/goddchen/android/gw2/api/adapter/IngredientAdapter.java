@@ -39,7 +39,7 @@ public class IngredientAdapter extends ArrayAdapter<Recipe.Ingredient> {
         ((BaseFragmentActivity) getContext()).getRequestQueue()
                 .add(new GsonRequest<Item>(
                         "https://api.guildwars2.com/v1/item_details.json?item_id=" + ingredient
-                                .item.item_id
+                                .raw_item_id
                                 + "&lang=" + Locale.getDefault().getLanguage(),
                         Item.class,
                         new Response.Listener<Item>() {
