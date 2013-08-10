@@ -80,5 +80,7 @@
     </string>
     <string name="action_sync">Synchronisieren</string>
     <string name="confirm_sync">Es wird ein Download von mehreren tausend Objekten gestartet.\nMöchtest du fortfahren?</string>
+    <string name="hint_item_query">Suche nach Name</string>
+    <string name="hint_recipe_query">Suche nach Name</string>
 
 </resources>

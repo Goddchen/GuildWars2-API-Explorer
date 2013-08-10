@@ -80,5 +80,7 @@
     <string name="hint_search">Name</string>
     <string name="action_sync">Sync</string>
     <string name="confirm_sync">This will download thousands of objects.\nContinue?</string>
+    <string name="hint_item_query">Search for name</string>
+    <string name="hint_recipe_query">Search for name</string>
 
 </resources>

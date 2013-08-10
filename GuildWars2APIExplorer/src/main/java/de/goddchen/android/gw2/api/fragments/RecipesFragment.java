@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
@@ -20,6 +22,7 @@ import java.util.List;
 
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
+import de.goddchen.android.gw2.api.adapter.RecipeAdapter;
 import de.goddchen.android.gw2.api.async.RecipesLoader;
 import de.goddchen.android.gw2.api.data.Recipe;
 import de.goddchen.android.gw2.api.fragments.dialogs.ShouldSyncDialogFragment;
@@ -30,6 +33,8 @@ import de.goddchen.android.gw2.api.fragments.dialogs.ShouldSyncDialogFragment;
 public class RecipesFragment extends SherlockListFragment {
 
     private Handler mHandler;
+
+    private EditText mQuery;
 
     public static RecipesFragment newInstance() {
         RecipesFragment fragment = new RecipesFragment();
@@ -54,6 +59,30 @@ public class RecipesFragment extends SherlockListFragment {
         super.onActivityCreated(savedInstanceState);
         showList(false);
         getLoaderManager().initLoader(Application.Loaders.RECIPES, null, mRecipesLoaderCallbacks);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mQuery = (EditText) view.findViewById(R.id.query);
+        mQuery.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (getListAdapter() != null) {
+                    ((ArrayAdapter) getListAdapter()).getFilter().filter(editable);
+                }
+            }
+        });
     }
 
     @Override
@@ -101,17 +130,7 @@ public class RecipesFragment extends SherlockListFragment {
                 public void onLoadFinished(Loader<List<Recipe>> listLoader, List<Recipe> recipes) {
                     showList(true);
                     if (recipes != null) {
-                        setListAdapter(new ArrayAdapter<Recipe>(getActivity(),
-                                android.R.layout.simple_list_item_1, recipes) {
-                            @Override
-                            public View getView(int position, View convertView, ViewGroup parent) {
-                                Recipe recipe = getItem(position);
-                                View view = super.getView(position, convertView, parent);
-                                ((TextView) view.findViewById(android.R.id.text1))
-                                        .setText(recipe.outputItem == null ? ("??? (#" + recipe.recipe_id + ")") : recipe.outputItem.name);
-                                return view;
-                            }
-                        });
+                        setListAdapter(new RecipeAdapter(getActivity(), recipes));
                         if (recipes.size() == 0) {
                             mHandler.post(new Runnable() {
                                 @Override
@@ -120,6 +139,9 @@ public class RecipesFragment extends SherlockListFragment {
                                             .show(getFragmentManager(), "should-sync");
                                 }
                             });
+                        }
+                        if (mQuery.length() > 0) {
+                            ((RecipeAdapter) getListAdapter()).getFilter().filter(mQuery.getText().toString());
                         }
                     }
                 }
