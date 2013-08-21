@@ -51,6 +51,10 @@ public class EventsLoader extends FixedAsyncTaskLoader<List<Event>> {
                     } else {
                         if (event.name == null || event2.name == null) {
                             return 0;
+                        } else if (event.name == null) {
+                            return 1;
+                        } else if (event2.name == null) {
+                            return -1;
                         } else {
                             return event.name.compareTo(event2.name);
                         }
