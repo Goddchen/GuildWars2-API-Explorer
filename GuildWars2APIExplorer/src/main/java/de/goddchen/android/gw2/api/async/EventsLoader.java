@@ -45,11 +45,11 @@ public class EventsLoader extends FixedAsyncTaskLoader<List<Event>> {
                 @Override
                 public int compare(Event event, Event event2) {
                     int stateCompare = -(Integer.valueOf(event.getStatePriority())
-                            .compareTo(event2.getStatePriority()));
+                            .compareTo(Integer.valueOf(event2.getStatePriority())));
                     if (stateCompare != 0) {
                         return stateCompare;
                     } else {
-                        if (event.name == null || event2.name == null) {
+                        if (event.name == null && event2.name == null) {
                             return 0;
                         } else if (event.name == null) {
                             return 1;
