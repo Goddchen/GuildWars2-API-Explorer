@@ -1,7 +1,11 @@
 package de.goddchen.android.gw2.api;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.crittercism.app.Crittercism;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.squareup.otto.Bus;
 
 import de.goddchen.android.gw2.api.db.DatabaseHelper;
 
@@ -9,6 +13,58 @@ import de.goddchen.android.gw2.api.db.DatabaseHelper;
  * Created by Goddchen on 22.05.13.
  */
 public class Application extends android.app.Application {
+
+    private static DatabaseHelper databaseHelper;
+    private static Bus bus;
+
+    public static Bus getBus() {
+        return bus;
+    }
+
+    public static DatabaseHelper getDatabaseHelper() {
+        return databaseHelper;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        setupORMLite();
+        setupBus();
+        if (!getString(R.string.app_name).contains("DEBUG")) {
+            Crittercism.init(getApplicationContext(), "519cb89c558d6a448b000007");
+        }
+    }
+
+    private void setupBus() {
+        final Handler handler = new Handler();
+        bus = new Bus() {
+
+            @Override
+            public void post(final Object event) {
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    super.post(event);
+                } else {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            post(event);
+                        }
+                    });
+                }
+            }
+        };
+    }
+
+    private void setupORMLite() {
+        databaseHelper = OpenHelperManager.getHelper(getApplicationContext(), DatabaseHelper.class);
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        OpenHelperManager.releaseHelper();
+        databaseHelper = null;
+    }
 
     public static final class Constants {
         public static final String LOG_TAG = "GW2 API Explorer";
@@ -45,31 +101,5 @@ public class Application extends android.app.Application {
         public static final String WVWVW_REFRESH = "wvwvw.auto.refresh";
         public static final String HOME_WORLD = "home.world";
         public static final String EVENTS_REFRESH = "events.auto.refresh";
-    }
-
-    private static DatabaseHelper databaseHelper;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        setupORMLite();
-        if (!getString(R.string.app_name).contains("DEBUG")) {
-            Crittercism.init(getApplicationContext(), "519cb89c558d6a448b000007");
-        }
-    }
-
-    private void setupORMLite() {
-        databaseHelper = OpenHelperManager.getHelper(getApplicationContext(), DatabaseHelper.class);
-    }
-
-    public static DatabaseHelper getDatabaseHelper() {
-        return databaseHelper;
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        OpenHelperManager.releaseHelper();
-        databaseHelper = null;
     }
 }
