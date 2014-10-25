@@ -3,7 +3,7 @@
 
     <string name="app_name">Explorador API GuildWars 2</string>
     <string name="items">Artículos</string>
-    <string name="dynamic_events">Eventos Dinámicos</string>
+    <string name="dynamic_events">Eventos Dinámicos (disabled)</string>
     <string name="recipes">Recetas</string>
     <string name="wvwvw">WvWvW</string>
     <string name="dialog_crash_title">¡Disculpas!</string>

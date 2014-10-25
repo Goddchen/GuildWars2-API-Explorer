@@ -3,7 +3,7 @@
 
     <string name="app_name">GuildWars 2 API Explorer</string>
     <string name="items">Items</string>
-    <string name="dynamic_events">Dynamische Events</string>
+    <string name="dynamic_events">Dynamische Events (disabled)</string>
     <string name="recipes">Rezepte</string>
     <string name="wvwvw">WvWvW</string>
     <string name="dialog_crash_title">Whoops!</string>

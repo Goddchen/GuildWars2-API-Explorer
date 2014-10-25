@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crittercism.app.Crittercism;
 
@@ -40,7 +41,9 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        if (findViewById(R.id.fragment) == null) {
+        if (view.getId() == R.id.events) {
+            Toast.makeText(MainActivity.this, "This API endpoint is currently disabled due to the megaserver changes", Toast.LENGTH_SHORT).show();
+        } else if (findViewById(R.id.fragment) == null) {
             if (view.getId() == R.id.items) {
                 startActivity(new Intent(getApplicationContext(), ItemsActivity.class));
             } else if (view.getId() == R.id.events) {
