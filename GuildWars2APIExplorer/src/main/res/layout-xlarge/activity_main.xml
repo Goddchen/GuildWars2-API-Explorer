@@ -2,25 +2,25 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
-              android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center_horizontal"
+    android:orientation="horizontal"
               android:weightSum="100">
 
     <LinearLayout
-            android:orientation="vertical"
             android:layout_width="0dp"
+        android:layout_height="match_parent"
             android:layout_weight="30"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <com.google.ads.AdView
                 android:id="@+id/adView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                ads:adUnitId="a1519cbaa10f9ae"
                 ads:adSize="BANNER"
+            ads:adUnitId="a1519cbaa10f9ae"
                 ads:loadAdOnCreate="true"/>
 
         <ScrollView
@@ -28,10 +28,10 @@
                 android:layout_height="match_parent">
 
             <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <Button
                         android:id="@+id/events"
@@ -74,6 +74,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/build"/>
+
+                <Button
+                    android:id="@+id/quaggans"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quaggans" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
@@ -81,7 +87,7 @@
     <FrameLayout
             android:id="@+id/fragment"
             android:layout_width="0dp"
-            android:layout_weight="70"
-            android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_weight="70" />
 
 </LinearLayout>

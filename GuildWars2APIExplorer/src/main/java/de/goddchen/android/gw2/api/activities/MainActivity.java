@@ -14,6 +14,7 @@ import de.goddchen.android.gw2.api.fragments.ColorsFragment;
 import de.goddchen.android.gw2.api.fragments.ContinentsFragment;
 import de.goddchen.android.gw2.api.fragments.ItemSearchFragment;
 import de.goddchen.android.gw2.api.fragments.MatchesFragment;
+import de.goddchen.android.gw2.api.fragments.QuaggansFragment;
 import de.goddchen.android.gw2.api.fragments.RecipeSearchFragment;
 import de.goddchen.android.gw2.api.fragments.WorldsFragment;
 import de.goddchen.android.gw2.api.fragments.dialogs.CrashDialogFragment;
@@ -31,6 +32,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
         findViewById(R.id.build).setOnClickListener(this);
         findViewById(R.id.colors).setOnClickListener(this);
         findViewById(R.id.maps).setOnClickListener(this);
+        findViewById(R.id.quaggans).setOnClickListener(this);
         if (Crittercism.didCrashOnLastAppLoad()) {
             CrashDialogFragment.newInstance().show(getSupportFragmentManager(), "crash");
         }
@@ -53,6 +55,8 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
                 startActivity(new Intent(getApplicationContext(), ColorsActivity.class));
             } else if (view.getId() == R.id.maps) {
                 startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            } else if (view.getId() == R.id.quaggans) {
+                startActivity(new Intent(getApplicationContext(), QuaggansActivity.class));
             }
         } else {
             if (view.getId() == R.id.items) {
@@ -82,6 +86,10 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
             } else if (view.getId() == R.id.build) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, BuildFragment.newInstance())
+                        .commit();
+            } else if (view.getId() == R.id.quaggans) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, QuaggansFragment.newInstance())
                         .commit();
             }
         }
