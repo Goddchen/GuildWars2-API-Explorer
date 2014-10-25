@@ -1,28 +1,25 @@
 package de.goddchen.android.gw2.api.fragments;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayout;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
-import de.goddchen.android.gw2.api.activities.BaseFragmentActivity;
 import de.goddchen.android.gw2.api.async.QuagganLoader;
 import de.goddchen.android.gw2.api.data.Quaggan;
 
@@ -45,21 +42,14 @@ public class QuaggansFragment extends SherlockFragment {
                         for (final Quaggan quaggan : quaggans) {
                             View view = LayoutInflater.from(getActivity()).inflate(R.layout.listitem_quaggan, mGridLayout, false);
                             final ImageView imageView = (ImageView) view.findViewById(de.goddchen.android.gw2.api.R.id.image);
-                            imageView.setImageResource(android.R.drawable.ic_menu_gallery);
-                            ImageRequest request = new ImageRequest(quaggan.url, new Response.Listener<Bitmap>() {
-                                @Override
-                                public void onResponse(Bitmap bitmap) {
-                                    imageView.setImageBitmap(bitmap);
-                                }
-                            }, 0, 0, null, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError volleyError) {
-                                    imageView.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
-                                }
-                            });
-                            request.setShouldCache(true);
-                            ((BaseFragmentActivity) getActivity()).getRequestQueue().add(request);
                             mGridLayout.addView(view);
+                            int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
+                            Picasso.with(getActivity()).load(Uri.parse(quaggan.url))
+                                    .centerInside()
+                                    .placeholder(android.R.drawable.ic_menu_gallery)
+                                    .error(android.R.drawable.ic_menu_close_clear_cancel)
+                                    .resize(size, size)
+                                    .into(imageView);
                             view.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
