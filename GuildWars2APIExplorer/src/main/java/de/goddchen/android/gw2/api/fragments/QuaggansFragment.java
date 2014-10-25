@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.otto.Subscribe;
@@ -34,7 +34,7 @@ import de.goddchen.android.gw2.api.events.QuaggansUpdatedEvent;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class QuaggansFragment extends SherlockFragment {
+public class QuaggansFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
 

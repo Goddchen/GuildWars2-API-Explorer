@@ -3,15 +3,14 @@ package de.goddchen.android.gw2.api.fragments.dialogs;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
-
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import android.support.v4.app.DialogFragment;
 
 import de.goddchen.android.gw2.api.R;
 
 /**
  * Created by Goddchen on 22.06.13.
  */
-public class ProgressDialogFragment extends SherlockDialogFragment {
+public class ProgressDialogFragment extends DialogFragment {
 
     public static ProgressDialogFragment newInstance() {
         ProgressDialogFragment fragment = new ProgressDialogFragment();

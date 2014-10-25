@@ -2,6 +2,7 @@ package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.Html;
@@ -12,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
@@ -28,37 +28,9 @@ import de.goddchen.android.gw2.api.data.Item;
 /**
  * Created by Goddchen on 23.05.13.
  */
-public class ItemFragment extends SherlockFragment {
+public class ItemFragment extends Fragment {
 
     private Handler mHandler;
-
-    public static ItemFragment newInstance(int id) {
-        ItemFragment fragment = new ItemFragment();
-        Bundle args = new Bundle();
-        args.putInt(Application.Extras.ITEM_ID, id);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mHandler = new Handler();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_item_details, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.content).setVisibility(View.GONE);
-        getLoaderManager().initLoader(Application.Loaders.ITEM_DETAILS, null, mItemLoaderCallbacks);
-    }
-
     private LoaderManager.LoaderCallbacks<Item> mItemLoaderCallbacks =
             new LoaderManager.LoaderCallbacks<Item>() {
                 @Override
@@ -127,7 +99,7 @@ public class ItemFragment extends SherlockFragment {
                             NetworkImageView iconView = (NetworkImageView) getView().findViewById(R.id.icon);
                             iconView.setDefaultImageResId(android.R.drawable.ic_menu_gallery);
                             iconView.setImageUrl(String.format("https://render.guildwars2.com/file/%s/%s.png",
-                                    item.icon_file_signature, item.icon_file_id),
+                                            item.icon_file_signature, item.icon_file_id),
                                     new ImageLoader(((BaseFragmentActivity) getActivity()).getRequestQueue(), new BitmapLruImageCache(1024 * 1024)));
                         }
                     }
@@ -138,4 +110,31 @@ public class ItemFragment extends SherlockFragment {
 
                 }
             };
+
+    public static ItemFragment newInstance(int id) {
+        ItemFragment fragment = new ItemFragment();
+        Bundle args = new Bundle();
+        args.putInt(Application.Extras.ITEM_ID, id);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mHandler = new Handler();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_item_details, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.content).setVisibility(View.GONE);
+        getLoaderManager().initLoader(Application.Loaders.ITEM_DETAILS, null, mItemLoaderCallbacks);
+    }
 }

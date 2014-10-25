@@ -1,13 +1,14 @@
 package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.adapter.ObjectiveAdapter;
@@ -16,7 +17,7 @@ import de.goddchen.android.gw2.api.data.MatchDetails;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class MatchMapFragment extends SherlockFragment {
+public class MatchMapFragment extends Fragment {
 
     private MatchDetails.Map mMap;
 

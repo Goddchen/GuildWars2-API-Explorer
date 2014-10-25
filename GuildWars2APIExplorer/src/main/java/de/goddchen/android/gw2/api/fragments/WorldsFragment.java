@@ -2,23 +2,44 @@ package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
-import com.actionbarsherlock.app.SherlockListFragment;
+
+import java.util.List;
+
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.adapter.WorldAdapter;
 import de.goddchen.android.gw2.api.async.WorldsLoader;
 import de.goddchen.android.gw2.api.data.World;
 
-import java.util.List;
-
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class WorldsFragment extends SherlockListFragment {
+public class WorldsFragment extends ListFragment {
+
+    private LoaderManager.LoaderCallbacks<List<World>> mWorldLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<List<World>>() {
+                @Override
+                public Loader<List<World>> onCreateLoader(int i, Bundle bundle) {
+                    return new WorldsLoader(getActivity());
+                }
+
+                @Override
+                public void onLoadFinished(Loader<List<World>> listLoader, List<World> worlds) {
+                    if (worlds != null) {
+                        setListAdapter(new WorldAdapter(getActivity(), worlds));
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(Loader<List<World>> listLoader) {
+
+                }
+            };
 
     public static WorldsFragment newInstance() {
         WorldsFragment fragment = new WorldsFragment();
@@ -52,24 +73,4 @@ public class WorldsFragment extends SherlockListFragment {
                 .addToBackStack("maps")
                 .commit();
     }
-
-    private LoaderManager.LoaderCallbacks<List<World>> mWorldLoaderCallbacks =
-            new LoaderManager.LoaderCallbacks<List<World>>() {
-                @Override
-                public Loader<List<World>> onCreateLoader(int i, Bundle bundle) {
-                    return new WorldsLoader(getActivity());
-                }
-
-                @Override
-                public void onLoadFinished(Loader<List<World>> listLoader, List<World> worlds) {
-                    if (worlds != null) {
-                        setListAdapter(new WorldAdapter(getActivity(), worlds));
-                    }
-                }
-
-                @Override
-                public void onLoaderReset(Loader<List<World>> listLoader) {
-
-                }
-            };
 }

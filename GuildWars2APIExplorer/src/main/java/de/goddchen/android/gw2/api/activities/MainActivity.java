@@ -2,10 +2,10 @@ package de.goddchen.android.gw2.api.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.crittercism.app.Crittercism;
 
 import de.goddchen.android.gw2.api.R;
@@ -97,7 +97,7 @@ public class MainActivity extends BaseFragmentActivity implements View.OnClickLi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 

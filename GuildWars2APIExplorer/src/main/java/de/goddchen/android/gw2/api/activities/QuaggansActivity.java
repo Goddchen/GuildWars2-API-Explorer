@@ -1,8 +1,7 @@
 package de.goddchen.android.gw2.api.activities;
 
 import android.os.Bundle;
-
-import com.actionbarsherlock.view.MenuItem;
+import android.view.MenuItem;
 
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.fragments.QuaggansFragment;

@@ -1,13 +1,12 @@
 package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-
-import com.actionbarsherlock.app.SherlockListFragment;
 
 import java.util.List;
 
@@ -20,7 +19,28 @@ import de.goddchen.android.gw2.api.data.Continent;
 /**
  * Created by Goddchen on 21.06.13.
  */
-public class ContinentsFragment extends SherlockListFragment {
+public class ContinentsFragment extends ListFragment {
+
+    private LoaderManager.LoaderCallbacks<List<Continent>> mContinentLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<List<Continent>>() {
+                @Override
+                public Loader<List<Continent>> onCreateLoader(int i, Bundle bundle) {
+                    return new ContinentLoader(getActivity());
+                }
+
+                @Override
+                public void onLoadFinished(Loader<List<Continent>> listLoader, List<Continent> continents) {
+                    setListShown(true);
+                    if (continents != null) {
+                        setListAdapter(new ContinentAdapter(getActivity(), continents));
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(Loader<List<Continent>> listLoader) {
+
+                }
+            };
 
     public static ContinentsFragment newInstance() {
         ContinentsFragment fragment = new ContinentsFragment();
@@ -59,25 +79,4 @@ public class ContinentsFragment extends SherlockListFragment {
                 .addToBackStack("continent")
                 .commit();
     }
-
-    private LoaderManager.LoaderCallbacks<List<Continent>> mContinentLoaderCallbacks =
-            new LoaderManager.LoaderCallbacks<List<Continent>>() {
-                @Override
-                public Loader<List<Continent>> onCreateLoader(int i, Bundle bundle) {
-                    return new ContinentLoader(getActivity());
-                }
-
-                @Override
-                public void onLoadFinished(Loader<List<Continent>> listLoader, List<Continent> continents) {
-                    setListShown(true);
-                    if (continents != null) {
-                        setListAdapter(new ContinentAdapter(getActivity(), continents));
-                    }
-                }
-
-                @Override
-                public void onLoaderReset(Loader<List<Continent>> listLoader) {
-
-                }
-            };
 }

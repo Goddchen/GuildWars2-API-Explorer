@@ -1,11 +1,10 @@
 package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.actionbarsherlock.app.SherlockFragment;
 
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.tileprovider.MapTile;
@@ -16,7 +15,7 @@ import org.osmdroid.views.MapView;
 /**
  * Created by Goddchen on 21.06.13.
  */
-public class MapTestFragment extends SherlockFragment {
+public class MapTestFragment extends Fragment {
 
     public static MapTestFragment newInstance() {
         MapTestFragment fragment = new MapTestFragment();

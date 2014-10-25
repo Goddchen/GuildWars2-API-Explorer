@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.util.Log;
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
+
 import com.google.analytics.tracking.android.EasyTracker;
+
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 
@@ -14,7 +16,7 @@ import de.goddchen.android.gw2.api.R;
  * Created by Goddchen on 24.05.13.
  */
 @SuppressWarnings("deprecation")
-public class SettingsActivity extends SherlockPreferenceActivity {
+public class SettingsActivity extends PreferenceActivity {
 
     @Override
     protected void onStart() {

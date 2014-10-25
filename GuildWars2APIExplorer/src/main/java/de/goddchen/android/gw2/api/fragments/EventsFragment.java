@@ -3,14 +3,18 @@ package de.goddchen.android.gw2.api.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.adapter.EventAdapter;
@@ -18,19 +22,45 @@ import de.goddchen.android.gw2.api.async.EventsLoader;
 import de.goddchen.android.gw2.api.data.Event;
 import de.goddchen.android.gw2.api.data.MapName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class EventsFragment extends SherlockListFragment {
+public class EventsFragment extends ListFragment {
     private Handler mHandler;
 
     private int mAutoRefresh;
 
     private int mListPosition;
+    private LoaderManager.LoaderCallbacks<List<Event>> mEventsLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<List<Event>>() {
+                @Override
+                public Loader<List<Event>> onCreateLoader(int i, Bundle bundle) {
+                    return new EventsLoader(getActivity(), getArguments().getInt(Application.Extras.WORLD));
+                }
 
+                @Override
+                public void onLoadFinished(Loader<List<Event>> listLoader, List<Event> events) {
+                    setListShown(true);
+                    if (events != null) {
+                        List<Event> mapEvents = new ArrayList<Event>();
+                        MapName mapName = (MapName) getArguments().getSerializable(Application.Extras.MAP);
+                        for (Event event : events) {
+                            if (event.map_id == mapName.id) {
+                                mapEvents.add(event);
+                            }
+                        }
+                        setListAdapter(new EventAdapter(getActivity(), mapEvents));
+                        if (mListPosition > 0) {
+                            getListView().setSelection(mListPosition);
+                        }
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(Loader<List<Event>> listLoader) {
+
+                }
+            };
     private Runnable mAuthRefreshRunnable = new Runnable() {
         @Override
         public void run() {
@@ -122,35 +152,4 @@ public class EventsFragment extends SherlockListFragment {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private LoaderManager.LoaderCallbacks<List<Event>> mEventsLoaderCallbacks =
-            new LoaderManager.LoaderCallbacks<List<Event>>() {
-                @Override
-                public Loader<List<Event>> onCreateLoader(int i, Bundle bundle) {
-                    return new EventsLoader(getActivity(), getArguments().getInt(Application.Extras.WORLD));
-                }
-
-                @Override
-                public void onLoadFinished(Loader<List<Event>> listLoader, List<Event> events) {
-                    setListShown(true);
-                    if (events != null) {
-                        List<Event> mapEvents = new ArrayList<Event>();
-                        MapName mapName = (MapName) getArguments().getSerializable(Application.Extras.MAP);
-                        for (Event event : events) {
-                            if (event.map_id == mapName.id) {
-                                mapEvents.add(event);
-                            }
-                        }
-                        setListAdapter(new EventAdapter(getActivity(), mapEvents));
-                        if (mListPosition > 0) {
-                            getListView().setSelection(mListPosition);
-                        }
-                    }
-                }
-
-                @Override
-                public void onLoaderReset(Loader<List<Event>> listLoader) {
-
-                }
-            };
 }

@@ -2,8 +2,9 @@ package de.goddchen.android.gw2.api.activities;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.fragments.WorldsFragment;
@@ -25,7 +26,7 @@ public class EventsActivity extends BaseFragmentActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.activity_events, menu);
+        getMenuInflater().inflate(R.menu.activity_events, menu);
         return true;
     }
 

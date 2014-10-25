@@ -1,13 +1,13 @@
 package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -21,7 +21,7 @@ import de.goddchen.android.gw2.api.data.Build;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class BuildFragment extends SherlockFragment {
+public class BuildFragment extends Fragment {
 
     public static BuildFragment newInstance() {
         BuildFragment fragment = new BuildFragment();

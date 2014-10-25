@@ -1,8 +1,8 @@
 package de.goddchen.android.gw2.api.activities;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -11,7 +11,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 /**
  * Created by Goddchen on 29.05.13.
  */
-public class BaseFragmentActivity extends SherlockFragmentActivity {
+public class BaseFragmentActivity extends ActionBarActivity {
 
     private RequestQueue mRequestQueue;
 

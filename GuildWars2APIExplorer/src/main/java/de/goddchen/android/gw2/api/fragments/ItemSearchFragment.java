@@ -2,6 +2,7 @@ package de.goddchen.android.gw2.api.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -14,8 +15,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-
 import java.util.List;
 
 import de.goddchen.android.gw2.api.Application;
@@ -25,7 +24,30 @@ import de.goddchen.android.gw2.api.async.ItemIdsLoader;
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class ItemSearchFragment extends SherlockListFragment implements View.OnClickListener {
+public class ItemSearchFragment extends ListFragment implements View.OnClickListener {
+
+    private LoaderManager.LoaderCallbacks<List<Integer>> mIdLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<List<Integer>>() {
+                @Override
+                public Loader<List<Integer>> onCreateLoader(int i, Bundle bundle) {
+                    return new ItemIdsLoader(getActivity());
+                }
+
+                @Override
+                public void onLoadFinished(Loader<List<Integer>> listLoader, List<Integer> integers) {
+                    showList(true);
+                    if (integers != null) {
+                        setListAdapter(
+                                new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_list_item_1, integers)
+                        );
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(Loader<List<Integer>> listLoader) {
+
+                }
+            };
 
     public static ItemSearchFragment newInstance() {
         ItemSearchFragment fragment = new ItemSearchFragment();
@@ -91,27 +113,4 @@ public class ItemSearchFragment extends SherlockListFragment implements View.OnC
             view.findViewById(R.id.list_content).setVisibility(shown ? View.VISIBLE : View.GONE);
         }
     }
-
-    private LoaderManager.LoaderCallbacks<List<Integer>> mIdLoaderCallbacks =
-            new LoaderManager.LoaderCallbacks<List<Integer>>() {
-                @Override
-                public Loader<List<Integer>> onCreateLoader(int i, Bundle bundle) {
-                    return new ItemIdsLoader(getActivity());
-                }
-
-                @Override
-                public void onLoadFinished(Loader<List<Integer>> listLoader, List<Integer> integers) {
-                    showList(true);
-                    if (integers != null) {
-                        setListAdapter(
-                                new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_list_item_1, integers)
-                        );
-                    }
-                }
-
-                @Override
-                public void onLoaderReset(Loader<List<Integer>> listLoader) {
-
-                }
-            };
 }

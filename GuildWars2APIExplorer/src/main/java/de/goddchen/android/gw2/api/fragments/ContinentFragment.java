@@ -16,8 +16,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
 import org.osmdroid.events.ZoomEvent;
@@ -49,20 +47,163 @@ import microsoft.mappoint.TileSystem;
 /**
  * Created by Goddchen on 21.06.13.
  */
-public class ContinentFragment extends SherlockFragment implements View.OnClickListener {
+public class ContinentFragment extends Fragment implements View.OnClickListener {
 
     private static final String EXTRA_CONTINENT = "contintent";
 
     private static final String EXTRA_EVENT = "event";
 
     private Continent mContinent;
+    private LoaderManager.LoaderCallbacks<List<List<?>>> mSearchLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<List<List<?>>>() {
+                @Override
+                public Loader<List<List<?>>> onCreateLoader(int i, Bundle bundle) {
+                    return new MapSearchLoader(getActivity(), mContinent,
+                            ((EditText) getView().findViewById(R.id.query)).getText().toString());
+                }
 
+                @Override
+                public void onLoadFinished(Loader<List<List<?>>> listLoader, List<List<?>> lists) {
+                    try {
+                        Fragment fragment = getFragmentManager().findFragmentByTag
+                                ("loading-search");
+                        if (fragment != null && fragment instanceof ProgressDialogFragment) {
+                            ((ProgressDialogFragment) fragment).dismiss();
+                        }
+                    } catch (Exception e) {
+                        Log.w(Application.Constants.LOG_TAG, "Error dismissing progress dialog");
+                    }
+                    if (lists != null) {
+                        List<POI> pois = (List<POI>) lists.get(0);
+                        List<Task> tasks = (List<Task>) lists.get(1);
+                        if (pois.size() + tasks.size() == 0) {
+                            Toast.makeText(getActivity(), R.string.toast_no_search_results,
+                                    Toast.LENGTH_SHORT).show();
+                        } else if (pois.size() + tasks.size() == 1) {
+                            if (pois.size() == 1) {
+                                POI poi = pois.get(0);
+                                Toast.makeText(getActivity(), poi.name, Toast.LENGTH_SHORT).show();
+                                if (mMapView.getZoomLevel() < 4) {
+                                    mMapView.getController().setZoom(4);
+                                }
+                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
+                                        poi.coord_x, (int) poi.coord_y, mContinent.max_zoom, null));
+                            } else if (tasks.size() == 1) {
+                                Task task = tasks.get(0);
+                                Toast.makeText(getActivity(), task.objective, Toast.LENGTH_SHORT).show();
+                                if (mMapView.getZoomLevel() < 4) {
+                                    mMapView.getController().setZoom(4);
+                                }
+                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
+                                        task.coord_x, (int) task.coord_y, mContinent.max_zoom, null));
+                            }
+                        } else if (pois.size() + tasks.size() > 1) {
+                            final MapSearchResultAdapter adapter = new MapSearchResultAdapter
+                                    (getActivity(), pois, tasks);
+                            new AlertDialog.Builder(getActivity())
+                                    .setAdapter(adapter, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Object item = adapter.getItem(which);
+                                            if (item instanceof POI) {
+                                                Toast.makeText(getActivity(), ((POI) item).name,
+                                                        Toast.LENGTH_SHORT).show();
+                                                if (mMapView.getZoomLevel() < 4) {
+                                                    mMapView.getController().setZoom(4);
+                                                }
+                                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
+                                                                ((POI) item).coord_x, (int) ((POI) item).coord_y,
+                                                        mContinent.max_zoom, null));
+                                            } else if (item instanceof Task) {
+                                                Toast.makeText(getActivity(), ((Task) item).objective,
+                                                        Toast.LENGTH_SHORT).show();
+                                                if (mMapView.getZoomLevel() < 4) {
+                                                    mMapView.getController().setZoom(4);
+                                                }
+                                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
+                                                                ((Task) item).coord_x, (int) ((Task) item).coord_y,
+                                                        mContinent.max_zoom,
+                                                        null));
+                                            }
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(Loader<List<List<?>>> listLoader) {
+
+                }
+            };
     private MapView mMapView;
-
     private Floor mFloor;
-
     private ItemizedOverlay<OverlayItem> mLandMarkOverlay, mTaskOverlay, mWaypointOverlay,
             mVistaOverlay, mSkillChallengeOverlay, mEventOverlay;
+    private LoaderManager.LoaderCallbacks<List<ItemizedOverlay<OverlayItem>>>
+            mOverlayLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<List<ItemizedOverlay<OverlayItem>>>() {
+                @Override
+                public Loader<List<ItemizedOverlay<OverlayItem>>> onCreateLoader(int i,
+                                                                                 Bundle bundle) {
+                    return new OverlayLoader(getActivity(), mContinent, mFloor);
+                }
+
+                @Override
+                public void onLoadFinished(Loader<List<ItemizedOverlay<OverlayItem>>> listLoader,
+                                           List<ItemizedOverlay<OverlayItem>> itemizedOverlays) {
+                    if (itemizedOverlays == null) {
+                        Log.w(Application.Constants.LOG_TAG, "Error loading overlays");
+                    } else {
+                        Log.d(Application.Constants.LOG_TAG, "Loaded " + itemizedOverlays.size()
+                                + " overlays");
+                    }
+                    if (itemizedOverlays != null) {
+                        mTaskOverlay = itemizedOverlays.get(0);
+                        mWaypointOverlay = itemizedOverlays.get(1);
+                        mLandMarkOverlay = itemizedOverlays.get(2);
+                        mVistaOverlay = itemizedOverlays.get(3);
+                        mSkillChallengeOverlay = itemizedOverlays.get(4);
+                        displayOverlays();
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(Loader<List<ItemizedOverlay<OverlayItem>>> listLoader) {
+
+                }
+            };
+    private LoaderManager.LoaderCallbacks<Floor> mFloorLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<Floor>() {
+                @Override
+                public Loader<Floor> onCreateLoader(int i, Bundle bundle) {
+                    return new FloorLoader(getActivity(), mContinent, 1);
+                }
+
+                @Override
+                public void onLoadFinished(Loader<Floor> floorLoader, Floor floor) {
+                    try {
+                        Fragment fragment = getFragmentManager().findFragmentByTag
+                                ("floor-loading");
+                        if (fragment != null && fragment instanceof ProgressDialogFragment) {
+                            ((ProgressDialogFragment) fragment).dismiss();
+                        }
+                    } catch (Exception e) {
+                        Log.w(Application.Constants.LOG_TAG, "Error dismissing progress dialog");
+                    }
+                    if (floor != null) {
+                        mFloor = floor;
+                        getLoaderManager().restartLoader(Application.Loaders.FLOOR_MARKERS, null,
+                                mOverlayLoaderCallbacks);
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(Loader<Floor> floorLoader) {
+
+                }
+            };
 
     public static ContinentFragment newInstance(Continent continent) {
         ContinentFragment fragment = new ContinentFragment();
@@ -208,155 +349,6 @@ public class ContinentFragment extends SherlockFragment implements View.OnClickL
         }
         mMapView.invalidate();
     }
-
-    private LoaderManager.LoaderCallbacks<Floor> mFloorLoaderCallbacks =
-            new LoaderManager.LoaderCallbacks<Floor>() {
-                @Override
-                public Loader<Floor> onCreateLoader(int i, Bundle bundle) {
-                    return new FloorLoader(getActivity(), mContinent, 1);
-                }
-
-                @Override
-                public void onLoadFinished(Loader<Floor> floorLoader, Floor floor) {
-                    try {
-                        Fragment fragment = getFragmentManager().findFragmentByTag
-                                ("floor-loading");
-                        if (fragment != null && fragment instanceof ProgressDialogFragment) {
-                            ((ProgressDialogFragment) fragment).dismiss();
-                        }
-                    } catch (Exception e) {
-                        Log.w(Application.Constants.LOG_TAG, "Error dismissing progress dialog");
-                    }
-                    if (floor != null) {
-                        mFloor = floor;
-                        getLoaderManager().restartLoader(Application.Loaders.FLOOR_MARKERS, null,
-                                mOverlayLoaderCallbacks);
-                    }
-                }
-
-                @Override
-                public void onLoaderReset(Loader<Floor> floorLoader) {
-
-                }
-            };
-
-    private LoaderManager.LoaderCallbacks<List<ItemizedOverlay<OverlayItem>>>
-            mOverlayLoaderCallbacks =
-            new LoaderManager.LoaderCallbacks<List<ItemizedOverlay<OverlayItem>>>() {
-                @Override
-                public Loader<List<ItemizedOverlay<OverlayItem>>> onCreateLoader(int i,
-                                                                                 Bundle bundle) {
-                    return new OverlayLoader(getActivity(), mContinent, mFloor);
-                }
-
-                @Override
-                public void onLoadFinished(Loader<List<ItemizedOverlay<OverlayItem>>> listLoader,
-                                           List<ItemizedOverlay<OverlayItem>> itemizedOverlays) {
-                    if (itemizedOverlays == null) {
-                        Log.w(Application.Constants.LOG_TAG, "Error loading overlays");
-                    } else {
-                        Log.d(Application.Constants.LOG_TAG, "Loaded " + itemizedOverlays.size()
-                                + " overlays");
-                    }
-                    if (itemizedOverlays != null) {
-                        mTaskOverlay = itemizedOverlays.get(0);
-                        mWaypointOverlay = itemizedOverlays.get(1);
-                        mLandMarkOverlay = itemizedOverlays.get(2);
-                        mVistaOverlay = itemizedOverlays.get(3);
-                        mSkillChallengeOverlay = itemizedOverlays.get(4);
-                        displayOverlays();
-                    }
-                }
-
-                @Override
-                public void onLoaderReset(Loader<List<ItemizedOverlay<OverlayItem>>> listLoader) {
-
-                }
-            };
-
-    private LoaderManager.LoaderCallbacks<List<List<?>>> mSearchLoaderCallbacks =
-            new LoaderManager.LoaderCallbacks<List<List<?>>>() {
-                @Override
-                public Loader<List<List<?>>> onCreateLoader(int i, Bundle bundle) {
-                    return new MapSearchLoader(getActivity(), mContinent,
-                            ((EditText) getView().findViewById(R.id.query)).getText().toString());
-                }
-
-                @Override
-                public void onLoadFinished(Loader<List<List<?>>> listLoader, List<List<?>> lists) {
-                    try {
-                        Fragment fragment = getFragmentManager().findFragmentByTag
-                                ("loading-search");
-                        if (fragment != null && fragment instanceof ProgressDialogFragment) {
-                            ((ProgressDialogFragment) fragment).dismiss();
-                        }
-                    } catch (Exception e) {
-                        Log.w(Application.Constants.LOG_TAG, "Error dismissing progress dialog");
-                    }
-                    if (lists != null) {
-                        List<POI> pois = (List<POI>) lists.get(0);
-                        List<Task> tasks = (List<Task>) lists.get(1);
-                        if (pois.size() + tasks.size() == 0) {
-                            Toast.makeText(getActivity(), R.string.toast_no_search_results,
-                                    Toast.LENGTH_SHORT).show();
-                        } else if (pois.size() + tasks.size() == 1) {
-                            if (pois.size() == 1) {
-                                POI poi = pois.get(0);
-                                Toast.makeText(getActivity(), poi.name, Toast.LENGTH_SHORT).show();
-                                if (mMapView.getZoomLevel() < 4) {
-                                    mMapView.getController().setZoom(4);
-                                }
-                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
-                                        poi.coord_x, (int) poi.coord_y, mContinent.max_zoom, null));
-                            } else if (tasks.size() == 1) {
-                                Task task = tasks.get(0);
-                                Toast.makeText(getActivity(), task.objective, Toast.LENGTH_SHORT).show();
-                                if (mMapView.getZoomLevel() < 4) {
-                                    mMapView.getController().setZoom(4);
-                                }
-                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
-                                        task.coord_x, (int) task.coord_y, mContinent.max_zoom, null));
-                            }
-                        } else if (pois.size() + tasks.size() > 1) {
-                            final MapSearchResultAdapter adapter = new MapSearchResultAdapter
-                                    (getActivity(), pois, tasks);
-                            new AlertDialog.Builder(getActivity())
-                                    .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Object item = adapter.getItem(which);
-                                            if (item instanceof POI) {
-                                                Toast.makeText(getActivity(), ((POI) item).name,
-                                                        Toast.LENGTH_SHORT).show();
-                                                if (mMapView.getZoomLevel() < 4) {
-                                                    mMapView.getController().setZoom(4);
-                                                }
-                                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
-                                                        ((POI) item).coord_x, (int) ((POI) item).coord_y,
-                                                        mContinent.max_zoom, null));
-                                            } else if (item instanceof Task) {
-                                                Toast.makeText(getActivity(), ((Task) item).objective,
-                                                        Toast.LENGTH_SHORT).show();
-                                                if (mMapView.getZoomLevel() < 4) {
-                                                    mMapView.getController().setZoom(4);
-                                                }
-                                                mMapView.getController().animateTo(TileSystem.PixelXYToLatLong((int)
-                                                        ((Task) item).coord_x, (int) ((Task) item).coord_y,
-                                                        mContinent.max_zoom,
-                                                        null));
-                                            }
-                                        }
-                                    })
-                                    .show();
-                        }
-                    }
-                }
-
-                @Override
-                public void onLoaderReset(Loader<List<List<?>>> listLoader) {
-
-                }
-            };
 
     @Override
     public void onClick(View v) {

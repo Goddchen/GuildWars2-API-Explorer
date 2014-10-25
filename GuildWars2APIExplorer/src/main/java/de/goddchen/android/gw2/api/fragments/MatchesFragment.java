@@ -1,23 +1,44 @@
 package de.goddchen.android.gw2.api.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
-import com.actionbarsherlock.app.SherlockListFragment;
+
+import java.util.List;
+
 import de.goddchen.android.gw2.api.Application;
 import de.goddchen.android.gw2.api.R;
 import de.goddchen.android.gw2.api.adapter.MatchAdapter;
 import de.goddchen.android.gw2.api.async.MatchesLoader;
 import de.goddchen.android.gw2.api.data.Match;
 
-import java.util.List;
-
 /**
  * Created by Goddchen on 22.05.13.
  */
-public class MatchesFragment extends SherlockListFragment {
+public class MatchesFragment extends ListFragment {
+
+    private LoaderManager.LoaderCallbacks<List<Match>> mMatchesLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<List<Match>>() {
+                @Override
+                public Loader<List<Match>> onCreateLoader(int i, Bundle bundle) {
+                    return new MatchesLoader(getActivity());
+                }
+
+                @Override
+                public void onLoadFinished(Loader<List<Match>> listLoader, List<Match> matches) {
+                    if (matches != null) {
+                        setListAdapter(new MatchAdapter(getActivity(), matches));
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(Loader<List<Match>> listLoader) {
+
+                }
+            };
 
     public static MatchesFragment newInstance() {
         MatchesFragment fragment = new MatchesFragment();
@@ -39,24 +60,4 @@ public class MatchesFragment extends SherlockListFragment {
                 .addToBackStack("match")
                 .commit();
     }
-
-    private LoaderManager.LoaderCallbacks<List<Match>> mMatchesLoaderCallbacks =
-            new LoaderManager.LoaderCallbacks<List<Match>>() {
-                @Override
-                public Loader<List<Match>> onCreateLoader(int i, Bundle bundle) {
-                    return new MatchesLoader(getActivity());
-                }
-
-                @Override
-                public void onLoadFinished(Loader<List<Match>> listLoader, List<Match> matches) {
-                    if (matches != null) {
-                        setListAdapter(new MatchAdapter(getActivity(), matches));
-                    }
-                }
-
-                @Override
-                public void onLoaderReset(Loader<List<Match>> listLoader) {
-
-                }
-            };
 }
