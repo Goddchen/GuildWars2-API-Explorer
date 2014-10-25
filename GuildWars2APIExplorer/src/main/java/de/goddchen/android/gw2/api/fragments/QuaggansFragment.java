@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.GridLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,7 @@ import de.goddchen.android.gw2.api.data.Quaggan;
  */
 public class QuaggansFragment extends SherlockFragment {
 
-    private GridLayout mGridLayout;
+    private RecyclerView mRecyclerView;
     private LoaderManager.LoaderCallbacks<List<Quaggan>> mQuagganLoaderCallbacks =
             new LoaderManager.LoaderCallbacks<List<Quaggan>>() {
                 @Override
@@ -37,30 +38,53 @@ public class QuaggansFragment extends SherlockFragment {
                 }
 
                 @Override
-                public void onLoadFinished(Loader<List<Quaggan>> listLoader, List<Quaggan> quaggans) {
-                    if (quaggans != null) {
-                        for (final Quaggan quaggan : quaggans) {
-                            View view = LayoutInflater.from(getActivity()).inflate(R.layout.listitem_quaggan, mGridLayout, false);
-                            final ImageView imageView = (ImageView) view.findViewById(de.goddchen.android.gw2.api.R.id.image);
-                            mGridLayout.addView(view);
-                            int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
-                            Picasso.with(getActivity()).load(Uri.parse(quaggan.url))
-                                    .centerInside()
-                                    .placeholder(android.R.drawable.ic_menu_gallery)
-                                    .error(android.R.drawable.ic_menu_close_clear_cancel)
-                                    .resize(size, size)
-                                    .into(imageView);
-                            view.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                                    intent.setDataAndType(Uri.parse(quaggan.url), "image/*");
-                                    if (getActivity().getPackageManager().resolveActivity(intent, 0) != null) {
-                                        startActivity(intent);
-                                    }
+                public void onLoadFinished(Loader<List<Quaggan>> listLoader, final List<Quaggan> quaggans) {
+                    if (quaggans != null && mRecyclerView != null) {
+                        mRecyclerView.setAdapter(new RecyclerView.Adapter() {
+
+                            class ViewHolder extends RecyclerView.ViewHolder {
+
+                                public ImageView imageView;
+
+                                public ViewHolder(View itemView) {
+                                    super(itemView);
+                                    imageView = (ImageView) itemView.findViewById(R.id.image);
                                 }
-                            });
-                        }
+                            }
+
+                            @Override
+                            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                                View v = LayoutInflater.from(getActivity()).inflate(R.layout.listitem_quaggan, viewGroup, false);
+                                return new ViewHolder(v);
+                            }
+
+                            @Override
+                            public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+                                final Quaggan quaggan = quaggans.get(i);
+                                int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
+                                Picasso.with(getActivity()).load(Uri.parse(quaggan.url))
+                                        .centerInside()
+                                        .placeholder(android.R.drawable.ic_menu_gallery)
+                                        .error(android.R.drawable.ic_menu_close_clear_cancel)
+                                        .resize(size, size)
+                                        .into(((ViewHolder) viewHolder).imageView);
+                                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                        intent.setDataAndType(Uri.parse(quaggan.url), "image/*");
+                                        if (getActivity().getPackageManager().resolveActivity(intent, 0) != null) {
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public int getItemCount() {
+                                return quaggans.size();
+                            }
+                        });
                     }
                 }
 
@@ -83,7 +107,9 @@ public class QuaggansFragment extends SherlockFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mGridLayout = (GridLayout) view.findViewById(R.id.gridlayout);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
     }
 
     @Override
